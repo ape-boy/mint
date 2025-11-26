@@ -1,0 +1,455 @@
+{
+  "project-groups": [
+    {
+      "id": "1",
+      "name": "BM1743",
+      "createdAt": "2024-01-15T09:00:00Z",
+      "updatedAt": "2024-11-20T14:30:00Z"
+    },
+    {
+      "id": "2",
+      "name": "PM9E1",
+      "createdAt": "2024-02-10T10:00:00Z",
+      "updatedAt": "2024-11-18T11:00:00Z"
+    },
+    {
+      "id": "3",
+      "name": "PM9A3",
+      "createdAt": "2024-03-05T08:00:00Z",
+      "updatedAt": "2024-11-22T16:45:00Z"
+    }
+  ],
+  "projects": [
+    {
+      "id": "1001",
+      "groupId": "1",
+      "name": "BM1743_LENOVO_1TB",
+      "status": "active",
+      "oem": "Lenovo",
+      "tl": {
+        "id": "101",
+        "name": "김철수",
+        "email": "kim.cs@company.com",
+        "role": "TL"
+      },
+      "members": [
+        { "id": "101", "name": "김철수", "email": "kim.cs@company.com", "role": "TL" },
+        { "id": "102", "name": "이영희", "email": "lee.yh@company.com", "role": "Developer" },
+        { "id": "103", "name": "박민수", "email": "park.ms@company.com", "role": "Developer" },
+        { "id": "104", "name": "정수진", "email": "jung.sj@company.com", "role": "QA" }
+      ],
+      "config": {
+        "repository": "git@github.com:samsung/bm1743-fw.git",
+        "defaultBranch": "main",
+        "buildOptions": [
+          { "key": "debug", "label": "Debug Mode", "defaultValue": false },
+          { "key": "verbose", "label": "Verbose Log", "defaultValue": false },
+          { "key": "clean", "label": "Clean Build", "defaultValue": true }
+        ]
+      },
+      "milestones": [
+        { "id": "1", "name": "MP", "targetDate": "2024-03-01", "status": "completed" },
+        { "id": "2", "name": "ES", "targetDate": "2024-06-01", "status": "completed" },
+        { "id": "3", "name": "CS", "targetDate": "2024-09-01", "status": "in_progress" },
+        { "id": "4", "name": "QS", "targetDate": "2024-12-01", "status": "pending" }
+      ],
+      "createdAt": "2024-01-20T09:00:00Z",
+      "updatedAt": "2024-11-20T14:30:00Z"
+    },
+    {
+      "id": "1002",
+      "groupId": "1",
+      "name": "BM1743_DELL_2TB",
+      "status": "active",
+      "oem": "Dell",
+      "tl": {
+        "id": "105",
+        "name": "최동훈",
+        "email": "choi.dh@company.com",
+        "role": "TL"
+      },
+      "members": [
+        { "id": "105", "name": "최동훈", "email": "choi.dh@company.com", "role": "TL" },
+        { "id": "106", "name": "한지민", "email": "han.jm@company.com", "role": "Developer" },
+        { "id": "107", "name": "윤서연", "email": "yoon.sy@company.com", "role": "Developer" }
+      ],
+      "config": {
+        "repository": "git@github.com:samsung/bm1743-fw.git",
+        "defaultBranch": "main",
+        "buildOptions": [
+          { "key": "debug", "label": "Debug Mode", "defaultValue": false },
+          { "key": "verbose", "label": "Verbose Log", "defaultValue": false },
+          { "key": "clean", "label": "Clean Build", "defaultValue": true }
+        ]
+      },
+      "milestones": [
+        { "id": "5", "name": "MP", "targetDate": "2024-04-01", "status": "completed" },
+        { "id": "6", "name": "ES", "targetDate": "2024-07-01", "status": "completed" },
+        { "id": "7", "name": "CS", "targetDate": "2024-10-01", "status": "in_progress" }
+      ],
+      "createdAt": "2024-02-01T10:00:00Z",
+      "updatedAt": "2024-11-19T09:15:00Z"
+    },
+    {
+      "id": "1003",
+      "groupId": "2",
+      "name": "PM9E1_SAMSUNG_512GB",
+      "status": "active",
+      "oem": "Samsung",
+      "tl": {
+        "id": "108",
+        "name": "강태호",
+        "email": "kang.th@company.com",
+        "role": "TL"
+      },
+      "members": [
+        { "id": "108", "name": "강태호", "email": "kang.th@company.com", "role": "TL" },
+        { "id": "109", "name": "송미래", "email": "song.mr@company.com", "role": "Developer" },
+        { "id": "110", "name": "임준혁", "email": "lim.jh@company.com", "role": "QA" }
+      ],
+      "config": {
+        "repository": "git@github.com:samsung/pm9e1-fw.git",
+        "defaultBranch": "develop",
+        "buildOptions": [
+          { "key": "debug", "label": "Debug Mode", "defaultValue": true },
+          { "key": "verbose", "label": "Verbose Log", "defaultValue": true },
+          { "key": "clean", "label": "Clean Build", "defaultValue": true }
+        ]
+      },
+      "milestones": [
+        { "id": "8", "name": "MP", "targetDate": "2024-05-01", "status": "completed" },
+        { "id": "9", "name": "ES", "targetDate": "2024-08-01", "status": "in_progress" }
+      ],
+      "createdAt": "2024-03-15T09:00:00Z",
+      "updatedAt": "2024-11-22T10:00:00Z"
+    },
+    {
+      "id": "1004",
+      "groupId": "3",
+      "name": "PM9A3_AWS_4TB",
+      "status": "active",
+      "oem": "AWS",
+      "tl": {
+        "id": "111",
+        "name": "오현우",
+        "email": "oh.hw@company.com",
+        "role": "TL"
+      },
+      "members": [
+        { "id": "111", "name": "오현우", "email": "oh.hw@company.com", "role": "TL" },
+        { "id": "112", "name": "배수지", "email": "bae.sj@company.com", "role": "Developer" },
+        { "id": "113", "name": "신동엽", "email": "shin.dy@company.com", "role": "Developer" },
+        { "id": "114", "name": "권유리", "email": "kwon.yr@company.com", "role": "QA" },
+        { "id": "115", "name": "장원영", "email": "jang.wy@company.com", "role": "PM" }
+      ],
+      "config": {
+        "repository": "git@github.com:samsung/pm9a3-fw.git",
+        "defaultBranch": "main",
+        "buildOptions": [
+          { "key": "debug", "label": "Debug Mode", "defaultValue": false },
+          { "key": "verbose", "label": "Verbose Log", "defaultValue": false },
+          { "key": "clean", "label": "Clean Build", "defaultValue": true },
+          { "key": "encryption", "label": "Enable Encryption", "defaultValue": true }
+        ]
+      },
+      "milestones": [
+        { "id": "10", "name": "MP", "targetDate": "2024-02-01", "status": "completed" },
+        { "id": "11", "name": "ES", "targetDate": "2024-05-01", "status": "completed" },
+        { "id": "12", "name": "CS", "targetDate": "2024-08-01", "status": "completed" },
+        { "id": "13", "name": "QS", "targetDate": "2024-11-01", "status": "in_progress" }
+      ],
+      "createdAt": "2024-01-10T09:00:00Z",
+      "updatedAt": "2024-11-23T08:00:00Z"
+    }
+  ],
+  "layers": [
+    {
+      "id": "2001",
+      "projectId": "1001",
+      "name": "Release",
+      "type": "release",
+      "pipelineConfig": [
+        { "name": "Build", "enabled": true, "required": true },
+        { "name": "SAM", "enabled": true, "required": true },
+        { "name": "Coverity", "enabled": true, "required": true },
+        { "name": "DoBEE", "enabled": true, "required": false },
+        { "name": "TASTY", "enabled": true, "required": true },
+        { "name": "Warning Count", "enabled": true, "required": false },
+        { "name": "BlackDuck", "enabled": true, "required": true },
+        { "name": "TEST1", "enabled": true, "required": false },
+        { "name": "TEST2", "enabled": false, "required": false }
+      ],
+      "createdAt": "2024-01-20T09:00:00Z",
+      "updatedAt": "2024-11-20T14:30:00Z"
+    },
+    {
+      "id": "2002",
+      "projectId": "1001",
+      "name": "HIL",
+      "type": "custom",
+      "pipelineConfig": [
+        { "name": "Build", "enabled": true, "required": true },
+        { "name": "SAM", "enabled": true, "required": false },
+        { "name": "HIL Test", "enabled": true, "required": true },
+        { "name": "Report", "enabled": true, "required": false }
+      ],
+      "createdAt": "2024-02-01T09:00:00Z",
+      "updatedAt": "2024-11-15T10:00:00Z"
+    },
+    {
+      "id": "2003",
+      "projectId": "1001",
+      "name": "FTL",
+      "type": "custom",
+      "pipelineConfig": [
+        { "name": "Build", "enabled": true, "required": true },
+        { "name": "FTL Test", "enabled": true, "required": true },
+        { "name": "Performance", "enabled": true, "required": false }
+      ],
+      "createdAt": "2024-03-01T09:00:00Z",
+      "updatedAt": "2024-11-10T14:00:00Z"
+    },
+    {
+      "id": "2004",
+      "projectId": "1002",
+      "name": "Release",
+      "type": "release",
+      "pipelineConfig": [
+        { "name": "Build", "enabled": true, "required": true },
+        { "name": "SAM", "enabled": true, "required": true },
+        { "name": "Coverity", "enabled": true, "required": true },
+        { "name": "TASTY", "enabled": true, "required": true },
+        { "name": "BlackDuck", "enabled": true, "required": true }
+      ],
+      "createdAt": "2024-02-01T10:00:00Z",
+      "updatedAt": "2024-11-19T09:15:00Z"
+    },
+    {
+      "id": "2005",
+      "projectId": "1003",
+      "name": "Release",
+      "type": "release",
+      "pipelineConfig": [
+        { "name": "Build", "enabled": true, "required": true },
+        { "name": "SAM", "enabled": true, "required": true },
+        { "name": "Coverity", "enabled": true, "required": true },
+        { "name": "TASTY", "enabled": true, "required": true },
+        { "name": "BlackDuck", "enabled": true, "required": true }
+      ],
+      "createdAt": "2024-03-15T09:00:00Z",
+      "updatedAt": "2024-11-22T10:00:00Z"
+    },
+    {
+      "id": "2006",
+      "projectId": "1004",
+      "name": "Release",
+      "type": "release",
+      "pipelineConfig": [
+        { "name": "Build", "enabled": true, "required": true },
+        { "name": "SAM", "enabled": true, "required": true },
+        { "name": "Coverity", "enabled": true, "required": true },
+        { "name": "DoBEE", "enabled": true, "required": true },
+        { "name": "TASTY", "enabled": true, "required": true },
+        { "name": "Warning Count", "enabled": true, "required": true },
+        { "name": "BlackDuck", "enabled": true, "required": true },
+        { "name": "TEST1", "enabled": true, "required": true },
+        { "name": "TEST2", "enabled": true, "required": true }
+      ],
+      "createdAt": "2024-01-10T09:00:00Z",
+      "updatedAt": "2024-11-23T08:00:00Z"
+    },
+    {
+      "id": "2007",
+      "projectId": "1004",
+      "name": "HIL",
+      "type": "custom",
+      "pipelineConfig": [
+        { "name": "Build", "enabled": true, "required": true },
+        { "name": "HIL Test", "enabled": true, "required": true }
+      ],
+      "createdAt": "2024-02-15T09:00:00Z",
+      "updatedAt": "2024-11-20T10:00:00Z"
+    }
+  ],
+  "builds": [
+    {
+      "id": "3001",
+      "projectId": "1001",
+      "layerId": "2001",
+      "buildNumber": 1245,
+      "status": "success",
+      "branch": "main",
+      "commitHash": "a1b2c3d4e5f6",
+      "buildOptions": { "debug": false, "verbose": false, "clean": true },
+      "stages": [
+        { "name": "Build", "status": "success", "duration": 120 },
+        { "name": "SAM", "status": "success", "duration": 45 },
+        { "name": "Coverity", "status": "success", "duration": 180 },
+        { "name": "DoBEE", "status": "success", "duration": 60 },
+        { "name": "TASTY", "status": "success", "duration": 90 },
+        { "name": "Warning Count", "status": "success", "duration": 15 },
+        { "name": "BlackDuck", "status": "success", "duration": 120 }
+      ],
+      "trStatus": "available",
+      "artifacts": {
+        "binaryUrl": "/downloads/build-3001/firmware.bin",
+        "logsUrl": "/downloads/build-3001/build.log"
+      },
+      "triggeredBy": "jenkins-auto",
+      "startedAt": "2024-11-20T14:00:00Z",
+      "finishedAt": "2024-11-20T14:25:00Z",
+      "duration": 1500
+    },
+    {
+      "id": "3002",
+      "projectId": "1001",
+      "layerId": "2001",
+      "buildNumber": 1244,
+      "status": "failed",
+      "branch": "feature/nvme-opt",
+      "commitHash": "b2c3d4e5f6a1",
+      "buildOptions": { "debug": true, "verbose": true, "clean": true },
+      "stages": [
+        { "name": "Build", "status": "success", "duration": 125 },
+        { "name": "SAM", "status": "success", "duration": 48 },
+        { "name": "Coverity", "status": "failed", "duration": 95 },
+        { "name": "DoBEE", "status": "skipped", "duration": null },
+        { "name": "TASTY", "status": "skipped", "duration": null },
+        { "name": "Warning Count", "status": "skipped", "duration": null },
+        { "name": "BlackDuck", "status": "skipped", "duration": null }
+      ],
+      "trStatus": "pending_approval",
+      "artifacts": {
+        "logsUrl": "/downloads/build-3002/build.log"
+      },
+      "triggeredBy": "kim.cs",
+      "startedAt": "2024-11-20T10:00:00Z",
+      "finishedAt": "2024-11-20T10:15:00Z",
+      "duration": 900
+    },
+    {
+      "id": "3003",
+      "projectId": "1001",
+      "layerId": "2002",
+      "buildNumber": 87,
+      "status": "success",
+      "branch": "main",
+      "commitHash": "c3d4e5f6a1b2",
+      "buildOptions": { "debug": false, "clean": true },
+      "stages": [
+        { "name": "Build", "status": "success", "duration": 110 },
+        { "name": "SAM", "status": "success", "duration": 40 },
+        { "name": "HIL Test", "status": "success", "duration": 300 },
+        { "name": "Report", "status": "success", "duration": 20 }
+      ],
+      "artifacts": {
+        "logsUrl": "/downloads/build-3003/hil.log"
+      },
+      "triggeredBy": "park.ms",
+      "startedAt": "2024-11-19T16:00:00Z",
+      "finishedAt": "2024-11-19T16:25:00Z",
+      "duration": 1500
+    },
+    {
+      "id": "3004",
+      "projectId": "1002",
+      "layerId": "2004",
+      "buildNumber": 892,
+      "status": "running",
+      "branch": "main",
+      "commitHash": "d4e5f6a1b2c3",
+      "buildOptions": { "debug": false, "verbose": false, "clean": true },
+      "stages": [
+        { "name": "Build", "status": "success", "duration": 115 },
+        { "name": "SAM", "status": "success", "duration": 42 },
+        { "name": "Coverity", "status": "running", "duration": null },
+        { "name": "TASTY", "status": "pending", "duration": null },
+        { "name": "BlackDuck", "status": "pending", "duration": null }
+      ],
+      "triggeredBy": "jenkins-auto",
+      "startedAt": "2024-11-20T14:30:00Z",
+      "finishedAt": null,
+      "duration": null
+    },
+    {
+      "id": "3005",
+      "projectId": "1003",
+      "layerId": "2005",
+      "buildNumber": 445,
+      "status": "success",
+      "branch": "develop",
+      "commitHash": "e5f6a1b2c3d4",
+      "buildOptions": { "debug": true, "verbose": true, "clean": true },
+      "stages": [
+        { "name": "Build", "status": "success", "duration": 130 },
+        { "name": "SAM", "status": "success", "duration": 55 },
+        { "name": "Coverity", "status": "success", "duration": 200 },
+        { "name": "TASTY", "status": "success", "duration": 95 },
+        { "name": "BlackDuck", "status": "success", "duration": 110 }
+      ],
+      "trStatus": "available",
+      "artifacts": {
+        "binaryUrl": "/downloads/build-3005/firmware.bin",
+        "logsUrl": "/downloads/build-3005/build.log"
+      },
+      "triggeredBy": "kang.th",
+      "startedAt": "2024-11-22T08:00:00Z",
+      "finishedAt": "2024-11-22T08:35:00Z",
+      "duration": 2100
+    },
+    {
+      "id": "3006",
+      "projectId": "1004",
+      "layerId": "2006",
+      "buildNumber": 3401,
+      "status": "success",
+      "branch": "main",
+      "commitHash": "f6a1b2c3d4e5",
+      "buildOptions": { "debug": false, "verbose": false, "clean": true, "encryption": true },
+      "stages": [
+        { "name": "Build", "status": "success", "duration": 150 },
+        { "name": "SAM", "status": "success", "duration": 60 },
+        { "name": "Coverity", "status": "success", "duration": 220 },
+        { "name": "DoBEE", "status": "success", "duration": 80 },
+        { "name": "TASTY", "status": "success", "duration": 100 },
+        { "name": "Warning Count", "status": "success", "duration": 20 },
+        { "name": "BlackDuck", "status": "success", "duration": 130 },
+        { "name": "TEST1", "status": "success", "duration": 45 },
+        { "name": "TEST2", "status": "success", "duration": 50 }
+      ],
+      "trStatus": "available",
+      "artifacts": {
+        "binaryUrl": "/downloads/build-3006/firmware.bin",
+        "logsUrl": "/downloads/build-3006/build.log"
+      },
+      "triggeredBy": "jenkins-auto",
+      "startedAt": "2024-11-23T08:00:00Z",
+      "finishedAt": "2024-11-23T08:45:00Z",
+      "duration": 2700
+    },
+    {
+      "id": "3007",
+      "projectId": "1004",
+      "layerId": "2007",
+      "buildNumber": 156,
+      "status": "pending",
+      "branch": "main",
+      "commitHash": "a1b2c3d4e5f6",
+      "buildOptions": { "debug": false, "clean": true },
+      "stages": [
+        { "name": "Build", "status": "pending", "duration": null },
+        { "name": "HIL Test", "status": "pending", "duration": null }
+      ],
+      "triggeredBy": "oh.hw",
+      "startedAt": "2024-11-23T09:00:00Z",
+      "finishedAt": null,
+      "duration": null
+    }
+  ],
+  "stats": {
+    "successRate": 85,
+    "totalBuilds": 156,
+    "activeProjects": 4,
+    "runningBuilds": 2
+  }
+}
