@@ -8,6 +8,7 @@ import {
   HistoryOutlined,
   PlayCircleOutlined
 } from '@ant-design/icons-vue'
+import { PageHeader, EmptyState } from '@/components'
 import { useProjectStore } from '@/stores/project'
 import { useProjectGroupStore } from '@/stores/projectGroup'
 import { useLayerStore } from '@/stores/layer'
@@ -33,8 +34,10 @@ const buildOptions = ref({
 const pipelineStages = ref<PipelineStageConfig[]>([])
 
 onMounted(async () => {
-  await projectGroupStore.fetchProjectGroups()
-  await projectStore.fetchProjects()
+  await Promise.all([
+    projectGroupStore.fetchProjectGroups(),
+    projectStore.fetchProjects()
+  ])
 })
 
 // Computed
@@ -81,22 +84,19 @@ function runBuild() {
 
   // Simulate API call and redirect
   setTimeout(() => {
-    router.push('/build/3001') // Redirect to a build detail
+    router.push('/build/3001')
   }, 1000)
 }
 </script>
 
 <template>
-  <div class="build-new-page">
-    <div class="page-header">
-      <h1>New Build</h1>
-      <p class="page-description">Configure and trigger a new build pipeline.</p>
-    </div>
+  <div class="build-new-view">
+    <PageHeader title="New Build" description="Configure and trigger a new build pipeline." />
 
     <div class="build-form-container">
       <!-- Project Selection -->
       <div class="form-section">
-        <h3><rocket-outlined /> Project & Layer Selection</h3>
+        <h3><RocketOutlined /> Project & Layer Selection</h3>
         <div class="form-row">
           <div class="form-group">
             <label>Project Group</label>
@@ -135,117 +135,112 @@ function runBuild() {
               :disabled="!selectedProjectId"
             >
               <a-select-option v-for="layer in filteredLayers" :key="layer.id" :value="layer.id">
-                {{ layer.name }} <span class="layer-type-badge">{{ layer.type }}</span>
+                {{ layer.name }}
+                <span class="layer-type-badge">{{ layer.type }}</span>
               </a-select-option>
             </a-select>
           </div>
         </div>
       </div>
 
-      <!-- SCM Configuration -->
-      <div class="form-section" v-if="selectedLayerId">
-        <h3><branches-outlined /> Source Control</h3>
-        <div class="form-row">
-          <div class="form-group">
-            <label>Branch</label>
-            <a-input v-model:value="branch" placeholder="e.g. main, develop">
-              <template #prefix><branches-outlined /></template>
-            </a-input>
-          </div>
-          <div class="form-group">
-            <label>Commit Hash (Optional)</label>
-            <a-input v-model:value="commitHash" placeholder="HEAD">
-              <template #prefix><history-outlined /></template>
-            </a-input>
-          </div>
-        </div>
-      </div>
-
-      <!-- Build Options -->
-      <div class="form-section" v-if="selectedLayerId">
-        <h3><setting-outlined /> Build Options</h3>
-        <div class="checkbox-group">
-          <a-checkbox v-model:checked="buildOptions.cleanBuild">Clean Build</a-checkbox>
-          <a-checkbox v-model:checked="buildOptions.verboseLogging">Verbose Logging</a-checkbox>
-          <a-checkbox v-model:checked="buildOptions.skipTests">Skip Tests</a-checkbox>
-        </div>
-      </div>
-
-      <!-- Pipeline Configuration -->
-      <div class="form-section" v-if="selectedLayerId && pipelineStages.length > 0">
-        <h3><setting-outlined /> Pipeline Configuration</h3>
-        <div class="pipeline-config-grid">
-          <div v-for="stage in pipelineStages" :key="stage.name" class="stage-checkbox">
-            <a-checkbox v-model:checked="stage.enabled" :disabled="stage.required">
-              {{ stage.name }}
-              <span v-if="stage.required" class="required-tag">(Required)</span>
-            </a-checkbox>
+      <template v-if="selectedLayerId">
+        <!-- SCM Configuration -->
+        <div class="form-section">
+          <h3><BranchesOutlined /> Source Control</h3>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Branch</label>
+              <a-input v-model:value="branch" placeholder="e.g. main, develop">
+                <template #prefix><BranchesOutlined /></template>
+              </a-input>
+            </div>
+            <div class="form-group">
+              <label>Commit Hash (Optional)</label>
+              <a-input v-model:value="commitHash" placeholder="HEAD">
+                <template #prefix><HistoryOutlined /></template>
+              </a-input>
+            </div>
           </div>
         </div>
-      </div>
 
-      <!-- Action -->
-      <div class="form-actions" v-if="selectedLayerId">
-        <a-button type="primary" size="large" @click="runBuild" class="run-btn">
-          <template #icon><play-circle-outlined /></template>
-          Run Build
-        </a-button>
-      </div>
+        <!-- Build Options -->
+        <div class="form-section">
+          <h3><SettingOutlined /> Build Options</h3>
+          <div class="checkbox-group">
+            <a-checkbox v-model:checked="buildOptions.cleanBuild">Clean Build</a-checkbox>
+            <a-checkbox v-model:checked="buildOptions.verboseLogging">Verbose Logging</a-checkbox>
+            <a-checkbox v-model:checked="buildOptions.skipTests">Skip Tests</a-checkbox>
+          </div>
+        </div>
+
+        <!-- Pipeline Configuration -->
+        <div v-if="pipelineStages.length > 0" class="form-section">
+          <h3><SettingOutlined /> Pipeline Configuration</h3>
+          <div class="pipeline-config-grid">
+            <div v-for="stage in pipelineStages" :key="stage.name" class="stage-checkbox">
+              <a-checkbox v-model:checked="stage.enabled" :disabled="stage.required">
+                {{ stage.name }}
+                <span v-if="stage.required" class="required-tag">(Required)</span>
+              </a-checkbox>
+            </div>
+          </div>
+        </div>
+        <EmptyState
+          v-else
+          title="No pipeline configuration"
+          description="This layer has no pipeline stages configured"
+        />
+
+        <!-- Action -->
+        <div class="form-actions">
+          <a-button type="primary" size="large" @click="runBuild" class="run-btn">
+            <template #icon><PlayCircleOutlined /></template>
+            Run Build
+          </a-button>
+        </div>
+      </template>
     </div>
   </div>
 </template>
 
 <style scoped>
-.build-new-page {
+.build-new-view {
   max-width: 800px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 24px;
-}
-
-.page-header h1 {
-  margin: 0;
-  font-size: 28px;
-  font-weight: 700;
-  background: linear-gradient(to right, #fff, #94a3b8);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-.page-description {
-  color: var(--text-muted);
-  margin: 4px 0 0;
+  gap: var(--spacing-lg);
 }
 
 .build-form-container {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: var(--spacing-lg);
 }
 
 .form-section {
-  background: var(--bg-secondary);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  border-radius: 16px;
-  padding: 24px;
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-lg);
 }
 
 .form-section h3 {
-  margin: 0 0 20px;
-  font-size: 18px;
+  margin: 0 0 var(--spacing-lg);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
   display: flex;
   align-items: center;
-  gap: 8px;
-  color: var(--text-primary);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-  padding-bottom: 12px;
+  gap: var(--spacing-sm);
+  color: var(--color-text-primary);
+  border-bottom: 1px solid var(--color-border-light);
+  padding-bottom: var(--spacing-sm);
 }
 
 .form-row {
   display: flex;
-  gap: 20px;
-  margin-bottom: 16px;
+  gap: var(--spacing-lg);
+  margin-bottom: var(--spacing-md);
 }
 
 .form-row:last-child {
@@ -256,7 +251,7 @@ function runBuild() {
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: var(--spacing-xs);
 }
 
 .form-group.full-width {
@@ -264,42 +259,42 @@ function runBuild() {
 }
 
 .form-group label {
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--text-secondary);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-secondary);
 }
 
 .layer-type-badge {
   background: rgba(255, 255, 255, 0.1);
   padding: 2px 6px;
-  border-radius: 4px;
-  font-size: 10px;
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-xs);
   text-transform: uppercase;
-  margin-left: 8px;
+  margin-left: var(--spacing-sm);
 }
 
 .checkbox-group {
   display: flex;
-  gap: 24px;
+  gap: var(--spacing-lg);
 }
 
 .pipeline-config-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 16px;
+  gap: var(--spacing-md);
 }
 
 .stage-checkbox {
   background: rgba(255, 255, 255, 0.02);
-  padding: 12px;
-  border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  padding: var(--spacing-sm);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border-light);
 }
 
 .required-tag {
-  font-size: 12px;
-  color: var(--text-muted);
-  margin-left: 4px;
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  margin-left: var(--spacing-xs);
 }
 
 .form-actions {
@@ -310,7 +305,7 @@ function runBuild() {
 .run-btn {
   width: 200px;
   height: 48px;
-  font-size: 16px;
-  font-weight: 600;
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-semibold);
 }
 </style>

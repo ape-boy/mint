@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, watch } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { useRouter } from 'vue-router'
 import {
   ArrowLeftOutlined,
   UserOutlined,
@@ -8,20 +8,12 @@ import {
   CalendarOutlined,
   BranchesOutlined,
   SettingOutlined,
-  CheckCircleOutlined,
-  ClockCircleOutlined,
-  ExclamationCircleOutlined,
-  PlayCircleOutlined,
-  LoadingOutlined,
-  PauseCircleOutlined,
-  StopOutlined,
 } from '@ant-design/icons-vue'
+import { StatusBadge, EmptyState, MilestoneTimeline, BuildCard, StageChip } from '@/components'
 import { useProjectStore } from '@/stores/project'
 import { useLayerStore } from '@/stores/layer'
 import { useBuildStore } from '@/stores/build'
-import type { Build, BuildStage, Layer, Milestone } from '@/types'
 
-const route = useRoute()
 const router = useRouter()
 const projectStore = useProjectStore()
 const layerStore = useLayerStore()
@@ -33,40 +25,25 @@ const props = defineProps<{
 
 const activeLayerId = ref<string | null>(null)
 
-onMounted(async () => {
-  await projectStore.fetchProjectById(props.projectId)
-  await layerStore.fetchLayers(props.projectId)
-  await buildStore.fetchBuilds(props.projectId)
+async function loadData(projectId: string) {
+  await Promise.all([
+    projectStore.fetchProjectById(projectId),
+    layerStore.fetchLayers(projectId),
+    buildStore.fetchBuilds(projectId)
+  ])
 
-  // Set first layer as active if exists
-  const layers = layerStore.layers.filter(l => l.projectId === props.projectId)
+  const layers = layerStore.layers.filter(l => l.projectId === projectId)
   if (layers.length > 0 && layers[0]) {
     activeLayerId.value = layers[0].id
   }
-})
+}
 
-watch(() => props.projectId, async (newId) => {
-  await projectStore.fetchProjectById(newId)
-  await layerStore.fetchLayers(newId)
-  await buildStore.fetchBuilds(newId)
-
-  const layers = layerStore.layers.filter(l => l.projectId === newId)
-  if (layers.length > 0 && layers[0]) {
-    activeLayerId.value = layers[0].id
-  }
-})
+onMounted(() => loadData(props.projectId))
+watch(() => props.projectId, loadData)
 
 const project = computed(() => projectStore.currentProject)
-
-const projectLayers = computed(() => {
-  return layerStore.layers.filter(l => l.projectId === props.projectId)
-})
-
-const activeLayer = computed(() => {
-  if (!activeLayerId.value) return null
-  return projectLayers.value.find(l => l.id === activeLayerId.value) || null
-})
-
+const projectLayers = computed(() => layerStore.layers.filter(l => l.projectId === props.projectId))
+const activeLayer = computed(() => projectLayers.value.find(l => l.id === activeLayerId.value) || null)
 const layerBuilds = computed(() => {
   if (!activeLayerId.value) return []
   return buildStore.builds.filter(b => b.layerId === activeLayerId.value)
@@ -75,89 +52,14 @@ const layerBuilds = computed(() => {
 function goBack() {
   router.push('/')
 }
-
-function getMilestoneStatus(milestone: Milestone) {
-  switch (milestone.status) {
-    case 'completed':
-      return { icon: CheckCircleOutlined, color: 'var(--accent-success)' }
-    case 'in_progress':
-      return { icon: LoadingOutlined, color: 'var(--accent-primary)' }
-    case 'pending':
-      return { icon: ClockCircleOutlined, color: 'var(--text-muted)' }
-    default:
-      return { icon: ClockCircleOutlined, color: 'var(--text-muted)' }
-  }
-}
-
-function getBuildStatusIcon(status: Build['status']) {
-  switch (status) {
-    case 'success':
-      return CheckCircleOutlined
-    case 'failed':
-      return ExclamationCircleOutlined
-    case 'running':
-      return LoadingOutlined
-    case 'pending':
-      return ClockCircleOutlined
-    case 'cancelled':
-      return StopOutlined
-    default:
-      return ClockCircleOutlined
-  }
-}
-
-function getBuildStatusColor(status: Build['status']) {
-  switch (status) {
-    case 'success':
-      return 'var(--accent-success)'
-    case 'failed':
-      return 'var(--accent-danger)'
-    case 'running':
-      return 'var(--accent-primary)'
-    case 'pending':
-      return 'var(--text-muted)'
-    case 'cancelled':
-      return 'var(--accent-warning)'
-    default:
-      return 'var(--text-muted)'
-  }
-}
-
-function getStageStatusColor(status: BuildStage['status']) {
-  switch (status) {
-    case 'success':
-      return '#22c55e'
-    case 'failed':
-      return '#ef4444'
-    case 'running':
-      return '#3b82f6'
-    case 'pending':
-      return '#6b7280'
-    case 'skipped':
-      return '#4b5563'
-    default:
-      return '#6b7280'
-  }
-}
-
-function formatDuration(seconds: number | null | undefined) {
-  if (!seconds) return '-'
-  const mins = Math.floor(seconds / 60)
-  const secs = seconds % 60
-  return mins > 0 ? `${mins}m ${secs}s` : `${secs}s`
-}
-
-function formatDate(dateStr: string) {
-  return new Date(dateStr).toLocaleString()
-}
 </script>
 
 <template>
-  <div class="project-detail-page">
+  <div class="project-detail-view">
     <!-- Back Navigation -->
     <div class="back-nav">
       <a-button type="text" @click="goBack">
-        <arrow-left-outlined /> Back to Projects
+        <ArrowLeftOutlined /> Back to Projects
       </a-button>
     </div>
 
@@ -169,7 +71,7 @@ function formatDate(dateStr: string) {
             <h1 class="project-title">{{ project.name }}</h1>
             <div class="project-badges">
               <span class="oem-badge">{{ project.oem }}</span>
-              <span class="status-badge" :class="project.status">{{ project.status }}</span>
+              <StatusBadge :status="project.status" type="project" />
             </div>
           </div>
         </div>
@@ -179,9 +81,9 @@ function formatDate(dateStr: string) {
           <div class="info-grid">
             <!-- Team Info -->
             <div class="info-card">
-              <h3><user-outlined /> Tech Lead</h3>
-              <div class="tl-info" v-if="project.tl">
-                <a-avatar size="small" :style="{ backgroundColor: 'var(--accent-primary)' }">
+              <h3><UserOutlined /> Tech Lead</h3>
+              <div v-if="project.tl" class="tl-info">
+                <a-avatar size="small" :style="{ backgroundColor: 'var(--color-accent-primary)' }">
                   {{ project.tl.name.charAt(0) }}
                 </a-avatar>
                 <div class="tl-details">
@@ -193,11 +95,11 @@ function formatDate(dateStr: string) {
 
             <!-- Team Members -->
             <div class="info-card">
-              <h3><team-outlined /> Team Members</h3>
-              <div class="members-list" v-if="project.members">
-                <a-avatar-group :max-count="5" :max-style="{ color: '#f56a00', backgroundColor: '#fde3cf' }">
+              <h3><TeamOutlined /> Team Members</h3>
+              <div v-if="project.members" class="members-list">
+                <a-avatar-group :max-count="5" :max-style="{ backgroundColor: 'var(--color-accent-secondary)' }">
                   <a-tooltip v-for="member in project.members" :key="member.id" :title="`${member.name} (${member.role})`">
-                    <a-avatar :style="{ backgroundColor: member.role === 'TL' ? 'var(--accent-primary)' : 'var(--accent-secondary)' }">
+                    <a-avatar :style="{ backgroundColor: member.role === 'TL' ? 'var(--color-accent-primary)' : 'var(--color-accent-secondary)' }">
                       {{ member.name.charAt(0) }}
                     </a-avatar>
                   </a-tooltip>
@@ -208,10 +110,10 @@ function formatDate(dateStr: string) {
 
             <!-- Config Info -->
             <div class="info-card">
-              <h3><setting-outlined /> Build Config</h3>
-              <div class="config-info" v-if="project.config">
+              <h3><SettingOutlined /> Build Config</h3>
+              <div v-if="project.config" class="config-info">
                 <div class="config-item">
-                  <branches-outlined />
+                  <BranchesOutlined />
                   <span>{{ project.config.defaultBranch }}</span>
                 </div>
                 <div class="config-item">
@@ -222,25 +124,9 @@ function formatDate(dateStr: string) {
             </div>
 
             <!-- Milestones -->
-            <div class="info-card milestones-card">
-              <h3><calendar-outlined /> Milestones</h3>
-              <div class="milestones-timeline" v-if="project.milestones">
-                <div
-                  v-for="milestone in project.milestones"
-                  :key="milestone.id"
-                  class="milestone-item"
-                  :class="milestone.status"
-                >
-                  <component
-                    :is="getMilestoneStatus(milestone).icon"
-                    :style="{ color: getMilestoneStatus(milestone).color }"
-                  />
-                  <div class="milestone-info">
-                    <span class="milestone-name">{{ milestone.name }}</span>
-                    <span class="milestone-date">{{ milestone.targetDate }}</span>
-                  </div>
-                </div>
-              </div>
+            <div class="info-card">
+              <h3><CalendarOutlined /> Milestones</h3>
+              <MilestoneTimeline v-if="project.milestones" :milestones="project.milestones" />
             </div>
           </div>
         </div>
@@ -249,13 +135,8 @@ function formatDate(dateStr: string) {
         <div class="layers-section">
           <h2>Build Layers</h2>
 
-          <!-- Layer Tabs -->
           <a-tabs v-model:activeKey="activeLayerId" type="card" class="layer-tabs">
-            <a-tab-pane
-              v-for="layer in projectLayers"
-              :key="layer.id"
-              :tab="layer.name"
-            >
+            <a-tab-pane v-for="layer in projectLayers" :key="layer.id" :tab="layer.name">
               <div class="layer-content">
                 <!-- Layer Info -->
                 <div class="layer-info">
@@ -266,209 +147,127 @@ function formatDate(dateStr: string) {
                 </div>
 
                 <!-- Pipeline Config -->
-                <div class="pipeline-config" v-if="layer.pipelineConfig">
+                <div v-if="layer.pipelineConfig" class="pipeline-config">
                   <h4>Pipeline Configuration</h4>
                   <div class="stage-chips">
-                    <span
+                    <StageChip
                       v-for="stage in layer.pipelineConfig.filter(s => s.enabled)"
                       :key="stage.name"
-                      class="stage-chip"
-                      :class="{ required: stage.required }"
-                    >
-                      {{ stage.name }}
-                      <span v-if="stage.required" class="required-mark">*</span>
-                    </span>
+                      :stage="stage"
+                    />
                   </div>
                 </div>
 
                 <!-- Builds List -->
                 <div class="builds-section">
                   <h4>Recent Builds</h4>
-                  <div class="builds-list" v-if="layerBuilds.length > 0">
-                    <div
+                  <div v-if="layerBuilds.length > 0" class="builds-list">
+                    <BuildCard
                       v-for="build in layerBuilds"
                       :key="build.id"
-                      class="build-card"
-                    >
-                      <div class="build-header">
-                        <div class="build-info">
-                          <component
-                            :is="getBuildStatusIcon(build.status)"
-                            :style="{ color: getBuildStatusColor(build.status), fontSize: '18px' }"
-                          />
-                          <span class="build-number">#{{ build.buildNumber }}</span>
-                          <span class="build-branch">
-                            <branches-outlined /> {{ build.branch }}
-                          </span>
-                        </div>
-                        <div class="build-meta">
-                          <span class="build-time">{{ formatDate(build.startedAt) }}</span>
-                          <span class="build-duration" v-if="build.duration">
-                            {{ formatDuration(build.duration) }}
-                          </span>
-                        </div>
-                      </div>
-
-                      <!-- Pipeline Stages -->
-                      <div class="build-stages">
-                        <div
-                          v-for="stage in build.stages"
-                          :key="stage.name"
-                          class="stage-block"
-                          :style="{ borderLeftColor: getStageStatusColor(stage.status) }"
-                        >
-                          <span class="stage-name">{{ stage.name }}</span>
-                          <span class="stage-duration">{{ formatDuration(stage.duration) }}</span>
-                        </div>
-                      </div>
-
-                      <!-- TR Status (for Release layers) -->
-                      <div class="tr-status" v-if="layer.type === 'release' && build.trStatus">
-                        <span class="tr-label">TR Status:</span>
-                        <span class="tr-badge" :class="build.trStatus">{{ build.trStatus }}</span>
-                      </div>
-
-                      <!-- Artifacts -->
-                      <div class="build-artifacts" v-if="build.artifacts">
-                        <a-button
-                          v-if="build.artifacts.binaryUrl"
-                          size="small"
-                          type="primary"
-                          ghost
-                        >
-                          Download Binary
-                        </a-button>
-                        <a-button
-                          v-if="build.artifacts.logsUrl"
-                          size="small"
-                        >
-                          View Logs
-                        </a-button>
-                      </div>
-                    </div>
+                      :build="build"
+                      :layer="activeLayer || undefined"
+                      :show-tr-status="activeLayer?.type === 'release'"
+                    />
                   </div>
-                  <a-empty v-else description="No builds yet" />
+                  <EmptyState v-else title="No builds yet" description="Trigger a build to see it here" />
                 </div>
               </div>
             </a-tab-pane>
           </a-tabs>
         </div>
       </template>
-      <a-empty v-else-if="!projectStore.loading" description="Project not found" />
+
+      <EmptyState v-else-if="!projectStore.loading" title="Project not found" />
     </a-spin>
   </div>
 </template>
 
 <style scoped>
-.project-detail-page {
+.project-detail-view {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: var(--spacing-lg);
 }
 
 .back-nav {
-  margin-bottom: 8px;
+  margin-bottom: var(--spacing-sm);
 }
 
-.back-nav .ant-btn {
-  color: var(--text-secondary);
+.back-nav :deep(.ant-btn) {
+  color: var(--color-text-secondary);
   padding-left: 0;
 }
 
-.back-nav .ant-btn:hover {
-  color: var(--accent-primary);
+.back-nav :deep(.ant-btn:hover) {
+  color: var(--color-accent-primary);
 }
 
 /* Project Header */
 .project-header {
-  background: var(--bg-secondary);
-  border-radius: 16px;
-  padding: 24px;
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  background: var(--color-bg-secondary);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-lg);
+  border: 1px solid var(--color-border-light);
 }
 
 .header-main {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
+  gap: var(--spacing-md);
 }
 
 .project-title {
   margin: 0;
-  font-size: 28px;
-  font-weight: 700;
-  color: var(--text-primary);
+  font-size: var(--font-size-4xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
 }
 
 .project-badges {
   display: flex;
-  gap: 12px;
+  gap: var(--spacing-sm);
 }
 
 .oem-badge {
-  background: rgba(34, 197, 94, 0.15);
-  color: #22c55e;
+  background: var(--color-bg-success);
+  color: var(--color-accent-primary);
   padding: 6px 16px;
-  border-radius: 20px;
-  font-size: 14px;
-  font-weight: 600;
-}
-
-.status-badge {
-  padding: 6px 16px;
-  border-radius: 20px;
-  font-size: 14px;
-  font-weight: 600;
-  text-transform: capitalize;
-}
-
-.status-badge.active {
-  background: rgba(59, 130, 246, 0.15);
-  color: #3b82f6;
-}
-
-.status-badge.inactive {
-  background: rgba(234, 179, 8, 0.15);
-  color: #eab308;
-}
-
-.status-badge.archived {
-  background: rgba(107, 114, 128, 0.15);
-  color: #6b7280;
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-semibold);
 }
 
 /* Info Section */
-.info-section {
-  margin-bottom: 8px;
-}
-
 .info-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 16px;
+  gap: var(--spacing-md);
 }
 
 .info-card {
-  background: var(--bg-secondary);
-  border-radius: 12px;
-  padding: 20px;
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  background: var(--color-bg-secondary);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-lg);
+  border: 1px solid var(--color-border-light);
 }
 
 .info-card h3 {
-  margin: 0 0 16px;
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--text-secondary);
+  margin: 0 0 var(--spacing-md);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-secondary);
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--spacing-sm);
 }
 
 .tl-info {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: var(--spacing-sm);
 }
 
 .tl-details {
@@ -477,298 +276,123 @@ function formatDate(dateStr: string) {
 }
 
 .tl-name {
-  font-weight: 600;
-  color: var(--text-primary);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
 }
 
 .tl-email {
-  font-size: 12px;
-  color: var(--text-muted);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
 }
 
 .members-list {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: var(--spacing-sm);
 }
 
 .member-count {
-  font-size: 14px;
-  color: var(--text-secondary);
+  font-size: var(--font-size-md);
+  color: var(--color-text-secondary);
 }
 
 .config-info {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: var(--spacing-sm);
 }
 
 .config-item {
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: 14px;
-  color: var(--text-secondary);
+  gap: var(--spacing-sm);
+  font-size: var(--font-size-md);
+  color: var(--color-text-secondary);
 }
 
 .config-label {
-  color: var(--text-muted);
-}
-
-/* Milestones */
-.milestones-timeline {
-  display: flex;
-  gap: 16px;
-  flex-wrap: wrap;
-}
-
-.milestone-item {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 12px;
-  background: rgba(255, 255, 255, 0.03);
-  border-radius: 8px;
-}
-
-.milestone-info {
-  display: flex;
-  flex-direction: column;
-}
-
-.milestone-name {
-  font-weight: 600;
-  font-size: 14px;
-  color: var(--text-primary);
-}
-
-.milestone-date {
-  font-size: 11px;
-  color: var(--text-muted);
+  color: var(--color-text-muted);
 }
 
 /* Layers Section */
 .layers-section {
-  background: var(--bg-secondary);
-  border-radius: 16px;
-  padding: 24px;
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  background: var(--color-bg-secondary);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-lg);
+  border: 1px solid var(--color-border-light);
 }
 
 .layers-section h2 {
-  margin: 0 0 20px;
-  font-size: 20px;
-  font-weight: 600;
-  color: var(--text-primary);
-}
-
-.layer-tabs :deep(.ant-tabs-nav) {
-  margin-bottom: 20px;
+  margin: 0 0 var(--spacing-lg);
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
 }
 
 .layer-content {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: var(--spacing-lg);
 }
 
 .layer-info {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: var(--spacing-md);
 }
 
 .layer-type {
   padding: 4px 12px;
-  border-radius: 12px;
-  font-size: 12px;
-  font-weight: 600;
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
   text-transform: uppercase;
 }
 
 .layer-type.release {
-  background: rgba(139, 92, 246, 0.15);
-  color: #a78bfa;
+  background: var(--color-bg-indigo);
+  color: var(--color-accent-secondary);
 }
 
 .layer-type.custom {
-  background: rgba(59, 130, 246, 0.15);
-  color: #3b82f6;
+  background: var(--color-bg-info);
+  color: var(--color-accent-primary);
 }
 
 .pipeline-stages {
-  font-size: 14px;
-  color: var(--text-secondary);
+  font-size: var(--font-size-md);
+  color: var(--color-text-secondary);
 }
 
-/* Pipeline Config */
 .pipeline-config {
   background: rgba(255, 255, 255, 0.02);
-  border-radius: 12px;
-  padding: 16px;
+  border-radius: var(--radius-md);
+  padding: var(--spacing-md);
 }
 
 .pipeline-config h4 {
-  margin: 0 0 12px;
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--text-secondary);
+  margin: 0 0 var(--spacing-sm);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-secondary);
 }
 
 .stage-chips {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: var(--spacing-sm);
 }
 
-.stage-chip {
-  padding: 6px 12px;
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 16px;
-  font-size: 12px;
-  color: var(--text-secondary);
-}
-
-.stage-chip.required {
-  background: rgba(139, 92, 246, 0.1);
-  color: #a78bfa;
-}
-
-.required-mark {
-  color: var(--accent-danger);
-  margin-left: 2px;
-}
-
-/* Builds Section */
 .builds-section h4 {
-  margin: 0 0 16px;
-  font-size: 16px;
-  font-weight: 600;
-  color: var(--text-primary);
+  margin: 0 0 var(--spacing-md);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
 }
 
 .builds-list {
   display: flex;
   flex-direction: column;
-  gap: 16px;
-}
-
-.build-card {
-  background: rgba(255, 255, 255, 0.02);
-  border-radius: 12px;
-  padding: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-.build-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 16px;
-}
-
-.build-info {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.build-number {
-  font-weight: 700;
-  font-size: 16px;
-  color: var(--text-primary);
-}
-
-.build-branch {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  font-size: 14px;
-  color: var(--text-secondary);
-}
-
-.build-meta {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  font-size: 13px;
-  color: var(--text-muted);
-}
-
-/* Build Stages */
-.build-stages {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-bottom: 12px;
-}
-
-.stage-block {
-  padding: 8px 12px;
-  background: rgba(0, 0, 0, 0.2);
-  border-radius: 6px;
-  border-left: 3px solid;
-  display: flex;
-  flex-direction: column;
-  min-width: 80px;
-}
-
-.stage-name {
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--text-primary);
-}
-
-.stage-duration {
-  font-size: 11px;
-  color: var(--text-muted);
-}
-
-/* TR Status */
-.tr-status {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 12px;
-}
-
-.tr-label {
-  font-size: 13px;
-  color: var(--text-secondary);
-}
-
-.tr-badge {
-  padding: 4px 10px;
-  border-radius: 12px;
-  font-size: 12px;
-  font-weight: 600;
-}
-
-.tr-badge.available {
-  background: rgba(34, 197, 94, 0.15);
-  color: #22c55e;
-}
-
-.tr-badge.pending_approval {
-  background: rgba(234, 179, 8, 0.15);
-  color: #eab308;
-}
-
-.tr-badge.approved {
-  background: rgba(59, 130, 246, 0.15);
-  color: #3b82f6;
-}
-
-.tr-badge.rejected {
-  background: rgba(239, 68, 68, 0.15);
-  color: #ef4444;
-}
-
-/* Build Artifacts */
-.build-artifacts {
-  display: flex;
-  gap: 8px;
-  padding-top: 12px;
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  gap: var(--spacing-md);
 }
 </style>

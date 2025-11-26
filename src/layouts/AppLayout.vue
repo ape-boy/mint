@@ -1,143 +1,160 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
-import { 
-  HomeOutlined, 
-  BuildOutlined, 
-  RocketOutlined, 
-  ProjectOutlined, 
-  RobotOutlined, 
+import {
+  HomeOutlined,
+  BuildOutlined,
+  ProjectOutlined,
   SettingOutlined,
-  SearchOutlined,
   BellOutlined,
   UserOutlined,
   MenuFoldOutlined,
-  MenuUnfoldOutlined
+  MenuUnfoldOutlined,
 } from '@ant-design/icons-vue'
 
 const router = useRouter()
 const route = useRoute()
 const collapsed = ref(false)
-const selectedKeys = ref<string[]>(['home'])
+const selectedKeys = ref<string[]>([])
 
-// Simple Breadcrumb Logic
+// Route to menu key mapping
+const routeMenuMap: Record<string, string> = {
+  '/': 'projects',
+  '/dashboard': 'dashboard',
+  '/build': 'builds',
+  '/settings': 'settings',
+}
+
+// Update selected menu based on route
+watch(
+  () => route.path,
+  (path) => {
+    // Find the base path (first segment)
+    const basePath = '/' + (path.split('/').filter(Boolean)[0] || '')
+    const menuKey = routeMenuMap[basePath] || routeMenuMap[path]
+    if (menuKey) {
+      selectedKeys.value = [menuKey]
+    }
+  },
+  { immediate: true }
+)
+
+// Breadcrumb generation based on route meta
 const breadcrumbs = computed(() => {
-  const path = route.path
-  const parts = path.split('/').filter(Boolean)
   const crumbs = [{ name: 'Home', path: '/' }]
-  
-  let currentPath = ''
-  parts.forEach(part => {
-    currentPath += `/${part}`
-    crumbs.push({ 
-      name: part.charAt(0).toUpperCase() + part.slice(1), 
-      path: currentPath 
+
+  if (route.meta?.title && route.path !== '/') {
+    // Add parent breadcrumb if exists
+    if (route.meta?.breadcrumb) {
+      const parentRoute = router.getRoutes().find(r => r.name === route.meta?.breadcrumb)
+      if (parentRoute) {
+        crumbs.push({
+          name: parentRoute.meta?.title as string || route.meta.breadcrumb as string,
+          path: parentRoute.path,
+        })
+      }
+    }
+    // Add current page
+    crumbs.push({
+      name: route.meta.title as string,
+      path: route.path,
     })
-  })
+  }
+
   return crumbs
 })
 
-const handleMenuClick = (e: any) => {
-  switch (e.key) {
-    case 'home': router.push('/dashboard'); break;
-    case 'project': router.push('/'); break;
-    case 'build': router.push('/build'); break;
-    case 'aiops': router.push('/aiops'); break;
-    case 'settings': router.push('/settings'); break;
+const menuItems = [
+  { key: 'dashboard', icon: HomeOutlined, label: 'Dashboard', path: '/dashboard' },
+  { key: 'projects', icon: ProjectOutlined, label: 'Projects', path: '/' },
+  { key: 'builds', icon: BuildOutlined, label: 'Builds', path: '/build' },
+  { key: 'settings', icon: SettingOutlined, label: 'Settings', path: '/settings' },
+]
+
+function handleMenuClick(e: { key: string }) {
+  const item = menuItems.find(m => m.key === e.key)
+  if (item) {
+    router.push(item.path)
   }
+}
+
+function goHome() {
+  router.push('/')
 }
 </script>
 
 <template>
   <a-layout class="app-layout">
-    <a-layout-sider 
-      v-model:collapsed="collapsed" 
-      :trigger="null" 
-      collapsible 
+    <a-layout-sider
+      v-model:collapsed="collapsed"
+      :trigger="null"
+      collapsible
       width="260"
-      class="enterprise-sider"
+      class="app-sider"
     >
-      <div class="logo-container">
-        <img src="/src/assets/logo.png" alt="Logo" class="logo-img" />
-        <span v-if="!collapsed" class="logo-text">SE DevOps Portal</span>
+      <div class="logo-container" @click="goHome">
+        <img src="@/assets/mint_portal_logo.png" alt="MintPortal" class="logo-image" />
+        <span v-if="!collapsed" class="logo-text">MintPortal</span>
       </div>
-      
-      <a-menu 
-        v-model:selectedKeys="selectedKeys" 
-        theme="dark" 
-        mode="inline" 
+
+      <a-menu
+        v-model:selectedKeys="selectedKeys"
+        theme="dark"
+        mode="inline"
         @click="handleMenuClick"
-        class="enterprise-menu"
+        class="app-menu"
       >
-        <a-menu-item key="home">
-          <home-outlined />
-          <span>Dashboard</span>
-        </a-menu-item>
-        <a-menu-item key="project">
-          <project-outlined />
-          <span>Projects</span>
-        </a-menu-item>
-        <a-menu-item key="build">
-          <build-outlined />
-          <span>Builds</span>
-        </a-menu-item>
-        <a-menu-item key="settings">
-          <setting-outlined />
-          <span>Settings</span>
-        </a-menu-item>
-        <a-menu-item key="aiops">
-          <robot-outlined />
-          <span>AI Ops (Admin)</span>
+        <a-menu-item v-for="item in menuItems" :key="item.key">
+          <component :is="item.icon" />
+          <span>{{ item.label }}</span>
         </a-menu-item>
       </a-menu>
     </a-layout-sider>
-    
+
     <a-layout>
-      <a-layout-header class="enterprise-header">
+      <a-layout-header class="app-header">
         <div class="header-left">
-          <menu-unfold-outlined
+          <MenuUnfoldOutlined
             v-if="collapsed"
             class="trigger"
-            @click="() => (collapsed = !collapsed)"
+            @click="collapsed = !collapsed"
           />
-          <menu-fold-outlined v-else class="trigger" @click="() => (collapsed = !collapsed)" />
-          
-          <!-- Breadcrumbs -->
+          <MenuFoldOutlined
+            v-else
+            class="trigger"
+            @click="collapsed = !collapsed"
+          />
+
           <a-breadcrumb class="header-breadcrumb">
             <a-breadcrumb-item v-for="crumb in breadcrumbs" :key="crumb.path">
               <router-link :to="crumb.path">{{ crumb.name }}</router-link>
             </a-breadcrumb-item>
           </a-breadcrumb>
         </div>
-        
+
         <div class="header-right">
-          <div class="search-wrapper">
-            <search-outlined class="search-icon" />
-            <input type="text" placeholder="Search..." class="search-input" />
-          </div>
-          
           <a-button type="text" class="icon-btn">
-            <bell-outlined />
+            <BellOutlined />
           </a-button>
-          
+
           <a-dropdown placement="bottomRight">
             <div class="user-profile">
               <a-avatar size="small" class="user-avatar">
-                <template #icon><user-outlined /></template>
+                <template #icon><UserOutlined /></template>
               </a-avatar>
               <span class="username">Admin User</span>
             </div>
             <template #overlay>
               <a-menu>
-                <a-menu-item>Profile</a-menu-item>
-                <a-menu-item>Logout</a-menu-item>
+                <a-menu-item @click="router.push('/settings')">Profile</a-menu-item>
+                <a-menu-item @click="router.push('/login')">Logout</a-menu-item>
               </a-menu>
             </template>
           </a-dropdown>
         </div>
       </a-layout-header>
-      
-      <a-layout-content class="enterprise-content">
+
+      <a-layout-content class="app-content">
         <router-view v-slot="{ Component }">
           <transition name="fade" mode="out-in">
             <component :is="Component" />
@@ -154,10 +171,10 @@ const handleMenuClick = (e: any) => {
 }
 
 /* Sidebar */
-.enterprise-sider {
-  background: #0f172a !important; /* Dark Navy Sidebar for Contrast */
-  border-right: 1px solid #1e293b;
-  box-shadow: 2px 0 8px rgba(0,0,0,0.15);
+.app-sider {
+  background: var(--color-bg-primary) !important;
+  border-right: 1px solid var(--color-border-light);
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.3);
   z-index: 10;
 }
 
@@ -165,168 +182,147 @@ const handleMenuClick = (e: any) => {
   height: 64px;
   display: flex;
   align-items: center;
-  padding: 0 24px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  background: #0f172a;
+  padding: 0 var(--spacing-lg);
+  border-bottom: 1px solid var(--color-border-light);
+  background: transparent;
+  cursor: pointer;
+  transition: background var(--transition-fast);
 }
 
-.logo-img {
+.logo-container:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.logo-image {
   width: 32px;
   height: 32px;
-  margin-right: 12px;
-  border-radius: 4px;
+  margin-right: var(--spacing-sm);
 }
 
 .logo-text {
-  font-size: 18px;
-  font-weight: 700;
-  color: #f8fafc; /* White Text */
-  letter-spacing: -0.5px;
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  background: linear-gradient(135deg, var(--color-accent-primary), var(--color-accent-secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
-.enterprise-menu {
+.app-menu {
   background: transparent;
   border-right: none;
-  padding-top: 16px;
+  padding-top: var(--spacing-md);
 }
 
-.enterprise-menu :deep(.ant-menu-item) {
-  margin: 4px 12px;
-  width: calc(100% - 24px);
-  border-radius: 4px;
-  color: #94a3b8; /* Muted Text */
+.app-menu :deep(.ant-menu-item) {
+  margin: 4px var(--spacing-sm);
+  width: calc(100% - var(--spacing-lg));
+  border-radius: var(--radius-sm);
+  color: var(--color-text-muted);
 }
 
-.enterprise-menu :deep(.ant-menu-item-selected) {
-  background-color: var(--accent-primary) !important;
-  color: white !important;
+.app-menu :deep(.ant-menu-item-selected) {
+  background: linear-gradient(135deg, var(--color-accent-primary), var(--color-accent-secondary)) !important;
+  color: var(--color-bg-primary) !important;
+  font-weight: var(--font-weight-semibold);
 }
 
-.enterprise-menu :deep(.ant-menu-item:hover) {
-  color: white;
-  background-color: rgba(255, 255, 255, 0.05);
+.app-menu :deep(.ant-menu-item:hover:not(.ant-menu-item-selected)) {
+  color: var(--color-text-primary);
+  background-color: var(--color-bg-tertiary);
 }
 
 /* Header */
-.enterprise-header {
-  background: #ffffff;
-  padding: 0 24px;
+.app-header {
+  background: rgba(24, 24, 27, 0.8);
+  backdrop-filter: blur(12px);
+  padding: 0 var(--spacing-2xl);
   height: 64px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--color-border-light);
   z-index: 9;
+  position: sticky;
+  top: 0;
 }
 
 .header-left {
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: var(--spacing-lg);
 }
 
 .trigger {
-  font-size: 18px;
+  font-size: var(--font-size-lg);
   cursor: pointer;
-  transition: color 0.3s;
-  color: var(--text-secondary);
+  transition: color var(--transition-fast);
+  color: var(--color-text-secondary);
 }
 
 .trigger:hover {
-  color: var(--accent-primary);
+  color: var(--color-accent-primary);
 }
 
 .header-breadcrumb {
-  margin-left: 8px;
+  margin-left: var(--spacing-sm);
 }
 
-.header-breadcrumb :deep(.ant-breadcrumb-link) {
-  color: var(--text-secondary);
-}
-
+.header-breadcrumb :deep(.ant-breadcrumb-link),
 .header-breadcrumb :deep(.ant-breadcrumb-link a) {
-  color: var(--text-secondary);
+  color: var(--color-text-secondary);
 }
 
 .header-breadcrumb :deep(.ant-breadcrumb-link a:hover) {
-  color: var(--accent-primary);
+  color: var(--color-accent-primary);
 }
 
 /* Header Right */
 .header-right {
   display: flex;
   align-items: center;
-  gap: 16px;
-}
-
-.search-wrapper {
-  position: relative;
-  margin-right: 16px;
-}
-
-.search-icon {
-  position: absolute;
-  left: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: var(--text-muted);
-}
-
-.search-input {
-  background: var(--bg-secondary);
-  border: 1px solid var(--border-color);
-  border-radius: 4px;
-  padding: 6px 12px 6px 32px;
-  color: var(--text-primary);
-  width: 200px;
-  outline: none;
-  transition: all 0.2s;
-}
-
-.search-input:focus {
-  border-color: var(--accent-primary);
-  background: #ffffff;
-  width: 240px;
+  gap: var(--spacing-md);
 }
 
 .icon-btn {
-  color: var(--text-secondary);
-  font-size: 18px;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-lg);
 }
 
 .icon-btn:hover {
-  color: var(--accent-primary);
+  color: var(--color-accent-primary);
 }
 
 .user-profile {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--spacing-sm);
   cursor: pointer;
-  padding: 4px 8px;
-  border-radius: 4px;
-  transition: background 0.2s;
+  padding: 4px var(--spacing-sm);
+  border-radius: var(--radius-sm);
+  transition: background var(--transition-fast);
 }
 
 .user-profile:hover {
-  background: var(--bg-secondary);
+  background: var(--color-bg-tertiary);
 }
 
 .user-avatar {
-  background: var(--accent-primary);
-  color: white;
+  background: var(--color-accent-primary);
+  color: var(--color-bg-primary);
+  font-weight: var(--font-weight-semibold);
 }
 
 .username {
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--text-primary);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
 }
 
 /* Content */
-.enterprise-content {
-  padding: 24px;
-  background: var(--bg-secondary);
+.app-content {
+  padding: var(--spacing-2xl);
+  background: var(--color-bg-primary);
   overflow-y: auto;
 }
 

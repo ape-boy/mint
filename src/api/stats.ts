@@ -1,4 +1,4 @@
-import api from './axios'
+import api from './client'
 import type { DashboardStats } from '@/types'
 
 export const statsApi = {

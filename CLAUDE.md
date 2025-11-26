@@ -177,34 +177,73 @@ index.html → src/main.ts → App.vue → Router → Views
 ```
 src/
 ├── api/                    # API 서비스 모듈
-│   ├── axios.ts           # Axios 인스턴스 (인터셉터 포함)
+│   ├── client.ts          # Axios 인스턴스 (인터셉터 포함)
+│   ├── index.ts           # API exports
 │   ├── projectGroup.ts    # Project Group API
 │   ├── project.ts         # Project API
 │   ├── layer.ts           # Layer API
 │   ├── build.ts           # Build API
 │   └── stats.ts           # Dashboard Stats API
+├── components/             # 재사용 컴포넌트
+│   ├── common/            # 공통 UI 컴포넌트
+│   │   ├── PageHeader.vue
+│   │   ├── StatusBadge.vue
+│   │   ├── EmptyState.vue
+│   │   └── index.ts
+│   ├── project/           # 프로젝트 도메인 컴포넌트
+│   │   ├── ProjectCard.vue
+│   │   ├── ProjectGroupSidebar.vue
+│   │   ├── MilestoneTimeline.vue
+│   │   └── index.ts
+│   ├── build/             # 빌드 도메인 컴포넌트
+│   │   ├── PipelineVisualization.vue
+│   │   ├── BuildCard.vue
+│   │   ├── StageChip.vue
+│   │   └── index.ts
+│   ├── dashboard/         # 대시보드 컴포넌트
+│   │   ├── StatCard.vue
+│   │   ├── RecentBuildsList.vue
+│   │   ├── ActiveProjectsList.vue
+│   │   └── index.ts
+│   └── index.ts           # 전체 컴포넌트 exports
+├── composables/            # Vue Composables
+│   ├── useStatus.ts       # 상태 아이콘/색상 로직
+│   ├── useFormat.ts       # 날짜/시간/숫자 포맷팅
+│   └── index.ts
+├── styles/                 # 글로벌 스타일
+│   ├── variables.css      # CSS 커스텀 프로퍼티
+│   ├── base.css           # 리셋 및 기본 스타일
+│   ├── components.css     # 재사용 컴포넌트 스타일
+│   └── index.css          # 스타일 imports
 ├── types/                  # TypeScript 타입 정의
-│   └── index.ts           # ProjectGroup, Project, Layer, Build, Pipeline 타입
+│   └── index.ts
 ├── stores/                 # Pinia 상태 관리
 │   ├── projectGroup.ts
 │   ├── project.ts
 │   ├── layer.ts
-│   ├── build.ts
-│   └── ...
+│   └── build.ts
 ├── views/                  # 페이지 컴포넌트
-│   ├── ProjectListView.vue   # 프로젝트 목록 (Card/Table 뷰 지원)
-│   ├── ProjectDetailView.vue # 프로젝트 상세 (TL, Members, Layers, Builds)
+│   ├── HomeView.vue
+│   ├── ProjectListView.vue
+│   ├── ProjectDetailView.vue
 │   ├── BuildListView.vue
 │   ├── BuildDetailView.vue
-│   ├── HomeView.vue          # 대시보드 (Mock API 연동)
-│   └── ...
-├── layouts/               # 레이아웃 컴포넌트
-│   └── AppLayout.vue      # Glassmorphism Sidebar/Header
-├── router/                # 라우트 정의
-│   └── index.ts
-└── style.css              # 글로벌 CSS 변수
+│   ├── BuildNewView.vue
+│   ├── LoginView.vue
+│   └── SettingsView.vue
+├── layouts/
+│   └── AppLayout.vue
+└── router/
+    └── index.ts
+tests/
+└── e2e/                    # E2E 테스트
+    ├── api.test.sh        # API 엔드포인트 테스트
+    ├── scenarios.test.sh  # 사용자 시나리오 테스트
+    └── README.md
 mock-server/
-└── db.json                # Mock 데이터 (Numeric IDs)
+└── db.json                # Mock 데이터
+docs/
+└── REFACTORING_PRD.md     # 리팩토링 PRD 문서
 ```
 
 ### Routing Pattern
@@ -235,6 +274,109 @@ npm run build     # 프로덕션 빌드 (TypeScript 체크 포함)
 npm run preview   # 프로덕션 빌드 미리보기
 npm run mock      # Mock 서버 실행 (port 3001)
 npm run dev:all   # Mock 서버 + 개발 서버 동시 실행
+npm run test:e2e  # E2E 테스트 실행 (Mock 서버 필요)
+```
+
+---
+
+## Development & Testing Rules (개발 및 테스트 규칙)
+
+### Mock-First Development (Mock 우선 개발 원칙)
+
+**모든 개발 및 테스트는 `mock-server/db.json` 기반으로 진행되어야 합니다.**
+
+#### 핵심 원칙
+
+| 규칙 | 설명 |
+|------|------|
+| **Mock 데이터 완전성** | 모든 API endpoint는 `mock-server/db.json`에 100% mocking 되어야 함 |
+| **실제 코드 내 Mock 금지** | 컴포넌트/서비스 코드에 하드코딩된 mock 데이터 삽입 금지 |
+| **임의 데이터 금지** | 테스트 통과를 위한 임의의 더미 데이터 사용 금지 |
+| **TDD 방식 준수** | 새 기능 개발 시 mock 데이터 → API → UI 순서로 구현 |
+
+#### 개발 워크플로우
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  1. Mock 서버 실행                                              │
+│     npm run mock  (port 3001)                                   │
+├─────────────────────────────────────────────────────────────────┤
+│  2. 기능 구현/수정/변경                                          │
+│     - 새 API 필요 시 → db.json에 먼저 데이터 추가               │
+│     - 기존 API 변경 시 → db.json 스키마도 함께 수정             │
+├─────────────────────────────────────────────────────────────────┤
+│  3. Mock 서버 검증 (필수)                                       │
+│     - curl 또는 브라우저로 API 응답 확인                        │
+│     - 예: curl http://localhost:3001/api/projects               │
+├─────────────────────────────────────────────────────────────────┤
+│  4. 통합 테스트                                                  │
+│     npm run dev:all  (Mock + Dev 서버 동시 실행)                │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+#### 금지 사항 (Anti-patterns)
+
+```typescript
+// ❌ 금지: 컴포넌트 내 하드코딩된 mock 데이터
+const mockProjects = [
+  { id: 1, name: 'Test Project' }  // 절대 금지
+]
+
+// ❌ 금지: API 실패 시 fallback mock 데이터
+const projects = await fetchProjects().catch(() => [
+  { id: 1, name: 'Fallback' }  // 절대 금지
+])
+
+// ❌ 금지: 테스트용 임시 데이터
+if (import.meta.env.DEV) {
+  return fakeData  // 절대 금지
+}
+```
+
+```typescript
+// ✅ 올바른 방식: 항상 mock-server API 호출
+const projects = await projectApi.getProjects()
+
+// ✅ 올바른 방식: 새 기능은 db.json에 먼저 데이터 추가 후 개발
+// mock-server/db.json에 데이터 추가 → API 호출 → UI 구현
+```
+
+#### Mock 데이터 변경 체크리스트
+
+기능 구현/수정/변경 후 반드시 확인:
+
+- [ ] `mock-server/db.json`에 필요한 모든 데이터가 존재하는가?
+- [ ] 새로 추가된 API endpoint가 db.json 스키마와 일치하는가?
+- [ ] ID 컨벤션을 준수하는가? (Project: 1000-1999, Layer: 2000-2999, Build: 3000-3999)
+- [ ] `npm run mock` 실행 후 API 응답이 정상인가?
+- [ ] 관계 데이터(groupId, projectId, layerId)가 올바르게 연결되어 있는가?
+
+#### E2E 테스트 규칙
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│ E2E 테스트는 반드시 mock-server가 제공하는 시나리오 내에서     │
+│ 수행되어야 합니다.                                              │
+├─────────────────────────────────────────────────────────────────┤
+│ • 테스트 시나리오 = db.json에 존재하는 데이터                   │
+│ • 새 테스트 케이스 = db.json에 먼저 데이터 추가                 │
+│ • 엣지 케이스 테스트 = db.json에 해당 케이스 데이터 추가        │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+#### Mock 서버 실행 확인
+
+```bash
+# Mock 서버 단독 실행
+npm run mock
+
+# 정상 실행 확인
+curl http://localhost:3001/api/projects
+curl http://localhost:3001/api/builds
+curl http://localhost:3001/api/stats
+
+# 개발 서버와 함께 실행
+npm run dev:all
 ```
 
 ---

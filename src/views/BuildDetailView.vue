@@ -1,156 +1,136 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import {
-  CheckCircleOutlined,
-  CloseCircleOutlined,
-  SyncOutlined,
-  ClockCircleOutlined,
-  StopOutlined,
-  ArrowLeftOutlined,
-  DownloadOutlined,
-  BranchesOutlined,
-  UserOutlined
-} from '@ant-design/icons-vue'
+import { ArrowLeftOutlined, DownloadOutlined, BranchesOutlined, UserOutlined } from '@ant-design/icons-vue'
+import { StatusBadge, EmptyState, PipelineVisualization } from '@/components'
 import { useBuildStore } from '@/stores/build'
+import { useProjectStore } from '@/stores/project'
+import { useLayerStore } from '@/stores/layer'
+import { useFormat } from '@/composables'
 import type { Build } from '@/types'
 
 const route = useRoute()
 const router = useRouter()
 const buildStore = useBuildStore()
+const projectStore = useProjectStore()
+const layerStore = useLayerStore()
+const { formatDuration, formatDateTime } = useFormat()
+
 const build = ref<Build | null>(null)
 
 onMounted(async () => {
   const buildId = route.params.id as string
   await buildStore.fetchBuildById(buildId)
   build.value = buildStore.currentBuild
+
+  if (build.value) {
+    await Promise.all([
+      projectStore.fetchProjects(),
+      layerStore.fetchLayers(build.value.projectId)
+    ])
+  }
 })
 
-function getStatusColor(status: string) {
-  switch (status) {
-    case 'success': return 'var(--accent-success)'
-    case 'failed': return 'var(--accent-danger)'
-    case 'running': return 'var(--accent-primary)'
-    case 'pending': return 'var(--accent-warning)'
-    default: return 'var(--text-muted)'
-  }
-}
+const project = computed(() => {
+  if (!build.value) return null
+  return projectStore.projects.find((p) => p.id === build.value!.projectId)
+})
 
-function getStatusIcon(status: string) {
-  switch (status) {
-    case 'success': return CheckCircleOutlined
-    case 'failed': return CloseCircleOutlined
-    case 'running': return SyncOutlined
-    case 'pending': return ClockCircleOutlined
-    default: return StopOutlined
-  }
-}
-
-function formatDuration(seconds: number | null | undefined) {
-  if (!seconds) return '-'
-  const mins = Math.floor(seconds / 60)
-  const secs = seconds % 60
-  return mins > 0 ? `${mins}m ${secs}s` : `${secs}s`
-}
+const layer = computed(() => {
+  if (!build.value) return null
+  return layerStore.layers.find((l) => l.id === build.value!.layerId)
+})
 </script>
 
 <template>
-  <div class="build-detail-page" v-if="build">
-    <!-- Header -->
-    <div class="page-header">
-      <div class="header-left">
-        <a-button type="text" @click="router.back()">
-          <template #icon><arrow-left-outlined /></template>
-        </a-button>
-        <div class="title-section">
-          <h1>Build #{{ build.buildNumber }}</h1>
-          <span class="status-badge" :style="{ color: getStatusColor(build.status), borderColor: getStatusColor(build.status) }">
-            <component :is="getStatusIcon(build.status)" /> {{ build.status }}
-          </span>
-        </div>
-      </div>
-      <div class="header-right">
-        <a-button v-if="build.artifacts?.binaryUrl" type="primary" ghost>
-          <template #icon><download-outlined /></template>
-          Binary
-        </a-button>
-        <a-button v-if="build.artifacts?.logsUrl">
-          <template #icon><download-outlined /></template>
-          Logs
-        </a-button>
-      </div>
-    </div>
-
-    <!-- Pipeline Visualization -->
-    <div class="pipeline-section">
-      <h3>Build Pipeline</h3>
-      <div class="pipeline-container">
-        <div v-for="(stage, index) in build.stages" :key="stage.name" class="pipeline-stage">
-          <div class="stage-node" :class="stage.status">
-            <div class="stage-icon">
-              <component :is="getStatusIcon(stage.status)" :spin="stage.status === 'running'" />
-            </div>
-            <div class="stage-info">
-              <span class="stage-name">{{ stage.name }}</span>
-              <span class="stage-duration">{{ formatDuration(stage.duration) }}</span>
-            </div>
+  <div class="build-detail-view">
+    <template v-if="build">
+      <!-- Header -->
+      <div class="page-header">
+        <div class="header-left">
+          <a-button type="text" @click="router.back()">
+            <template #icon><ArrowLeftOutlined /></template>
+          </a-button>
+          <div class="title-section">
+            <h1>Build #{{ build.buildNumber }}</h1>
+            <StatusBadge :status="build.status" type="build" />
           </div>
-          <div v-if="index < build.stages.length - 1" class="stage-connector" :class="stage.status"></div>
         </div>
-      </div>
-    </div>
-
-    <!-- Details Grid -->
-    <div class="details-grid">
-      <div class="detail-card">
-        <h3>Build Information</h3>
-        <div class="info-row">
-          <span class="label">Project ID</span>
-          <span class="value">{{ build.projectId }}</span>
-        </div>
-        <div class="info-row">
-          <span class="label">Layer ID</span>
-          <span class="value">{{ build.layerId }}</span>
-        </div>
-        <div class="info-row">
-          <span class="label">Branch</span>
-          <span class="value"><branches-outlined /> {{ build.branch }}</span>
-        </div>
-        <div class="info-row">
-          <span class="label">Commit</span>
-          <span class="value commit-hash">{{ build.commitHash }}</span>
-        </div>
-        <div class="info-row">
-          <span class="label">Triggered By</span>
-          <span class="value"><user-outlined /> {{ build.triggeredBy }}</span>
+        <div class="header-right">
+          <a-button v-if="build.artifacts?.binaryUrl" type="primary" ghost>
+            <template #icon><DownloadOutlined /></template>
+            Binary
+          </a-button>
+          <a-button v-if="build.artifacts?.logsUrl">
+            <template #icon><DownloadOutlined /></template>
+            Logs
+          </a-button>
         </div>
       </div>
 
-      <div class="detail-card">
-        <h3>Timing</h3>
-        <div class="info-row">
-          <span class="label">Started At</span>
-          <span class="value">{{ new Date(build.startedAt).toLocaleString() }}</span>
+      <!-- Pipeline Visualization -->
+      <div class="pipeline-section">
+        <h3>Build Pipeline</h3>
+        <PipelineVisualization :stages="build.stages" />
+      </div>
+
+      <!-- Details Grid -->
+      <div class="details-grid">
+        <div class="detail-card">
+          <h3>Build Information</h3>
+          <div class="info-row">
+            <span class="label">Project</span>
+            <span class="value">{{ project?.name || build.projectId }}</span>
+          </div>
+          <div class="info-row">
+            <span class="label">Layer</span>
+            <span class="value">
+              <span v-if="layer" class="layer-badge" :class="layer.type">{{ layer.name }}</span>
+              <span v-else>{{ build.layerId }}</span>
+            </span>
+          </div>
+          <div class="info-row">
+            <span class="label">Branch</span>
+            <span class="value"><BranchesOutlined /> {{ build.branch }}</span>
+          </div>
+          <div class="info-row">
+            <span class="label">Commit</span>
+            <span class="value commit-hash">{{ build.commitHash }}</span>
+          </div>
+          <div class="info-row">
+            <span class="label">Triggered By</span>
+            <span class="value"><UserOutlined /> {{ build.triggeredBy }}</span>
+          </div>
         </div>
-        <div class="info-row">
-          <span class="label">Duration</span>
-          <span class="value">{{ formatDuration(build.duration) }}</span>
-        </div>
-        <div class="info-row" v-if="build.trStatus">
-          <span class="label">TR Status</span>
-          <span class="value tr-badge" :class="build.trStatus">{{ build.trStatus }}</span>
+
+        <div class="detail-card">
+          <h3>Timing</h3>
+          <div class="info-row">
+            <span class="label">Started At</span>
+            <span class="value">{{ formatDateTime(build.startedAt) }}</span>
+          </div>
+          <div class="info-row">
+            <span class="label">Duration</span>
+            <span class="value">{{ formatDuration(build.duration) }}</span>
+          </div>
+          <div class="info-row" v-if="build.trStatus">
+            <span class="label">TR Status</span>
+            <StatusBadge :status="build.trStatus" type="tr" />
+          </div>
         </div>
       </div>
-    </div>
+    </template>
+
+    <a-spin v-else-if="buildStore.loading" :spinning="true" class="loading-spinner" />
+    <EmptyState v-else title="Build not found" description="The requested build could not be found" />
   </div>
-  <a-spin v-else :spinning="true" />
 </template>
 
 <style scoped>
-.build-detail-page {
+.build-detail-view {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: var(--spacing-lg);
 }
 
 .page-header {
@@ -162,176 +142,71 @@ function formatDuration(seconds: number | null | undefined) {
 .header-left {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: var(--spacing-md);
 }
 
 .title-section {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: var(--spacing-md);
 }
 
 .title-section h1 {
   margin: 0;
-  font-size: 24px;
-}
-
-.status-badge {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 4px 12px;
-  border: 1px solid;
-  border-radius: 20px;
-  font-size: 14px;
-  font-weight: 600;
-  text-transform: uppercase;
-  background: rgba(255, 255, 255, 0.05);
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
 }
 
 .header-right {
   display: flex;
-  gap: 12px;
+  gap: var(--spacing-sm);
 }
 
-/* Pipeline Visualization */
+/* Pipeline Section */
 .pipeline-section {
-  background: var(--bg-secondary);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  border-radius: 16px;
-  padding: 24px;
-  overflow-x: auto;
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-lg);
 }
 
 .pipeline-section h3 {
-  margin: 0 0 24px;
-  font-size: 18px;
-}
-
-.pipeline-container {
-  display: flex;
-  align-items: center;
-  padding: 20px 0;
-  min-width: max-content;
-}
-
-.pipeline-stage {
-  display: flex;
-  align-items: center;
-}
-
-.stage-node {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  position: relative;
-  z-index: 2;
-  cursor: pointer;
-  transition: transform 0.2s;
-}
-
-.stage-node:hover {
-  transform: scale(1.05);
-}
-
-.stage-icon {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  background: var(--bg-tertiary);
-  border: 2px solid var(--text-muted);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 20px;
-  color: var(--text-muted);
-  transition: all 0.3s;
-}
-
-.stage-node.success .stage-icon {
-  border-color: var(--accent-success);
-  color: var(--accent-success);
-  background: rgba(16, 185, 129, 0.1);
-  box-shadow: 0 0 15px rgba(16, 185, 129, 0.3);
-}
-
-.stage-node.failed .stage-icon {
-  border-color: var(--accent-danger);
-  color: var(--accent-danger);
-  background: rgba(239, 68, 68, 0.1);
-  box-shadow: 0 0 15px rgba(239, 68, 68, 0.3);
-}
-
-.stage-node.running .stage-icon {
-  border-color: var(--accent-primary);
-  color: var(--accent-primary);
-  background: rgba(59, 130, 246, 0.1);
-  box-shadow: 0 0 15px rgba(59, 130, 246, 0.3);
-}
-
-.stage-node.skipped .stage-icon {
-  opacity: 0.5;
-}
-
-.stage-info {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2px;
-}
-
-.stage-name {
-  font-weight: 600;
-  font-size: 14px;
-  white-space: nowrap;
-}
-
-.stage-duration {
-  font-size: 12px;
-  color: var(--text-muted);
-}
-
-.stage-connector {
-  width: 60px;
-  height: 2px;
-  background: var(--text-muted);
-  opacity: 0.3;
-  margin: 0 8px;
-  margin-bottom: 24px; /* Align with icon center */
-}
-
-.stage-connector.success {
-  background: var(--accent-success);
-  opacity: 1;
+  margin: 0 0 var(--spacing-lg);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
 }
 
 /* Details Grid */
 .details-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 24px;
+  gap: var(--spacing-lg);
 }
 
 .detail-card {
-  background: var(--bg-secondary);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  border-radius: 16px;
-  padding: 24px;
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-lg);
 }
 
 .detail-card h3 {
-  margin: 0 0 20px;
-  font-size: 18px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-  padding-bottom: 12px;
+  margin: 0 0 var(--spacing-lg);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  border-bottom: 1px solid var(--color-border-light);
+  padding-bottom: var(--spacing-sm);
 }
 
 .info-row {
   display: flex;
   justify-content: space-between;
-  padding: 8px 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+  align-items: center;
+  padding: var(--spacing-sm) 0;
+  border-bottom: 1px solid var(--color-border-light);
 }
 
 .info-row:last-child {
@@ -339,46 +214,48 @@ function formatDuration(seconds: number | null | undefined) {
 }
 
 .info-row .label {
-  color: var(--text-muted);
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
 }
 
 .info-row .value {
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--spacing-xs);
 }
 
 .commit-hash {
-  font-family: monospace;
+  font-family: var(--font-mono);
   background: rgba(255, 255, 255, 0.1);
-  padding: 2px 6px;
-  border-radius: 4px;
-}
-
-.tr-badge {
   padding: 2px 8px;
-  border-radius: 8px;
-  font-size: 12px;
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-sm);
 }
 
-.tr-badge.available {
-  background: rgba(34, 197, 94, 0.15);
-  color: #22c55e;
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 300px;
 }
 
-.tr-badge.pending_approval {
-  background: rgba(234, 179, 8, 0.15);
-  color: #eab308;
+.layer-badge {
+  padding: 2px 10px;
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  text-transform: uppercase;
 }
 
-.tr-badge.approved {
-  background: rgba(59, 130, 246, 0.15);
-  color: #3b82f6;
+.layer-badge.release {
+  background: var(--color-bg-indigo);
+  color: var(--color-accent-secondary);
 }
 
-.tr-badge.rejected {
-  background: rgba(239, 68, 68, 0.15);
-  color: #ef4444;
+.layer-badge.custom {
+  background: var(--color-bg-info);
+  color: var(--color-accent-info);
 }
 </style>

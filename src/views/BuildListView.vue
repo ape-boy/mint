@@ -1,20 +1,12 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import {
-  CheckCircleOutlined,
-  CloseCircleOutlined,
-  SyncOutlined,
-  ClockCircleOutlined,
-  StopOutlined,
-  BranchesOutlined,
-  UserOutlined,
-  SearchOutlined,
-  FilterOutlined,
-} from '@ant-design/icons-vue'
+import { BranchesOutlined, UserOutlined } from '@ant-design/icons-vue'
+import { PageHeader, StatusBadge, EmptyState } from '@/components'
 import { useBuildStore } from '@/stores/build'
 import { useProjectStore } from '@/stores/project'
 import { useProjectGroupStore } from '@/stores/projectGroup'
+import { useFormat } from '@/composables'
 import type { Build, BuildStatus } from '@/types'
 
 const route = useRoute()
@@ -22,17 +14,19 @@ const router = useRouter()
 const buildStore = useBuildStore()
 const projectStore = useProjectStore()
 const projectGroupStore = useProjectGroupStore()
+const { formatDuration, formatDateTime } = useFormat()
 
 const selectedProjectId = ref<string | null>(null)
 const selectedStatus = ref<BuildStatus | null>(null)
 const searchText = ref('')
 
 onMounted(async () => {
-  await projectGroupStore.fetchProjectGroups()
-  await projectStore.fetchProjects()
-  await buildStore.fetchBuilds()
+  await Promise.all([
+    projectGroupStore.fetchProjectGroups(),
+    projectStore.fetchProjects(),
+    buildStore.fetchBuilds()
+  ])
 
-  // Check for projectId query param
   if (route.query.projectId) {
     selectedProjectId.value = route.query.projectId as string
   }
@@ -67,7 +61,6 @@ const filteredBuilds = computed(() => {
     )
   }
 
-  // Sort by startedAt descending
   return [...builds].sort(
     (a, b) => new Date(b.startedAt).getTime() - new Date(a.startedAt).getTime()
   )
@@ -104,48 +97,6 @@ function getGroupName(projectId: string) {
   return group?.name || ''
 }
 
-function getStatusIcon(status: BuildStatus) {
-  switch (status) {
-    case 'success':
-      return CheckCircleOutlined
-    case 'failed':
-      return CloseCircleOutlined
-    case 'running':
-      return SyncOutlined
-    case 'pending':
-      return ClockCircleOutlined
-    case 'cancelled':
-      return StopOutlined
-  }
-}
-
-function getStatusColor(status: BuildStatus) {
-  switch (status) {
-    case 'success':
-      return 'var(--accent-success)'
-    case 'failed':
-      return 'var(--accent-danger)'
-    case 'running':
-      return 'var(--accent-primary)'
-    case 'pending':
-      return 'var(--accent-warning)'
-    case 'cancelled':
-      return 'var(--text-muted)'
-  }
-}
-
-function formatDuration(seconds: number | null) {
-  if (seconds === null) return '-'
-  const mins = Math.floor(seconds / 60)
-  const secs = seconds % 60
-  return `${mins}m ${secs}s`
-}
-
-function formatDate(dateStr: string) {
-  const date = new Date(dateStr)
-  return date.toLocaleString()
-}
-
 function goToBuildDetail(buildId: string) {
   router.push(`/build/${buildId}`)
 }
@@ -158,55 +109,25 @@ function clearFilters() {
 }
 
 const buildColumns = [
-  {
-    title: 'Build',
-    key: 'build',
-    width: 120,
-  },
-  {
-    title: 'Status',
-    key: 'status',
-    width: 120,
-  },
-  {
-    title: 'Project',
-    key: 'project',
-    width: 200,
-  },
-  {
-    title: 'Branch',
-    key: 'branch',
-    width: 180,
-  },
-  {
-    title: 'Triggered By',
-    key: 'triggeredBy',
-    width: 140,
-  },
-  {
-    title: 'Started',
-    key: 'startedAt',
-    width: 180,
-  },
-  {
-    title: 'Duration',
-    key: 'duration',
-    width: 100,
-  },
+  { title: 'Build', key: 'build', width: 120 },
+  { title: 'Status', key: 'status', width: 120 },
+  { title: 'Project', key: 'project', width: 200 },
+  { title: 'Branch', key: 'branch', width: 180 },
+  { title: 'Triggered By', key: 'triggeredBy', width: 140 },
+  { title: 'Started', key: 'startedAt', width: 180 },
+  { title: 'Duration', key: 'duration', width: 100 },
 ]
 </script>
 
 <template>
-  <div class="build-list-page">
-    <div class="page-header">
-      <div class="header-content">
-        <h1>Builds</h1>
-        <p class="page-description">CI/CD 빌드 현황 및 이력</p>
-      </div>
-      <a-button type="primary" @click="router.push('/build/new')">
-        New Build
-      </a-button>
-    </div>
+  <div class="build-list-view">
+    <PageHeader title="Builds" description="CI/CD 빌드 현황 및 이력">
+      <template #actions>
+        <a-button type="primary" @click="router.push('/build/new')">
+          New Build
+        </a-button>
+      </template>
+    </PageHeader>
 
     <!-- Filters -->
     <div class="filters-section">
@@ -215,11 +136,7 @@ const buildColumns = [
         placeholder="Search builds..."
         style="width: 280px"
         allow-clear
-      >
-        <template #prefix>
-          <search-outlined />
-        </template>
-      </a-input-search>
+      />
 
       <a-select
         v-model:value="selectedProjectId"
@@ -227,11 +144,7 @@ const buildColumns = [
         placeholder="Filter by project"
         style="width: 240px"
         allow-clear
-      >
-        <template #prefix>
-          <filter-outlined />
-        </template>
-      </a-select>
+      />
 
       <a-select
         v-model:value="selectedStatus"
@@ -254,9 +167,10 @@ const buildColumns = [
     </div>
 
     <!-- Build Table -->
-    <div class="builds-table-container">
+    <div class="table-container">
       <a-spin :spinning="buildStore.loading">
         <a-table
+          v-if="filteredBuilds.length > 0"
           :columns="buildColumns"
           :data-source="filteredBuilds"
           :pagination="{ pageSize: 15, showSizeChanger: true }"
@@ -273,19 +187,7 @@ const buildColumns = [
             </template>
 
             <template v-else-if="column.key === 'status'">
-              <div class="status-cell">
-                <component
-                  :is="getStatusIcon(record.status)"
-                  :style="{ color: getStatusColor(record.status) }"
-                  :spin="record.status === 'running'"
-                />
-                <span
-                  class="status-text"
-                  :style="{ color: getStatusColor(record.status) }"
-                >
-                  {{ record.status }}
-                </span>
-              </div>
+              <StatusBadge :status="record.status" type="build" />
             </template>
 
             <template v-else-if="column.key === 'project'">
@@ -297,20 +199,20 @@ const buildColumns = [
 
             <template v-else-if="column.key === 'branch'">
               <div class="branch-cell">
-                <branches-outlined />
+                <BranchesOutlined />
                 <span>{{ record.branch }}</span>
               </div>
             </template>
 
             <template v-else-if="column.key === 'triggeredBy'">
               <div class="user-cell">
-                <user-outlined />
+                <UserOutlined />
                 <span>{{ record.triggeredBy }}</span>
               </div>
             </template>
 
             <template v-else-if="column.key === 'startedAt'">
-              {{ formatDate(record.startedAt) }}
+              {{ formatDateTime(record.startedAt) }}
             </template>
 
             <template v-else-if="column.key === 'duration'">
@@ -318,142 +220,99 @@ const buildColumns = [
             </template>
           </template>
         </a-table>
+        <EmptyState v-else-if="!buildStore.loading" title="No builds found" description="Adjust filters or trigger a new build" />
       </a-spin>
     </div>
   </div>
 </template>
 
 <style scoped>
-.build-list-page {
+.build-list-view {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: var(--spacing-lg);
 }
 
-.page-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-}
-
-.page-header h1 {
-  margin: 0;
-  font-size: 28px;
-  font-weight: 700;
-  background: linear-gradient(to right, #fff, #94a3b8);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-.page-description {
-  color: var(--text-muted);
-  margin: 4px 0 0;
-}
-
-/* Filters */
 .filters-section {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: var(--spacing-md);
   flex-wrap: wrap;
 }
 
 .filter-info {
   margin-left: auto;
-  color: var(--text-muted);
-  font-size: 14px;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
 }
 
-/* Table Container */
-.builds-table-container {
-  background: var(--bg-secondary);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  border-radius: 16px;
-  padding: 20px;
+.table-container {
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-lg);
 }
 
-.builds-table-container :deep(.ant-table) {
+.table-container :deep(.ant-table) {
   background: transparent;
 }
 
-.builds-table-container :deep(.ant-table-thead > tr > th) {
+.table-container :deep(.ant-table-thead > tr > th) {
   background: rgba(255, 255, 255, 0.02);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-  color: var(--text-secondary);
-  font-weight: 600;
+  border-bottom: 1px solid var(--color-border-light);
+  color: var(--color-text-secondary);
+  font-weight: var(--font-weight-semibold);
 }
 
-.builds-table-container :deep(.ant-table-tbody > tr > td) {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+.table-container :deep(.ant-table-tbody > tr > td) {
+  border-bottom: 1px solid var(--color-border-light);
 }
 
-.builds-table-container :deep(.ant-table-tbody > tr:hover > td) {
+.table-container :deep(.ant-table-tbody > tr:hover > td) {
   background: rgba(255, 255, 255, 0.03);
 }
 
-.builds-table-container :deep(.build-row) {
+.table-container :deep(.build-row) {
   cursor: pointer;
 }
 
-/* Build Number Cell */
 .build-number {
   display: flex;
   flex-direction: column;
 }
 
 .build-number .number {
-  font-weight: 600;
-  color: var(--text-primary);
-  font-family: monospace;
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  font-family: var(--font-mono);
 }
 
 .build-number .commit {
-  font-size: 12px;
-  color: var(--text-muted);
-  font-family: monospace;
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  font-family: var(--font-mono);
 }
 
-/* Status Cell */
-.status-cell {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.status-text {
-  text-transform: capitalize;
-  font-weight: 500;
-}
-
-/* Project Cell */
 .project-cell {
   display: flex;
   flex-direction: column;
 }
 
 .project-cell .project-name {
-  font-weight: 500;
-  color: var(--text-primary);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
 }
 
 .project-cell .group-name {
-  font-size: 12px;
-  color: var(--text-muted);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
 }
 
-/* Branch Cell */
-.branch-cell {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: var(--text-secondary);
-}
-
-/* User Cell */
+.branch-cell,
 .user-cell {
   display: flex;
   align-items: center;
-  gap: 8px;
-  color: var(--text-secondary);
+  gap: var(--spacing-xs);
+  color: var(--color-text-secondary);
 }
 </style>

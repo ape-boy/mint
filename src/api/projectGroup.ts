@@ -1,4 +1,4 @@
-import api from './axios'
+import api from './client'
 import type { ProjectGroup } from '@/types'
 
 export const projectGroupApi = {
