@@ -65,33 +65,6 @@ const routes: RouteRecordRaw[] = [
         },
       },
       {
-        path: 'board/notice/:id',
-        name: 'notice-detail',
-        component: () => import('../views/BoardView.vue'),
-        meta: {
-          title: 'Notice Detail',
-          breadcrumb: 'board',
-        },
-      },
-      {
-        path: 'board/voc/:id',
-        name: 'voc-detail',
-        component: () => import('../views/BoardView.vue'),
-        meta: {
-          title: 'VOC Detail',
-          breadcrumb: 'board',
-        },
-      },
-      {
-        path: 'board/release-note/:id',
-        name: 'release-note-detail',
-        component: () => import('../views/BoardView.vue'),
-        meta: {
-          title: 'Release Note Detail',
-          breadcrumb: 'board',
-        },
-      },
-      {
         path: 'settings',
         name: 'settings',
         component: () => import('../views/SettingsView.vue'),

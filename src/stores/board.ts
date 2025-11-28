@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
-import { noticeApi, releaseNoteApi, vocApi, popupApi } from '../api'
+import { noticeApi, releaseNoteApi, vocApi, popupApi } from '@/api'
 import type {
   Notice,
   NoticeQueryParams,
@@ -65,24 +65,6 @@ export const useNoticeStore = defineStore('notice', () => {
       notices.value = await noticeApi.getList(params)
     } catch (e) {
       error.value = e instanceof Error ? e.message : 'Failed to fetch notices'
-      throw e
-    } finally {
-      loading.value = false
-    }
-  }
-
-  async function fetchNoticeById(id: string) {
-    loading.value = true
-    error.value = null
-    try {
-      currentNotice.value = await noticeApi.getById(id)
-      // Increment view count
-      if (currentNotice.value) {
-        await noticeApi.incrementViewCount(id, currentNotice.value.viewCount)
-        currentNotice.value.viewCount += 1
-      }
-    } catch (e) {
-      error.value = e instanceof Error ? e.message : 'Failed to fetch notice'
       throw e
     } finally {
       loading.value = false
@@ -158,7 +140,6 @@ export const useNoticeStore = defineStore('notice', () => {
     noticesByCategory,
     // Actions
     fetchNotices,
-    fetchNoticeById,
     createNotice,
     updateNotice,
     deleteNotice,
@@ -224,24 +205,6 @@ export const useReleaseNoteStore = defineStore('releaseNote', () => {
       releaseNotes.value = await releaseNoteApi.getList(params)
     } catch (e) {
       error.value = e instanceof Error ? e.message : 'Failed to fetch release notes'
-      throw e
-    } finally {
-      loading.value = false
-    }
-  }
-
-  async function fetchReleaseNoteById(id: string) {
-    loading.value = true
-    error.value = null
-    try {
-      currentReleaseNote.value = await releaseNoteApi.getById(id)
-      // Increment view count
-      if (currentReleaseNote.value) {
-        await releaseNoteApi.incrementViewCount(id, currentReleaseNote.value.viewCount)
-        currentReleaseNote.value.viewCount += 1
-      }
-    } catch (e) {
-      error.value = e instanceof Error ? e.message : 'Failed to fetch release note'
       throw e
     } finally {
       loading.value = false
@@ -317,7 +280,6 @@ export const useReleaseNoteStore = defineStore('releaseNote', () => {
     releaseNotesByType,
     // Actions
     fetchReleaseNotes,
-    fetchReleaseNoteById,
     createReleaseNote,
     updateReleaseNote,
     deleteReleaseNote,
@@ -406,24 +368,6 @@ export const useVOCStore = defineStore('voc', () => {
       vocs.value = await vocApi.getList(params)
     } catch (e) {
       error.value = e instanceof Error ? e.message : 'Failed to fetch VOCs'
-      throw e
-    } finally {
-      loading.value = false
-    }
-  }
-
-  async function fetchVOCById(id: string) {
-    loading.value = true
-    error.value = null
-    try {
-      currentVOC.value = await vocApi.getById(id)
-      // Increment view count
-      if (currentVOC.value) {
-        await vocApi.incrementViewCount(id, currentVOC.value.viewCount)
-        currentVOC.value.viewCount += 1
-      }
-    } catch (e) {
-      error.value = e instanceof Error ? e.message : 'Failed to fetch VOC'
       throw e
     } finally {
       loading.value = false
@@ -567,7 +511,6 @@ export const useVOCStore = defineStore('voc', () => {
     overdueVOCs,
     // Actions
     fetchVOCs,
-    fetchVOCById,
     createVOC,
     updateVOC,
     deleteVOC,

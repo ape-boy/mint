@@ -17,7 +17,14 @@ npm run dev       # 개발 서버 실행 (HMR)
 npm run build     # 프로덕션 빌드 (vue-tsc + vite build)
 npm run mock      # Mock 서버 실행 (port 3001)
 npm run dev:all   # Mock 서버 + 개발 서버 동시 실행
-npm run test:e2e  # E2E 테스트 (bash tests/e2e/*.sh)
+npm run test:e2e  # E2E 테스트 (mock 서버 필요)
+```
+
+E2E 테스트 개별 실행:
+```bash
+bash tests/e2e/api.test.sh       # API 엔드포인트 테스트
+bash tests/e2e/scenarios.test.sh # 시나리오 테스트
+bash tests/e2e/board.test.sh     # 게시판 API 테스트
 ```
 
 ---
@@ -37,23 +44,27 @@ npm run test:e2e  # E2E 테스트 (bash tests/e2e/*.sh)
 ```
 src/
 ├── api/           # API modules (client.ts = Axios instance)
-├── components/    # Reusable components by domain (common/, project/, build/, dashboard/)
+├── components/    # Reusable components by domain (common/, project/, build/, board/, dashboard/)
 ├── composables/   # Vue composables (useStatus, useFormat)
-├── stores/        # Pinia stores (projectGroup, project, layer, build)
-├── types/         # TypeScript interfaces
+├── stores/        # Pinia stores (projectGroup, project, layer, build, board)
+├── types/         # TypeScript interfaces (index.ts에 모든 타입 정의)
 ├── views/         # Page components
 ├── layouts/       # AppLayout.vue
 └── router/        # Route definitions
 mock-server/
 └── db.json        # Mock data (json-server)
+tests/e2e/
+└── *.test.sh      # E2E 테스트 스크립트
 ```
 
 ### Key Patterns
 
-- **API Layer**: `src/api/client.ts` creates Axios instance with interceptors. Each entity has its own API module.
-- **Stores**: Pinia stores use Composition API style (`defineStore` with setup function)
-- **Components**: Organized by domain. Each folder has `index.ts` for barrel exports.
-- **Types**: All domain types defined in `src/types/index.ts`
+- **Path Alias**: `@/` → `src/` (vite.config.ts에서 설정)
+- **API Proxy**: `/api` → `http://localhost:3001` (개발 서버에서 프록시 처리)
+- **API Layer**: `src/api/client.ts`에서 Axios 인스턴스 생성. 각 엔티티별 API 모듈 분리
+- **Stores**: Pinia Composition API 스타일 (`defineStore` with setup function)
+- **Components**: 도메인별 폴더 구조. 각 폴더에 `index.ts` barrel export
+- **Types**: `src/types/index.ts`에 모든 도메인 타입 정의
 
 ### Routes
 
@@ -63,6 +74,7 @@ mock-server/
 | `/projects/:projectId` | ProjectDetailView |
 | `/dashboard` | HomeView |
 | `/build`, `/build/:id` | BuildListView, BuildDetailView |
+| `/board` | BoardView (공지사항, 릴리즈노트, VOC) |
 | `/login`, `/settings` | LoginView, SettingsView |
 
 ---
@@ -91,7 +103,7 @@ Project Group (제품)      → BM1743, PM9E1, PM9A3
 
 ### Pipeline Stages (파이프라인 스테이지)
 
-Build, SAM, Coverity, DoBEE, TASTY, Warning Count, BlackDuck, TEST1, TEST2
+Build, SAM, Coverity, DoBEE, TASTY, Warning Count, BlackDuck, OnBoard Test, Coding Rule Check
 
 ### TR Flow (Release Layer Only)
 
@@ -99,6 +111,14 @@ Build, SAM, Coverity, DoBEE, TASTY, Warning Count, BlackDuck, TEST1, TEST2
 All Pipeline Stages Pass? → YES → TR Available
                          → NO  → Approval Required → TR 가능
 ```
+
+### Board System (게시판)
+
+| Type | Description |
+|------|-------------|
+| **Notice** | 공지사항 - 시스템/일반/유지보수/이벤트 카테고리 |
+| **Release Note** | 릴리즈 노트 - 버전별 변경사항 문서화 |
+| **VOC** | Voice of Customer - 버그/기능요청/개선/문의 접수 및 처리 |
 
 ---
 
@@ -130,16 +150,23 @@ if (import.meta.env.DEV) return fakeData
 | Entity | ID Range |
 |--------|----------|
 | Project Group | 1-99 |
+| User | 100-199 |
 | Project | 1000-1999 |
 | Layer | 2000-2999 |
 | Build | 3000-3999 |
-| User | 100-199 |
+| Notice | 4000-4999 |
+| Release Note | 5000-5999 |
+| VOC | 6000-6999 |
 
 ### API Endpoints (json-server)
 
-Base: `http://localhost:3001/api/`
+Base: `http://localhost:3001/` (Vite proxy: `/api` → `http://localhost:3001`)
 
+**Core:**
 - `project-groups`, `projects` (?groupId=), `layers` (?projectId=), `builds` (?projectId=, ?layerId=), `stats`
+
+**Board:**
+- `notices`, `release-notes`, `vocs`
 
 ---
 

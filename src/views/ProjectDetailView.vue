@@ -395,8 +395,8 @@ const qualityColumns = [
 
     <a-spin :spinning="projectStore.loading">
       <template v-if="project">
-        <!-- Project Header -->
-        <div class="project-header">
+        <!-- Project Header (빌드 뷰에서는 숨김) -->
+        <div v-if="currentView !== 'build'" class="project-header">
           <div class="header-main">
             <div class="header-info">
               <span class="task-code">{{ project.taskCode }}</span>
@@ -514,9 +514,9 @@ const qualityColumns = [
         </div>
 
         <!-- BUILD VIEW (Single Page: Config → Build Button → Results) -->
-        <div v-else-if="currentView === 'build' && currentLayer" class="content-section">
+        <div v-else-if="currentView === 'build' && currentLayer" class="content-section build-view-section">
           <div class="build-page">
-            <!-- Layer Header -->
+            <!-- Layer Header (간소화) -->
             <div class="layer-header">
               <div class="layer-info">
                 <h2>
@@ -528,6 +528,11 @@ const qualityColumns = [
                 <a-tag :color="currentLayer.type === 'release' ? 'green' : currentLayer.type === 'layer' ? 'blue' : 'purple'">
                   {{ currentLayer.type }}
                 </a-tag>
+              </div>
+              <div class="layer-actions">
+                <a-button type="primary" @click="handleTriggerBuild">
+                  <PlayCircleOutlined /> 빌드 실행
+                </a-button>
               </div>
             </div>
 
@@ -673,13 +678,6 @@ const qualityColumns = [
                   </div>
                 </div>
               </div>
-            </div>
-
-            <!-- Build Trigger Button (간격 축소) -->
-            <div class="build-action compact">
-              <a-button type="primary" size="large" @click="handleTriggerBuild" class="build-trigger-btn">
-                <PlayCircleOutlined /> 빌드 실행
-              </a-button>
             </div>
 
             <!-- Build Results Section (테이블 형식) -->
@@ -1390,6 +1388,9 @@ const qualityColumns = [
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding-bottom: var(--spacing-md);
+  border-bottom: 1px solid var(--color-border);
+  margin-bottom: var(--spacing-lg);
 }
 
 .layer-info {
@@ -1404,6 +1405,16 @@ const qualityColumns = [
   display: flex;
   align-items: center;
   gap: var(--spacing-sm);
+}
+
+.layer-actions {
+  display: flex;
+  gap: var(--spacing-sm);
+}
+
+/* Build View Section - 프로젝트 헤더 숨김 */
+.build-view-section {
+  margin-top: 0;
 }
 
 /* Config Section */

@@ -20,7 +20,7 @@ const buildStore = useBuildStore()
 
 // Filter states
 const filters = ref({
-  groupId: undefined as string | undefined,
+  projectGroupId: undefined as string | undefined,
   oem: undefined as string | undefined,
   feature: undefined as string | undefined,
   search: '',
@@ -60,8 +60,8 @@ function getLatestBuild(projectId: string): Build | undefined {
 }
 
 // Get task group name
-function getGroupName(groupId: string): string {
-  const group = taskGroupStore.taskGroups.find(g => g.id === groupId)
+function getGroupName(projectGroupId: string): string {
+  const group = taskGroupStore.taskGroups.find(g => g.id === projectGroupId)
   return group?.name || '-'
 }
 
@@ -69,8 +69,8 @@ function getGroupName(groupId: string): string {
 const tableData = computed(() => {
   let projects = projectStore.projects
 
-  if (filters.value.groupId) {
-    projects = projects.filter(p => p.groupId === filters.value.groupId)
+  if (filters.value.projectGroupId) {
+    projects = projects.filter(p => p.projectGroupId === filters.value.projectGroupId)
   }
   if (filters.value.oem) {
     projects = projects.filter(p => p.oem === filters.value.oem)
@@ -92,7 +92,7 @@ const tableData = computed(() => {
     const latestBuild = getLatestBuild(project.id)
     return {
       ...project,
-      groupTitle: getGroupName(project.groupId),
+      groupTitle: getGroupName(project.projectGroupId),
       latestBuild,
       result: latestBuild?.status || 'pending',
       date: latestBuild?.finishedAt || latestBuild?.startedAt || project.updatedAt,
@@ -103,7 +103,7 @@ const tableData = computed(() => {
 
 function clearFilters() {
   filters.value = {
-    groupId: undefined,
+    projectGroupId: undefined,
     oem: undefined,
     feature: undefined,
     search: '',
@@ -175,7 +175,7 @@ const tableColumns = [
           <div class="filter-item">
             <label>P/J (과제 그룹)</label>
             <a-select
-              v-model:value="filters.groupId"
+              v-model:value="filters.projectGroupId"
               placeholder="전체"
               :options="taskGroupOptions"
               allow-clear

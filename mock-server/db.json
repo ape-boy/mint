@@ -28,7 +28,7 @@
   "projects": [
     {
       "id": "1001",
-      "groupId": "1",
+      "projectGroupId": "1",
       "taskCode": "BM1743-LNV-001",
       "name": "BM1743_LENOVO_1TB",
       "status": "active",
@@ -129,7 +129,7 @@
     },
     {
       "id": "1002",
-      "groupId": "1",
+      "projectGroupId": "1",
       "taskCode": "BM1743-DEL-001",
       "name": "BM1743_DELL_2TB",
       "status": "active",
@@ -202,7 +202,7 @@
     },
     {
       "id": "1003",
-      "groupId": "2",
+      "projectGroupId": "2",
       "taskCode": "PM9E1-SAM-001",
       "name": "PM9E1_SAMSUNG_512GB",
       "status": "active",
@@ -269,7 +269,7 @@
     },
     {
       "id": "1004",
-      "groupId": "3",
+      "projectGroupId": "3",
       "taskCode": "PM9A3-AWS-001",
       "name": "PM9A3_AWS_4TB",
       "status": "active",
@@ -376,7 +376,7 @@
     },
     {
       "id": "1005",
-      "groupId": "2",
+      "projectGroupId": "2",
       "taskCode": "PM9E1-HP-001",
       "name": "PM9E1_HP_256GB",
       "status": "active",
@@ -1959,6 +1959,47 @@
     "totalBuilds": 245,
     "activeProjects": 5,
     "runningBuilds": 2,
+    "recentBuilds": [
+      {
+        "id": "3001",
+        "projectId": "1001",
+        "layerId": "2001",
+        "round": 5,
+        "buildNumber": 125,
+        "status": "success",
+        "fwName": "BM1743_LENOVO_REL_v1.2.5",
+        "triggeredBy": "김철수",
+        "startedAt": "2024-11-20T09:00:00Z",
+        "finishedAt": "2024-11-20T09:45:00Z",
+        "duration": 2700
+      },
+      {
+        "id": "3002",
+        "projectId": "1001",
+        "layerId": "2002",
+        "round": 3,
+        "buildNumber": 45,
+        "status": "running",
+        "fwName": "BM1743_LENOVO_HIL_v1.2.5",
+        "triggeredBy": "이영희",
+        "startedAt": "2024-11-20T10:30:00Z",
+        "finishedAt": null,
+        "duration": null
+      },
+      {
+        "id": "3003",
+        "projectId": "1002",
+        "layerId": "2004",
+        "round": 2,
+        "buildNumber": 88,
+        "status": "failed",
+        "fwName": "BM1743_DELL_REL_v1.1.0",
+        "triggeredBy": "박민수",
+        "startedAt": "2024-11-20T08:00:00Z",
+        "finishedAt": "2024-11-20T08:30:00Z",
+        "duration": 1800
+      }
+    ],
     "qualityOverview": {
       "coverityAvg": 94,
       "samAvg": 92,

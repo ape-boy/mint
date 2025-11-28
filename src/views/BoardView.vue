@@ -37,34 +37,18 @@ const formVisible = ref(false)
 const editingItem = ref<Notice | VOC | ReleaseNote | null>(null)
 const formLoading = ref(false)
 
-// Detect tab from route path
-function detectTabFromRoute(): 'notice' | 'voc' | 'release-note' {
-  const path = route.path
-  if (path.includes('/notice/')) return 'notice'
-  if (path.includes('/voc/')) return 'voc'
-  if (path.includes('/release-note/')) return 'release-note'
-
-  // Check query param
+// Initialize tab from query param
+function getTabFromQuery(): 'notice' | 'voc' | 'release-note' {
   const tab = route.query.tab as string
   if (tab && ['notice', 'voc', 'release-note'].includes(tab)) {
     return tab as 'notice' | 'voc' | 'release-note'
   }
-
   return 'notice'
 }
 
-// Initialize from route
 onMounted(async () => {
-  // Parse route parameters
-  const id = route.params.id as string
-  activeTab.value = detectTabFromRoute()
+  activeTab.value = getTabFromQuery()
 
-  if (id) {
-    selectedId.value = id
-    viewMode.value = 'detail'
-  }
-
-  // Load data
   await Promise.all([
     noticeStore.fetchNotices(),
     vocStore.fetchVOCs(),
@@ -72,18 +56,11 @@ onMounted(async () => {
   ])
 })
 
-// Watch route changes (path and query)
-watch([() => route.path, () => route.query.tab], () => {
-  const id = route.params.id as string
-  activeTab.value = detectTabFromRoute()
-
-  if (id) {
-    selectedId.value = id
-    viewMode.value = 'detail'
-  } else {
-    viewMode.value = 'list'
-    selectedId.value = null
-  }
+// Watch query tab changes
+watch(() => route.query.tab, () => {
+  activeTab.value = getTabFromQuery()
+  viewMode.value = 'list'
+  selectedId.value = null
 })
 
 // Computed data
@@ -120,13 +97,11 @@ function handleTabChange(tab: 'notice' | 'voc' | 'release-note') {
 function handleViewDetail(id: string) {
   selectedId.value = id
   viewMode.value = 'detail'
-  router.push(`/board/${activeTab.value}/${id}`)
 }
 
 function handleBack() {
   viewMode.value = 'list'
   selectedId.value = null
-  router.push({ path: '/board', query: { tab: activeTab.value } })
 }
 
 // Create handlers

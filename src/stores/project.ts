@@ -17,7 +17,6 @@ export const useProjectStore = defineStore('project', () => {
       projects.value = response.data
     } catch (e) {
       error.value = 'Failed to fetch projects'
-      console.error(e)
     } finally {
       loading.value = false
     }
@@ -31,7 +30,6 @@ export const useProjectStore = defineStore('project', () => {
       currentProject.value = response.data
     } catch (e) {
       error.value = 'Failed to fetch project'
-      console.error(e)
     } finally {
       loading.value = false
     }
@@ -50,7 +48,6 @@ export const useProjectStore = defineStore('project', () => {
       }
     } catch (e) {
       error.value = 'Failed to update project'
-      console.error(e)
     } finally {
       loading.value = false
     }

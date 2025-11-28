@@ -17,7 +17,6 @@ export const useBuildStore = defineStore('build', () => {
       builds.value = response.data
     } catch (e) {
       error.value = 'Failed to fetch builds'
-      console.error(e)
     } finally {
       loading.value = false
     }
@@ -31,7 +30,6 @@ export const useBuildStore = defineStore('build', () => {
       currentBuild.value = response.data
     } catch (e) {
       error.value = 'Failed to fetch build'
-      console.error(e)
     } finally {
       loading.value = false
     }
@@ -50,7 +48,6 @@ export const useBuildStore = defineStore('build', () => {
       }
     } catch (e) {
       error.value = 'Failed to trigger release'
-      console.error(e)
     } finally {
       loading.value = false
     }

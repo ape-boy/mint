@@ -23,7 +23,11 @@ import {
 } from '@ant-design/icons-vue'
 import { useLayerStore } from '@/stores/layer'
 import { useProjectStore } from '@/stores/project'
+import { PopupModal } from '@/components/board'
 import type { Layer } from '@/types'
+
+// Popup modal state
+const popupVisible = ref(false)
 
 const router = useRouter()
 const route = useRoute()
@@ -96,17 +100,16 @@ watch(
       }
     } else if (path === '/dashboard') {
       selectedKeys.value = ['dashboard']
-    } else if (path === '/board' || (path as string).startsWith('/board/')) {
-      // Board 하위 메뉴 선택
+    } else if (path === '/board') {
+      // Board 메뉴 선택 (query param 기반)
       const tabValue = tab as string
-      if (tabValue === 'voc' || (path as string).includes('/voc/')) {
+      if (tabValue === 'voc') {
         selectedKeys.value = ['board-voc']
-      } else if (tabValue === 'release-note' || (path as string).includes('/release-note/')) {
+      } else if (tabValue === 'release-note') {
         selectedKeys.value = ['board-release-note']
       } else {
         selectedKeys.value = ['board-notice']
       }
-      // Board 메뉴 열기
       if (!openKeys.value.includes('board-menu')) {
         openKeys.value = [...openKeys.value, 'board-menu']
       }
@@ -245,51 +248,51 @@ const isProjectDetailPage = computed(() => {
                 <span>기본 정보</span>
               </a-menu-item>
             </a-menu-item-group>
-
-            <!-- BUILD (PROJECT 하위의 sub-menu) -->
-            <a-sub-menu key="build-menu">
-              <template #icon><BuildOutlined /></template>
-              <template #title>BUILD</template>
-
-              <!-- Release -->
-              <a-menu-item-group v-if="projectLayers.release.length > 0" title="Release">
-                <a-menu-item
-                  v-for="layer in projectLayers.release"
-                  :key="`layer-${layer.id}`"
-                >
-                  <RocketOutlined />
-                  <span>{{ layer.name }}</span>
-                </a-menu-item>
-              </a-menu-item-group>
-
-              <!-- Layer -->
-              <a-menu-item-group v-if="projectLayers.layer.length > 0" title="Layer">
-                <a-menu-item
-                  v-for="layer in projectLayers.layer"
-                  :key="`layer-${layer.id}`"
-                >
-                  <CodeOutlined />
-                  <span>{{ layer.name }}</span>
-                </a-menu-item>
-              </a-menu-item-group>
-
-              <!-- Private -->
-              <a-menu-item-group v-if="projectLayers.private.length > 0" title="Private">
-                <a-menu-item
-                  v-for="layer in projectLayers.private"
-                  :key="`layer-${layer.id}`"
-                >
-                  <ExperimentOutlined />
-                  <span>{{ layer.name }}</span>
-                </a-menu-item>
-              </a-menu-item-group>
-
-              <!-- Empty State -->
-              <a-menu-item v-if="projectLayers.release.length === 0 && projectLayers.layer.length === 0 && projectLayers.private.length === 0" disabled>
-                <span class="text-muted">등록된 Layer 없음</span>
-              </a-menu-item>
-            </a-sub-menu>
           </template>
+        </a-sub-menu>
+
+        <!-- BUILD (프로젝트 상세 페이지에서만 표시) -->
+        <a-sub-menu v-if="isProjectDetailPage" key="build-menu">
+          <template #icon><BuildOutlined /></template>
+          <template #title>BUILD</template>
+
+          <!-- Release -->
+          <a-menu-item-group v-if="projectLayers.release.length > 0" title="Release">
+            <a-menu-item
+              v-for="layer in projectLayers.release"
+              :key="`layer-${layer.id}`"
+            >
+              <RocketOutlined />
+              <span>{{ layer.name }}</span>
+            </a-menu-item>
+          </a-menu-item-group>
+
+          <!-- Layer -->
+          <a-menu-item-group v-if="projectLayers.layer.length > 0" title="Layer">
+            <a-menu-item
+              v-for="layer in projectLayers.layer"
+              :key="`layer-${layer.id}`"
+            >
+              <CodeOutlined />
+              <span>{{ layer.name }}</span>
+            </a-menu-item>
+          </a-menu-item-group>
+
+          <!-- Private -->
+          <a-menu-item-group v-if="projectLayers.private.length > 0" title="Private">
+            <a-menu-item
+              v-for="layer in projectLayers.private"
+              :key="`layer-${layer.id}`"
+            >
+              <ExperimentOutlined />
+              <span>{{ layer.name }}</span>
+            </a-menu-item>
+          </a-menu-item-group>
+
+          <!-- Empty State -->
+          <a-menu-item v-if="projectLayers.release.length === 0 && projectLayers.layer.length === 0 && projectLayers.private.length === 0" disabled>
+            <span class="text-muted">등록된 Layer 없음</span>
+          </a-menu-item>
         </a-sub-menu>
 
         <!-- 대시보드 -->
@@ -375,6 +378,9 @@ const isProjectDetailPage = computed(() => {
         </router-view>
       </a-layout-content>
     </a-layout>
+
+    <!-- Popup Modal for Notices and Release Notes -->
+    <PopupModal v-model:visible="popupVisible" />
   </a-layout>
 </template>
 

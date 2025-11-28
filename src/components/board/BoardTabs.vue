@@ -1,36 +1,35 @@
 <script setup lang="ts">
-import { computed } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
 import {
   NotificationOutlined,
   FileTextOutlined,
   CommentOutlined,
 } from '@ant-design/icons-vue'
 
-const route = useRoute()
-const router = useRouter()
+const props = defineProps<{
+  activeTab: 'notice' | 'voc' | 'release-note'
+  noticeCount?: number
+  vocCount?: number
+  releaseNoteCount?: number
+}>()
 
-const activeKey = computed(() => {
-  const path = route.path
-  if (path.includes('/board/notice')) return 'notice'
-  if (path.includes('/board/release-note')) return 'release-note'
-  if (path.includes('/board/voc')) return 'voc'
-  return 'notice'
-})
+const emit = defineEmits<{
+  'update:active-tab': [tab: 'notice' | 'voc' | 'release-note']
+}>()
 
 function handleTabChange(key: string) {
-  router.push(`/board/${key}`)
+  emit('update:active-tab', key as 'notice' | 'voc' | 'release-note')
 }
 </script>
 
 <template>
   <div class="board-tabs">
-    <a-tabs :activeKey="activeKey" @change="handleTabChange" size="large">
+    <a-tabs :activeKey="activeTab" @change="handleTabChange" size="large">
       <a-tab-pane key="notice">
         <template #tab>
           <span class="tab-item">
             <NotificationOutlined />
             Notice
+            <a-badge v-if="noticeCount" :count="noticeCount" :number-style="{ backgroundColor: 'var(--color-accent-primary)' }" />
           </span>
         </template>
       </a-tab-pane>
@@ -39,6 +38,7 @@ function handleTabChange(key: string) {
           <span class="tab-item">
             <FileTextOutlined />
             Release Notes
+            <a-badge v-if="releaseNoteCount" :count="releaseNoteCount" :number-style="{ backgroundColor: 'var(--color-accent-primary)' }" />
           </span>
         </template>
       </a-tab-pane>
@@ -47,6 +47,7 @@ function handleTabChange(key: string) {
           <span class="tab-item">
             <CommentOutlined />
             VOC
+            <a-badge v-if="vocCount" :count="vocCount" :number-style="{ backgroundColor: 'var(--color-accent-primary)' }" />
           </span>
         </template>
       </a-tab-pane>

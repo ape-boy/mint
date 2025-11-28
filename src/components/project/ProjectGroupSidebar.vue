@@ -10,7 +10,7 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{
-  select: [groupId: string | null]
+  select: [projectGroupId: string | null]
 }>()
 </script>
 

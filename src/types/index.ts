@@ -72,7 +72,7 @@ export interface BuildOptions {
 // ============================================
 export interface Project {
   id: string
-  groupId: string                  // TaskGroup ID
+  projectGroupId: string           // TaskGroup ID
   taskCode: string                 // 과제 코드
   name: string                     // 과제 이름 (BM1743_LENOVO_1TB)
   status: ProjectStatus
@@ -342,7 +342,7 @@ export interface DashboardStats {
 // 14. API Query Params
 // ============================================
 export interface ProjectQueryParams {
-  groupId?: string
+  projectGroupId?: string
   oem?: string
   feature?: string
   tl?: string

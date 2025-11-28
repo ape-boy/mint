@@ -17,7 +17,6 @@ export const useLayerStore = defineStore('layer', () => {
       layers.value = response.data
     } catch (e) {
       error.value = 'Failed to fetch layers'
-      console.error(e)
     } finally {
       loading.value = false
     }
@@ -31,7 +30,6 @@ export const useLayerStore = defineStore('layer', () => {
       currentLayer.value = response.data
     } catch (e) {
       error.value = 'Failed to fetch layer'
-      console.error(e)
     } finally {
       loading.value = false
     }

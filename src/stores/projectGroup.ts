@@ -18,7 +18,6 @@ export const useTaskGroupStore = defineStore('taskGroup', () => {
       taskGroups.value = response.data
     } catch (e) {
       error.value = 'Failed to fetch task groups'
-      console.error(e)
     } finally {
       loading.value = false
     }
@@ -32,7 +31,6 @@ export const useTaskGroupStore = defineStore('taskGroup', () => {
       currentTaskGroup.value = response.data
     } catch (e) {
       error.value = 'Failed to fetch task group'
-      console.error(e)
     } finally {
       loading.value = false
     }

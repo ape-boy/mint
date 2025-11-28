@@ -21,7 +21,7 @@ const modalTitle = computed(() => isEdit.value ? 'Edit VOC' : 'New VOC')
 interface ProjectOption {
   value: string
   label: string
-  groupId: string
+  projectGroupId: string
   groupName: string
 }
 
@@ -61,10 +61,10 @@ async function loadProjects() {
   loadingProjects.value = true
   try {
     const projects = await projectApi.getList()
-    projectOptions.value = projects.map((p: { id: string; name: string; groupId: string }) => ({
+    projectOptions.value = projects.map((p: { id: string; name: string; projectGroupId: string }) => ({
       value: p.id,
       label: p.name,
-      groupId: p.groupId,
+      projectGroupId: p.projectGroupId,
       groupName: '', // Would need to fetch from task groups
     }))
   } catch (error) {
@@ -125,7 +125,7 @@ function handleSubmit() {
     status: 'open',
     projectId: formState.value.projectId || undefined,
     projectName: selectedProject?.label || undefined,
-    projectGroupId: selectedProject?.groupId || undefined,
+    projectGroupId: selectedProject?.projectGroupId || undefined,
     projectGroupName: selectedProject?.groupName || undefined,
     requester: mockRequester,
     dueDate: formState.value.dueDate || undefined,
