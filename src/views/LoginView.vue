@@ -1,23 +1,52 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import { UserOutlined, LockOutlined } from '@ant-design/icons-vue'
+import { message } from 'ant-design-vue'
 
 const router = useRouter()
+const route = useRoute()
 
 const username = ref('')
 const password = ref('')
 const loading = ref(false)
 const rememberMe = ref(false)
+const error = ref('')
 
 async function handleLogin() {
+  error.value = ''
+
+  // Basic validation
+  if (!username.value.trim()) {
+    error.value = 'Please enter your username'
+    return
+  }
+  if (!password.value) {
+    error.value = 'Please enter your password'
+    return
+  }
+
   loading.value = true
 
-  // Simulate API call
-  setTimeout(() => {
+  try {
+    // Simulate API call - in production, call actual auth API
+    await new Promise(resolve => setTimeout(resolve, 1000))
+
+    // Set auth state
+    localStorage.setItem('mintportal_auth', 'true')
+    localStorage.setItem('mintportal_user', username.value)
+
+    message.success('Login successful')
+
+    // Redirect to intended destination or home
+    const redirect = route.query.redirect as string
+    router.push(redirect || '/')
+  } catch (e) {
+    error.value = 'Login failed. Please check your credentials.'
+    console.error('Login error:', e)
+  } finally {
     loading.value = false
-    router.push('/')
-  }, 1000)
+  }
 }
 </script>
 
@@ -34,6 +63,17 @@ async function handleLogin() {
 
         <!-- Login Form -->
         <a-form layout="vertical" @finish="handleLogin">
+          <!-- Error Alert -->
+          <a-alert
+            v-if="error"
+            :message="error"
+            type="error"
+            show-icon
+            closable
+            class="login-error"
+            @close="error = ''"
+          />
+
           <a-form-item label="Username">
             <a-input
               v-model:value="username"
@@ -166,5 +206,9 @@ async function handleLogin() {
   margin: 0;
   color: var(--color-text-muted);
   font-size: var(--font-size-xs);
+}
+
+.login-error {
+  margin-bottom: var(--spacing-lg);
 }
 </style>

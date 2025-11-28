@@ -3,7 +3,7 @@
 # Tests complete user workflows against mock data
 # Usage: ./tests/e2e/scenarios.test.sh
 
-set -e
+# set -e  # 전체 테스트 결과를 보기 위해 비활성화
 
 BASE_URL="${API_URL:-http://localhost:3001}"
 PASSED=0
@@ -75,8 +75,8 @@ echo ""
 echo "--- Scenario 2: Project List View Flow ---"
 echo "User browses project list with group filter"
 
-groups=$(curl -s "$BASE_URL/project-groups")
-assert_count "$groups" 1 "Project groups are available"
+groups=$(curl -s "$BASE_URL/task-groups")
+assert_count "$groups" 1 "Task groups are available"
 
 projects=$(curl -s "$BASE_URL/projects")
 assert_count "$projects" 1 "Projects are available"
@@ -98,7 +98,7 @@ assert_contains "$project" "Lenovo" "OEM is present"
 assert_contains "$project" "김철수" "TL info is present"
 assert_contains "$project" "members" "Team members are present"
 assert_contains "$project" "milestones" "Milestones are present"
-assert_contains "$project" "config" "Build config is present"
+assert_contains "$project" "scmConfig" "SCM config is present"
 
 layers=$(curl -s "$BASE_URL/layers?projectId=1001")
 assert_count "$layers" 1 "Project has layers"
@@ -118,7 +118,7 @@ build=$(curl -s "$BASE_URL/builds/3001")
 assert_contains "$build" "buildNumber" "Build number is present"
 assert_contains "$build" "success" "Build status is present"
 assert_contains "$build" "main" "Branch is present"
-assert_contains "$build" "commitHash" "Commit hash is present"
+assert_contains "$build" "revisionTag" "Revision tag is present"
 assert_contains "$build" "triggeredBy" "Triggered by is present"
 assert_contains "$build" "stages" "Pipeline stages are present"
 assert_contains "$build" "Build" "Build stage exists"
@@ -149,8 +149,8 @@ echo ""
 echo "--- Scenario 6: New Build Form Data ---"
 echo "User prepares to create new build"
 
-groups=$(curl -s "$BASE_URL/project-groups")
-assert_count "$groups" 1 "Can fetch project groups for selection"
+groups=$(curl -s "$BASE_URL/task-groups")
+assert_count "$groups" 1 "Can fetch task groups for selection"
 
 projects=$(curl -s "$BASE_URL/projects?groupId=1")
 assert_count "$projects" 1 "Can fetch projects for selected group"
@@ -160,6 +160,23 @@ assert_count "$layers" 1 "Can fetch layers for selected project"
 
 layer=$(curl -s "$BASE_URL/layers/2001")
 assert_contains "$layer" "pipelineConfig" "Can fetch pipeline config for form"
+
+echo ""
+
+# ==========================================
+# Scenario 7: Board System Flow
+# ==========================================
+echo "--- Scenario 7: Board System Flow ---"
+echo "User views notices, release notes, and VOCs"
+
+notices=$(curl -s "$BASE_URL/notices")
+assert_count "$notices" 1 "Notices are available"
+
+releasenotes=$(curl -s "$BASE_URL/release-notes")
+assert_count "$releasenotes" 1 "Release notes are available"
+
+vocs=$(curl -s "$BASE_URL/vocs")
+assert_count "$vocs" 1 "VOCs are available"
 
 echo ""
 

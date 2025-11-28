@@ -1,33 +1,22 @@
 <script setup lang="ts">
-import { ref, computed, watch, onMounted } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import {
-  HomeOutlined,
   BuildOutlined,
   ProjectOutlined,
-  SettingOutlined,
   BellOutlined,
   UserOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
-  MessageOutlined,
   DashboardOutlined,
-  TeamOutlined,
   UnorderedListOutlined,
-  NotificationOutlined,
-  CustomerServiceOutlined,
   RocketOutlined,
-  AppstoreOutlined,
   ExperimentOutlined,
   CodeOutlined,
+  ArrowLeftOutlined,
 } from '@ant-design/icons-vue'
 import { useLayerStore } from '@/stores/layer'
 import { useProjectStore } from '@/stores/project'
-import { PopupModal } from '@/components/board'
-import type { Layer } from '@/types'
-
-// Popup modal state
-const popupVisible = ref(false)
 
 const router = useRouter()
 const route = useRoute()
@@ -71,50 +60,23 @@ watch(
 watch(
   [() => route.path, () => route.query.tab, () => route.query.layerId],
   ([path, tab, layerId]) => {
-    // Map routes to menu keys
     if (path === '/') {
       selectedKeys.value = ['projects-list']
-      // 과제 목록에서는 PROJECT 메뉴 열기
-      if (!openKeys.value.includes('project-menu')) {
-        openKeys.value = [...openKeys.value, 'project-menu']
-      }
     } else if ((path as string).startsWith('/projects/')) {
       const tabValue = tab as string
-      // 프로젝트 상세 페이지에서는 PROJECT 메뉴 열기
-      if (!openKeys.value.includes('project-menu')) {
-        openKeys.value = [...openKeys.value, 'project-menu']
-      }
-      if (tabValue === 'info') {
-        selectedKeys.value = ['project-info']
-      } else if (tabValue === 'build' && layerId) {
+      if (tabValue === 'build' && layerId) {
         selectedKeys.value = [`layer-${layerId}`]
-        // Open appropriate submenu (build-menu under project-menu)
-        const layer = layerStore.layers.find(l => l.id === layerId)
-        if (layer) {
-          if (!openKeys.value.includes('build-menu')) {
-            openKeys.value = [...openKeys.value, 'build-menu']
-          }
+        // Open build submenu
+        if (!openKeys.value.includes('build-menu')) {
+          openKeys.value = [...openKeys.value, 'build-menu']
         }
       } else {
-        selectedKeys.value = ['project-summary']
+        selectedKeys.value = ['project-overview']
       }
-    } else if (path === '/dashboard') {
-      selectedKeys.value = ['dashboard']
-    } else if (path === '/board') {
-      // Board 메뉴 선택 (query param 기반)
-      const tabValue = tab as string
-      if (tabValue === 'voc') {
-        selectedKeys.value = ['board-voc']
-      } else if (tabValue === 'release-note') {
-        selectedKeys.value = ['board-release-note']
-      } else {
-        selectedKeys.value = ['board-notice']
+      // Open project submenu
+      if (!openKeys.value.includes('current-project')) {
+        openKeys.value = [...openKeys.value, 'current-project']
       }
-      if (!openKeys.value.includes('board-menu')) {
-        openKeys.value = [...openKeys.value, 'board-menu']
-      }
-    } else if (path === '/settings') {
-      selectedKeys.value = ['settings']
     }
   },
   { immediate: true }
@@ -125,7 +87,6 @@ const breadcrumbs = computed(() => {
   const crumbs = [{ name: '홈', path: '/' }]
 
   if (route.meta?.title && route.path !== '/') {
-    // Add parent breadcrumb if exists
     if (route.meta?.breadcrumb) {
       const parentRoute = router.getRoutes().find(r => r.name === route.meta?.breadcrumb)
       if (parentRoute) {
@@ -135,7 +96,6 @@ const breadcrumbs = computed(() => {
         })
       }
     }
-    // Add current page
     crumbs.push({
       name: route.meta.title as string,
       path: route.path,
@@ -159,41 +119,21 @@ function handleMenuClick(e: { key: string }) {
     case 'projects-list':
       router.push('/')
       break
-    case 'project-summary':
-      // Go to project detail with summary tab
+    case 'project-overview':
       if (route.params.projectId) {
-        router.push(`/projects/${route.params.projectId}?tab=summary`)
+        router.push(`/projects/${route.params.projectId}?tab=overview`)
       } else {
         router.push('/')
       }
-      break
-    case 'project-info':
-      if (route.params.projectId) {
-        router.push(`/projects/${route.params.projectId}?tab=info`)
-      } else {
-        router.push('/')
-      }
-      break
-    case 'dashboard':
-      router.push('/dashboard')
-      break
-    // Board 하위 메뉴
-    case 'board-notice':
-      router.push('/board?tab=notice')
-      break
-    case 'board-voc':
-      router.push('/board?tab=voc')
-      break
-    case 'board-release-note':
-      router.push('/board?tab=release-note')
-      break
-    case 'settings':
-      router.push('/settings')
       break
   }
 }
 
 function goHome() {
+  router.push('/')
+}
+
+function goBack() {
   router.push('/')
 }
 
@@ -225,105 +165,78 @@ const isProjectDetailPage = computed(() => {
         @click="handleMenuClick"
         class="app-menu"
       >
-        <!-- PROJECT (sub-menu로 변경하여 계층 구조 표현) -->
-        <a-sub-menu key="project-menu">
-          <template #icon><ProjectOutlined /></template>
-          <template #title>PROJECT</template>
-
-          <!-- 과제 목록 -->
-          <a-menu-item key="projects-list">
-            <UnorderedListOutlined />
-            <span>과제 목록</span>
-          </a-menu-item>
-
-          <!-- 프로젝트 상세 페이지에서만 표시되는 메뉴 -->
-          <template v-if="isProjectDetailPage">
-            <a-menu-item-group :title="currentProjectName">
-              <a-menu-item key="project-summary">
-                <DashboardOutlined />
-                <span>Summary & Quality</span>
-              </a-menu-item>
-              <a-menu-item key="project-info">
-                <TeamOutlined />
-                <span>기본 정보</span>
-              </a-menu-item>
-            </a-menu-item-group>
-          </template>
-        </a-sub-menu>
-
-        <!-- BUILD (프로젝트 상세 페이지에서만 표시) -->
-        <a-sub-menu v-if="isProjectDetailPage" key="build-menu">
-          <template #icon><BuildOutlined /></template>
-          <template #title>BUILD</template>
-
-          <!-- Release -->
-          <a-menu-item-group v-if="projectLayers.release.length > 0" title="Release">
-            <a-menu-item
-              v-for="layer in projectLayers.release"
-              :key="`layer-${layer.id}`"
-            >
-              <RocketOutlined />
-              <span>{{ layer.name }}</span>
-            </a-menu-item>
-          </a-menu-item-group>
-
-          <!-- Layer -->
-          <a-menu-item-group v-if="projectLayers.layer.length > 0" title="Layer">
-            <a-menu-item
-              v-for="layer in projectLayers.layer"
-              :key="`layer-${layer.id}`"
-            >
-              <CodeOutlined />
-              <span>{{ layer.name }}</span>
-            </a-menu-item>
-          </a-menu-item-group>
-
-          <!-- Private -->
-          <a-menu-item-group v-if="projectLayers.private.length > 0" title="Private">
-            <a-menu-item
-              v-for="layer in projectLayers.private"
-              :key="`layer-${layer.id}`"
-            >
-              <ExperimentOutlined />
-              <span>{{ layer.name }}</span>
-            </a-menu-item>
-          </a-menu-item-group>
-
-          <!-- Empty State -->
-          <a-menu-item v-if="projectLayers.release.length === 0 && projectLayers.layer.length === 0 && projectLayers.private.length === 0" disabled>
-            <span class="text-muted">등록된 Layer 없음</span>
-          </a-menu-item>
-        </a-sub-menu>
-
-        <!-- 대시보드 -->
-        <a-menu-item key="dashboard">
-          <HomeOutlined />
-          <span>대시보드</span>
+        <!-- 과제 목록 (항상 표시) -->
+        <a-menu-item key="projects-list">
+          <ProjectOutlined />
+          <span>과제 목록</span>
         </a-menu-item>
 
-        <!-- Board (게시판) -->
-        <a-sub-menu key="board-menu">
-          <template #icon><MessageOutlined /></template>
-          <template #title>게시판</template>
-          <a-menu-item key="board-notice">
-            <NotificationOutlined />
-            <span>공지사항</span>
-          </a-menu-item>
-          <a-menu-item key="board-voc">
-            <CustomerServiceOutlined />
-            <span>VOC</span>
-          </a-menu-item>
-          <a-menu-item key="board-release-note">
-            <RocketOutlined />
-            <span>Release Note</span>
-          </a-menu-item>
-        </a-sub-menu>
+        <!-- 프로젝트 상세 페이지에서만 표시되는 메뉴 -->
+        <template v-if="isProjectDetailPage">
+          <a-divider class="menu-divider" />
 
-        <!-- 설정 -->
-        <a-menu-item key="settings">
-          <SettingOutlined />
-          <span>설정</span>
-        </a-menu-item>
+          <!-- 뒤로가기 버튼 -->
+          <div class="back-button" @click="goBack">
+            <ArrowLeftOutlined />
+            <span v-if="!collapsed">과제 목록으로</span>
+          </div>
+
+          <!-- 현재 과제 서브메뉴 -->
+          <a-sub-menu key="current-project">
+            <template #icon><DashboardOutlined /></template>
+            <template #title>{{ currentProjectName }}</template>
+
+            <!-- Overview (기본정보 + Summary 통합) -->
+            <a-menu-item key="project-overview">
+              <DashboardOutlined />
+              <span>Overview</span>
+            </a-menu-item>
+
+            <!-- Build 서브메뉴 -->
+            <a-sub-menu key="build-menu">
+              <template #icon><BuildOutlined /></template>
+              <template #title>Build</template>
+
+              <!-- Release -->
+              <a-menu-item-group v-if="projectLayers.release.length > 0" title="Release">
+                <a-menu-item
+                  v-for="layer in projectLayers.release"
+                  :key="`layer-${layer.id}`"
+                >
+                  <RocketOutlined />
+                  <span>{{ layer.name }}</span>
+                </a-menu-item>
+              </a-menu-item-group>
+
+              <!-- Layer -->
+              <a-menu-item-group v-if="projectLayers.layer.length > 0" title="Layer">
+                <a-menu-item
+                  v-for="layer in projectLayers.layer"
+                  :key="`layer-${layer.id}`"
+                >
+                  <CodeOutlined />
+                  <span>{{ layer.name }}</span>
+                </a-menu-item>
+              </a-menu-item-group>
+
+              <!-- Private -->
+              <a-menu-item-group v-if="projectLayers.private.length > 0" title="Private">
+                <a-menu-item
+                  v-for="layer in projectLayers.private"
+                  :key="`layer-${layer.id}`"
+                >
+                  <ExperimentOutlined />
+                  <span>{{ layer.name }}</span>
+                </a-menu-item>
+              </a-menu-item-group>
+
+              <!-- Empty State -->
+              <a-menu-item v-if="projectLayers.release.length === 0 && projectLayers.layer.length === 0 && projectLayers.private.length === 0" disabled>
+                <span class="text-muted">등록된 Layer 없음</span>
+              </a-menu-item>
+            </a-sub-menu>
+          </a-sub-menu>
+        </template>
       </a-menu>
     </a-layout-sider>
 
@@ -362,7 +275,6 @@ const isProjectDetailPage = computed(() => {
             </div>
             <template #overlay>
               <a-menu>
-                <a-menu-item @click="router.push('/settings')">Profile</a-menu-item>
                 <a-menu-item @click="router.push('/login')">Logout</a-menu-item>
               </a-menu>
             </template>
@@ -378,9 +290,6 @@ const isProjectDetailPage = computed(() => {
         </router-view>
       </a-layout-content>
     </a-layout>
-
-    <!-- Popup Modal for Notices and Release Notes -->
-    <PopupModal v-model:visible="popupVisible" />
   </a-layout>
 </template>
 
@@ -487,6 +396,29 @@ const isProjectDetailPage = computed(() => {
 
 .app-menu :deep(.ant-menu-submenu-title) {
   font-weight: var(--font-weight-medium);
+}
+
+.menu-divider {
+  margin: var(--spacing-sm) var(--spacing-md);
+  border-color: var(--color-border);
+}
+
+.back-button {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-xs) var(--spacing-md);
+  margin: var(--spacing-xs) var(--spacing-sm);
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+  transition: all var(--transition-fast);
+}
+
+.back-button:hover {
+  color: var(--color-text-primary);
+  background: rgba(255, 255, 255, 0.04);
 }
 
 /* Header - Backstage Style */

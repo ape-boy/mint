@@ -464,7 +464,10 @@
             "timeout": 15,
             "sam": {
               "level": "strict",
-              "excludePaths": ["test/", "tools/"]
+              "excludePaths": [
+                "test/",
+                "tools/"
+              ]
             }
           }
         },
@@ -535,7 +538,10 @@
           "settings": {
             "timeout": 10,
             "codingRuleCheck": {
-              "rules": ["MISRA-C:2012", "CERT-C"],
+              "rules": [
+                "MISRA-C:2012",
+                "CERT-C"
+              ],
               "severity": "error"
             }
           }
@@ -548,7 +554,10 @@
             "timeout": 30,
             "blackduck": {
               "scanMode": "full",
-              "excludePatterns": ["*.test.*", "test/**"]
+              "excludePatterns": [
+                "*.test.*",
+                "test/**"
+              ]
             }
           }
         }
@@ -562,10 +571,26 @@
       "name": "HIL",
       "type": "layer",
       "pipelineConfig": [
-        { "name": "Build", "enabled": true, "required": true },
-        { "name": "SAM", "enabled": true, "required": false },
-        { "name": "Coverity", "enabled": true, "required": false },
-        { "name": "Warning Count", "enabled": true, "required": false }
+        {
+          "name": "Build",
+          "enabled": true,
+          "required": true
+        },
+        {
+          "name": "SAM",
+          "enabled": true,
+          "required": false
+        },
+        {
+          "name": "Coverity",
+          "enabled": true,
+          "required": false
+        },
+        {
+          "name": "Warning Count",
+          "enabled": true,
+          "required": false
+        }
       ],
       "createdAt": "2024-02-01T09:00:00Z",
       "updatedAt": "2024-11-15T10:00:00Z"
@@ -576,9 +601,21 @@
       "name": "FIL",
       "type": "layer",
       "pipelineConfig": [
-        { "name": "Build", "enabled": true, "required": true },
-        { "name": "SAM", "enabled": true, "required": false },
-        { "name": "Warning Count", "enabled": true, "required": false }
+        {
+          "name": "Build",
+          "enabled": true,
+          "required": true
+        },
+        {
+          "name": "SAM",
+          "enabled": true,
+          "required": false
+        },
+        {
+          "name": "Warning Count",
+          "enabled": true,
+          "required": false
+        }
       ],
       "createdAt": "2024-02-15T09:00:00Z",
       "updatedAt": "2024-11-15T10:00:00Z"
@@ -589,9 +626,21 @@
       "name": "FTL",
       "type": "layer",
       "pipelineConfig": [
-        { "name": "Build", "enabled": true, "required": true },
-        { "name": "SAM", "enabled": true, "required": false },
-        { "name": "Coverity", "enabled": true, "required": false }
+        {
+          "name": "Build",
+          "enabled": true,
+          "required": true
+        },
+        {
+          "name": "SAM",
+          "enabled": true,
+          "required": false
+        },
+        {
+          "name": "Coverity",
+          "enabled": true,
+          "required": false
+        }
       ],
       "createdAt": "2024-02-20T09:00:00Z",
       "updatedAt": "2024-11-15T10:00:00Z"
@@ -602,8 +651,16 @@
       "name": "DEV-Test",
       "type": "private",
       "pipelineConfig": [
-        { "name": "Build", "enabled": true, "required": true },
-        { "name": "SAM", "enabled": false, "required": false }
+        {
+          "name": "Build",
+          "enabled": true,
+          "required": true
+        },
+        {
+          "name": "SAM",
+          "enabled": false,
+          "required": false
+        }
       ],
       "createdAt": "2024-03-01T09:00:00Z",
       "updatedAt": "2024-11-10T14:00:00Z"
@@ -614,7 +671,11 @@
       "name": "Debug-Build",
       "type": "private",
       "pipelineConfig": [
-        { "name": "Build", "enabled": true, "required": true }
+        {
+          "name": "Build",
+          "enabled": true,
+          "required": true
+        }
       ],
       "createdAt": "2024-03-10T09:00:00Z",
       "updatedAt": "2024-11-10T14:00:00Z"
@@ -2006,689 +2067,6 @@
       "passRate": 89
     }
   },
-  "notices": [
-    {
-      "id": "4001",
-      "title": "MintPortal 시스템 정기 점검 안내",
-      "content": "안녕하세요.\n\n2024년 11월 25일(월) 02:00 ~ 06:00 시스템 정기 점검이 예정되어 있습니다.\n\n점검 시간 동안 서비스 이용이 제한됩니다.\n\n감사합니다.",
-      "category": "maintenance",
-      "priority": "important",
-      "isPinned": true,
-      "isPopup": true,
-      "popupStartDate": "2024-11-20T00:00:00Z",
-      "popupEndDate": "2024-11-25T06:00:00Z",
-      "viewCount": 245,
-      "attachments": [],
-      "author": {
-        "id": "100",
-        "name": "박대표",
-        "email": "park.dr@company.com",
-        "role": "PL"
-      },
-      "createdAt": "2024-11-18T09:00:00Z",
-      "updatedAt": "2024-11-18T09:00:00Z"
-    },
-    {
-      "id": "4002",
-      "title": "CI/CD 파이프라인 개선 안내",
-      "content": "CI/CD 파이프라인이 개선되었습니다.\n\n주요 변경 사항:\n1. 빌드 속도 30% 향상\n2. Coverity 분석 병렬화\n3. BlackDuck 스캔 최적화\n\n자세한 내용은 첨부 파일을 참고해 주세요.",
-      "category": "system",
-      "priority": "normal",
-      "isPinned": false,
-      "isPopup": false,
-      "viewCount": 189,
-      "attachments": [
-        {
-          "id": "att001",
-          "name": "pipeline_improvement_v2.pdf",
-          "url": "/downloads/attachments/pipeline_improvement_v2.pdf",
-          "size": 2048576,
-          "mimeType": "application/pdf"
-        }
-      ],
-      "author": {
-        "id": "101",
-        "name": "김철수",
-        "email": "kim.cs@company.com",
-        "role": "TL"
-      },
-      "createdAt": "2024-11-15T14:30:00Z",
-      "updatedAt": "2024-11-15T14:30:00Z"
-    },
-    {
-      "id": "4003",
-      "title": "2024년 하반기 FW 개발 워크샵 안내",
-      "content": "2024년 하반기 FW 개발 워크샵을 개최합니다.\n\n- 일시: 2024년 12월 15일(금) 14:00 ~ 18:00\n- 장소: 본관 대강당\n- 주제: SSD FW 품질 향상 방안\n\n많은 참여 부탁드립니다.",
-      "category": "event",
-      "priority": "normal",
-      "isPinned": false,
-      "isPopup": true,
-      "popupStartDate": "2024-11-20T00:00:00Z",
-      "popupEndDate": "2024-12-15T14:00:00Z",
-      "viewCount": 156,
-      "attachments": [],
-      "author": {
-        "id": "115",
-        "name": "장원영",
-        "email": "jang.wy@company.com",
-        "role": "PM"
-      },
-      "createdAt": "2024-11-10T10:00:00Z",
-      "updatedAt": "2024-11-12T11:00:00Z"
-    },
-    {
-      "id": "4004",
-      "title": "보안 정책 업데이트 안내",
-      "content": "보안 정책이 업데이트되었습니다.\n\n변경 사항:\n1. 비밀번호 복잡도 강화\n2. 2FA 인증 필수화\n3. 세션 타임아웃 시간 조정 (60분 → 30분)\n\n2024년 12월 1일부터 적용됩니다.",
-      "category": "general",
-      "priority": "urgent",
-      "isPinned": true,
-      "isPopup": false,
-      "viewCount": 312,
-      "attachments": [],
-      "author": {
-        "id": "100",
-        "name": "박대표",
-        "email": "park.dr@company.com",
-        "role": "PL"
-      },
-      "createdAt": "2024-11-08T09:00:00Z",
-      "updatedAt": "2024-11-08T09:00:00Z"
-    },
-    {
-      "id": "4005",
-      "title": "신규 프로젝트 등록 절차 안내",
-      "content": "신규 프로젝트 등록 절차가 간소화되었습니다.\n\n기존 5단계 → 3단계로 축소\n\n자세한 내용은 Settings > Project Management를 참고해 주세요.",
-      "category": "general",
-      "priority": "normal",
-      "isPinned": false,
-      "isPopup": false,
-      "viewCount": 98,
-      "attachments": [],
-      "author": {
-        "id": "108",
-        "name": "강태호",
-        "email": "kang.th@company.com",
-        "role": "TL"
-      },
-      "createdAt": "2024-11-05T15:00:00Z",
-      "updatedAt": "2024-11-05T15:00:00Z"
-    }
-  ],
-  "release-notes": [
-    {
-      "id": "5001",
-      "title": "MintPortal v2.5.0 릴리즈",
-      "content": "MintPortal v2.5.0 버전이 릴리즈되었습니다.\n\n이번 버전에서는 대시보드 UI 개선과 빌드 모니터링 기능이 강화되었습니다.",
-      "version": "2.5.0",
-      "projectId": null,
-      "projectName": null,
-      "releaseType": "minor",
-      "changes": [
-        {
-          "type": "feature",
-          "description": "실시간 빌드 모니터링 대시보드 추가"
-        },
-        {
-          "type": "feature",
-          "description": "프로젝트 그룹별 통계 차트 추가"
-        },
-        {
-          "type": "improvement",
-          "description": "빌드 목록 페이지 로딩 속도 개선"
-        },
-        {
-          "type": "bugfix",
-          "description": "파이프라인 스테이지 상태 표시 오류 수정"
-        }
-      ],
-      "isPopup": true,
-      "popupStartDate": "2024-11-20T00:00:00Z",
-      "popupEndDate": "2024-11-27T00:00:00Z",
-      "viewCount": 423,
-      "attachments": [],
-      "author": {
-        "id": "101",
-        "name": "김철수",
-        "email": "kim.cs@company.com",
-        "role": "TL"
-      },
-      "releasedAt": "2024-11-20T10:00:00Z",
-      "createdAt": "2024-11-20T10:00:00Z",
-      "updatedAt": "2024-11-20T10:00:00Z"
-    },
-    {
-      "id": "5002",
-      "title": "BM1743 FW v2.3.1 릴리즈",
-      "content": "BM1743 펌웨어 v2.3.1 버전이 릴리즈되었습니다.\n\nLenovo OEM 요구사항이 반영되었습니다.",
-      "version": "2.3.1",
-      "projectId": "1001",
-      "projectName": "BM1743_LENOVO_1TB",
-      "releaseType": "patch",
-      "changes": [
-        {
-          "type": "bugfix",
-          "description": "NVMe 커맨드 타임아웃 이슈 수정"
-        },
-        {
-          "type": "bugfix",
-          "description": "전력 관리 모드 전환 오류 수정"
-        },
-        {
-          "type": "improvement",
-          "description": "부팅 시간 최적화"
-        }
-      ],
-      "isPopup": false,
-      "viewCount": 187,
-      "attachments": [
-        {
-          "id": "att002",
-          "name": "BM1743_v2.3.1_release_notes.pdf",
-          "url": "/downloads/attachments/BM1743_v2.3.1_release_notes.pdf",
-          "size": 1048576,
-          "mimeType": "application/pdf"
-        }
-      ],
-      "author": {
-        "id": "101",
-        "name": "김철수",
-        "email": "kim.cs@company.com",
-        "role": "TL"
-      },
-      "releasedAt": "2024-11-20T14:30:00Z",
-      "createdAt": "2024-11-20T14:30:00Z",
-      "updatedAt": "2024-11-20T14:30:00Z"
-    },
-    {
-      "id": "5003",
-      "title": "PM9A3 FW v3.1.0 메이저 릴리즈",
-      "content": "PM9A3 펌웨어 v3.1.0 메이저 버전이 릴리즈되었습니다.\n\nAWS 인증 요구사항 충족 및 새로운 보안 기능이 추가되었습니다.",
-      "version": "3.1.0",
-      "projectId": "1004",
-      "projectName": "PM9A3_AWS_4TB",
-      "releaseType": "major",
-      "changes": [
-        {
-          "type": "feature",
-          "description": "AES-256 하드웨어 암호화 지원"
-        },
-        {
-          "type": "feature",
-          "description": "Secure Boot 기능 추가"
-        },
-        {
-          "type": "feature",
-          "description": "AWS Nitro 호환성 지원"
-        },
-        {
-          "type": "breaking",
-          "description": "기존 펌웨어 업그레이드 시 설정 초기화 필요"
-        },
-        {
-          "type": "improvement",
-          "description": "랜덤 읽기 성능 15% 향상"
-        }
-      ],
-      "isPopup": true,
-      "popupStartDate": "2024-11-15T00:00:00Z",
-      "popupEndDate": "2024-11-30T00:00:00Z",
-      "viewCount": 567,
-      "attachments": [
-        {
-          "id": "att003",
-          "name": "PM9A3_v3.1.0_migration_guide.pdf",
-          "url": "/downloads/attachments/PM9A3_v3.1.0_migration_guide.pdf",
-          "size": 3145728,
-          "mimeType": "application/pdf"
-        }
-      ],
-      "author": {
-        "id": "111",
-        "name": "오현우",
-        "email": "oh.hw@company.com",
-        "role": "TL"
-      },
-      "releasedAt": "2024-11-23T08:45:00Z",
-      "createdAt": "2024-11-23T08:45:00Z",
-      "updatedAt": "2024-11-23T08:45:00Z"
-    },
-    {
-      "id": "5004",
-      "title": "MintPortal v2.4.5 핫픽스",
-      "content": "긴급 보안 패치가 적용되었습니다.",
-      "version": "2.4.5",
-      "projectId": null,
-      "projectName": null,
-      "releaseType": "hotfix",
-      "changes": [
-        {
-          "type": "bugfix",
-          "description": "인증 토큰 만료 처리 오류 수정"
-        },
-        {
-          "type": "bugfix",
-          "description": "XSS 취약점 패치"
-        }
-      ],
-      "isPopup": false,
-      "viewCount": 234,
-      "attachments": [],
-      "author": {
-        "id": "100",
-        "name": "박대표",
-        "email": "park.dr@company.com",
-        "role": "PL"
-      },
-      "releasedAt": "2024-11-10T18:00:00Z",
-      "createdAt": "2024-11-10T18:00:00Z",
-      "updatedAt": "2024-11-10T18:00:00Z"
-    },
-    {
-      "id": "5005",
-      "title": "PM9E1 FW v1.2.0 릴리즈",
-      "content": "PM9E1 펌웨어 v1.2.0 버전이 릴리즈되었습니다.",
-      "version": "1.2.0",
-      "projectId": "1003",
-      "projectName": "PM9E1_SAMSUNG_512GB",
-      "releaseType": "minor",
-      "changes": [
-        {
-          "type": "feature",
-          "description": "SMART 로그 확장"
-        },
-        {
-          "type": "improvement",
-          "description": "Wear Leveling 알고리즘 개선"
-        },
-        {
-          "type": "bugfix",
-          "description": "드라이브 인식 지연 문제 수정"
-        }
-      ],
-      "isPopup": false,
-      "viewCount": 145,
-      "attachments": [],
-      "author": {
-        "id": "108",
-        "name": "강태호",
-        "email": "kang.th@company.com",
-        "role": "TL"
-      },
-      "releasedAt": "2024-11-22T08:35:00Z",
-      "createdAt": "2024-11-22T08:35:00Z",
-      "updatedAt": "2024-11-22T08:35:00Z"
-    }
-  ],
-  "vocs": [
-    {
-      "id": "6001",
-      "title": "빌드 실패 시 알림 기능 요청",
-      "content": "빌드가 실패했을 때 담당자에게 이메일 또는 Slack 알림이 가도록 기능을 추가해 주세요.\n\n현재는 직접 대시보드에서 확인해야 해서 불편합니다.",
-      "category": "feature_request",
-      "priority": "high",
-      "status": "in_progress",
-      "projectId": "1001",
-      "projectName": "BM1743_LENOVO_1TB",
-      "projectGroupId": "1",
-      "projectGroupName": "BM1743",
-      "requester": {
-        "id": "102",
-        "name": "이영희",
-        "email": "lee.yh@company.com",
-        "role": "Developer"
-      },
-      "assignee": {
-        "id": "101",
-        "name": "김철수",
-        "email": "kim.cs@company.com",
-        "role": "TL"
-      },
-      "dueDate": "2024-12-01T00:00:00Z",
-      "viewCount": 45,
-      "attachments": [],
-      "comments": [
-        {
-          "id": "cmt001",
-          "content": "좋은 제안입니다. 검토 후 반영하겠습니다.",
-          "author": {
-            "id": "101",
-            "name": "김철수",
-            "email": "kim.cs@company.com",
-            "role": "TL"
-          },
-          "createdAt": "2024-11-16T10:00:00Z"
-        },
-        {
-          "id": "cmt002",
-          "content": "Slack 웹훅 연동 작업 진행 중입니다.",
-          "author": {
-            "id": "101",
-            "name": "김철수",
-            "email": "kim.cs@company.com",
-            "role": "TL"
-          },
-          "createdAt": "2024-11-18T14:00:00Z"
-        }
-      ],
-      "createdAt": "2024-11-15T09:00:00Z",
-      "updatedAt": "2024-11-18T14:00:00Z"
-    },
-    {
-      "id": "6002",
-      "title": "Coverity 분석 결과 상세 보기 오류",
-      "content": "Coverity 분석 결과 상세 보기 버튼 클릭 시 404 에러가 발생합니다.\n\n재현 방법:\n1. Build 상세 페이지 접속\n2. Coverity 스테이지 클릭\n3. '상세 보기' 버튼 클릭\n→ 404 Not Found 에러",
-      "category": "bug",
-      "priority": "critical",
-      "status": "resolved",
-      "projectId": "1002",
-      "projectName": "BM1743_DELL_2TB",
-      "projectGroupId": "1",
-      "projectGroupName": "BM1743",
-      "requester": {
-        "id": "106",
-        "name": "한지민",
-        "email": "han.jm@company.com",
-        "role": "Developer"
-      },
-      "assignee": {
-        "id": "105",
-        "name": "최동훈",
-        "email": "choi.dh@company.com",
-        "role": "TL"
-      },
-      "dueDate": "2024-11-18T00:00:00Z",
-      "resolvedAt": "2024-11-17T16:00:00Z",
-      "resolution": "Coverity 서버 URL 설정 오류를 수정했습니다. 환경 변수 COVERITY_URL이 누락되어 있었습니다.",
-      "viewCount": 78,
-      "attachments": [
-        {
-          "id": "att004",
-          "name": "error_screenshot.png",
-          "url": "/downloads/attachments/error_screenshot.png",
-          "size": 256000,
-          "mimeType": "image/png"
-        }
-      ],
-      "comments": [
-        {
-          "id": "cmt003",
-          "content": "확인했습니다. 긴급 처리하겠습니다.",
-          "author": {
-            "id": "105",
-            "name": "최동훈",
-            "email": "choi.dh@company.com",
-            "role": "TL"
-          },
-          "createdAt": "2024-11-16T11:00:00Z"
-        },
-        {
-          "id": "cmt004",
-          "content": "수정 완료했습니다. 확인 부탁드립니다.",
-          "author": {
-            "id": "105",
-            "name": "최동훈",
-            "email": "choi.dh@company.com",
-            "role": "TL"
-          },
-          "createdAt": "2024-11-17T16:00:00Z"
-        }
-      ],
-      "createdAt": "2024-11-16T09:30:00Z",
-      "updatedAt": "2024-11-17T16:00:00Z"
-    },
-    {
-      "id": "6003",
-      "title": "프로젝트 목록 필터 기능 개선 요청",
-      "content": "프로젝트 목록에서 OEM, TL, 마일스톤 등으로 필터링할 수 있으면 좋겠습니다.\n\n현재 프로젝트가 많아져서 원하는 프로젝트를 찾기 어렵습니다.",
-      "category": "improvement",
-      "priority": "medium",
-      "status": "open",
-      "projectId": null,
-      "projectName": null,
-      "projectGroupId": null,
-      "projectGroupName": null,
-      "requester": {
-        "id": "109",
-        "name": "송미래",
-        "email": "song.mr@company.com",
-        "role": "Developer"
-      },
-      "assignee": null,
-      "dueDate": null,
-      "viewCount": 34,
-      "attachments": [],
-      "comments": [],
-      "createdAt": "2024-11-19T14:00:00Z",
-      "updatedAt": "2024-11-19T14:00:00Z"
-    },
-    {
-      "id": "6004",
-      "title": "API 문서 업데이트 요청",
-      "content": "API 문서가 최신 버전과 맞지 않습니다.\n\n특히 빌드 API의 새로운 파라미터들이 문서에 없습니다.",
-      "category": "documentation",
-      "priority": "low",
-      "status": "pending",
-      "projectId": null,
-      "projectName": null,
-      "projectGroupId": null,
-      "projectGroupName": null,
-      "requester": {
-        "id": "113",
-        "name": "신동엽",
-        "email": "shin.dy@company.com",
-        "role": "Developer"
-      },
-      "assignee": {
-        "id": "115",
-        "name": "장원영",
-        "email": "jang.wy@company.com",
-        "role": "PM"
-      },
-      "dueDate": "2024-12-15T00:00:00Z",
-      "viewCount": 23,
-      "attachments": [],
-      "comments": [
-        {
-          "id": "cmt005",
-          "content": "문서 업데이트 일정을 잡았습니다. 12월 중 완료 예정입니다.",
-          "author": {
-            "id": "115",
-            "name": "장원영",
-            "email": "jang.wy@company.com",
-            "role": "PM"
-          },
-          "createdAt": "2024-11-20T10:00:00Z"
-        }
-      ],
-      "createdAt": "2024-11-18T11:00:00Z",
-      "updatedAt": "2024-11-20T10:00:00Z"
-    },
-    {
-      "id": "6005",
-      "title": "빌드 히스토리 내보내기 기능 문의",
-      "content": "빌드 히스토리를 CSV 또는 Excel로 내보내기 하는 기능이 있나요?\n\n보고서 작성 시 필요합니다.",
-      "category": "question",
-      "priority": "low",
-      "status": "closed",
-      "projectId": "1004",
-      "projectName": "PM9A3_AWS_4TB",
-      "projectGroupId": "3",
-      "projectGroupName": "PM9A3",
-      "requester": {
-        "id": "114",
-        "name": "권유리",
-        "email": "kwon.yr@company.com",
-        "role": "QA"
-      },
-      "assignee": {
-        "id": "111",
-        "name": "오현우",
-        "email": "oh.hw@company.com",
-        "role": "TL"
-      },
-      "dueDate": null,
-      "resolvedAt": "2024-11-12T15:00:00Z",
-      "resolution": "현재 빌드 목록 페이지 우측 상단의 'Export' 버튼을 통해 CSV 내보내기가 가능합니다.",
-      "viewCount": 56,
-      "attachments": [],
-      "comments": [
-        {
-          "id": "cmt006",
-          "content": "빌드 목록 페이지의 Export 버튼을 사용하시면 됩니다.",
-          "author": {
-            "id": "111",
-            "name": "오현우",
-            "email": "oh.hw@company.com",
-            "role": "TL"
-          },
-          "createdAt": "2024-11-12T15:00:00Z"
-        }
-      ],
-      "createdAt": "2024-11-12T10:00:00Z",
-      "updatedAt": "2024-11-12T15:00:00Z"
-    },
-    {
-      "id": "6006",
-      "title": "PM9E1 빌드 시간이 너무 오래 걸림",
-      "content": "PM9E1 프로젝트의 Release 빌드가 평균 45분 이상 소요됩니다.\n\n다른 프로젝트는 25분 내외인데 비해 너무 오래 걸립니다.\n\n원인 파악 및 개선 요청드립니다.",
-      "category": "improvement",
-      "priority": "high",
-      "status": "in_progress",
-      "projectId": "1003",
-      "projectName": "PM9E1_SAMSUNG_512GB",
-      "projectGroupId": "2",
-      "projectGroupName": "PM9E1",
-      "requester": {
-        "id": "110",
-        "name": "임준혁",
-        "email": "lim.jh@company.com",
-        "role": "QA"
-      },
-      "assignee": {
-        "id": "108",
-        "name": "강태호",
-        "email": "kang.th@company.com",
-        "role": "TL"
-      },
-      "dueDate": "2024-11-30T00:00:00Z",
-      "viewCount": 67,
-      "attachments": [
-        {
-          "id": "att005",
-          "name": "build_time_comparison.xlsx",
-          "url": "/downloads/attachments/build_time_comparison.xlsx",
-          "size": 45056,
-          "mimeType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-        }
-      ],
-      "comments": [
-        {
-          "id": "cmt007",
-          "content": "빌드 로그 분석 결과, Coverity 단계에서 시간이 많이 소요되고 있습니다. 병렬화 작업을 진행하겠습니다.",
-          "author": {
-            "id": "108",
-            "name": "강태호",
-            "email": "kang.th@company.com",
-            "role": "TL"
-          },
-          "createdAt": "2024-11-21T14:00:00Z"
-        }
-      ],
-      "createdAt": "2024-11-20T09:00:00Z",
-      "updatedAt": "2024-11-21T14:00:00Z"
-    },
-    {
-      "id": "6007",
-      "title": "테스트 환경 접근 권한 요청",
-      "content": "테스트 환경 서버 접근 권한을 요청합니다.\n\n신규 입사자 온보딩을 위해 필요합니다.",
-      "category": "other",
-      "priority": "medium",
-      "status": "resolved",
-      "projectId": null,
-      "projectName": null,
-      "projectGroupId": null,
-      "projectGroupName": null,
-      "requester": {
-        "id": "103",
-        "name": "박민수",
-        "email": "park.ms@company.com",
-        "role": "Developer"
-      },
-      "assignee": {
-        "id": "100",
-        "name": "박대표",
-        "email": "park.dr@company.com",
-        "role": "PL"
-      },
-      "dueDate": null,
-      "resolvedAt": "2024-11-14T11:00:00Z",
-      "resolution": "테스트 서버 접근 권한이 부여되었습니다. VPN 연결 후 접속 가능합니다.",
-      "viewCount": 12,
-      "attachments": [],
-      "comments": [],
-      "createdAt": "2024-11-14T09:00:00Z",
-      "updatedAt": "2024-11-14T11:00:00Z"
-    }
-  ],
-  "active-popups": [
-    {
-      "id": "7001",
-      "type": "notice",
-      "boardId": "4001",
-      "title": "MintPortal 시스템 정기 점검 안내",
-      "content": "안녕하세요.\n\n2024년 11월 25일(월) 02:00 ~ 06:00 시스템 정기 점검이 예정되어 있습니다.\n\n점검 시간 동안 서비스 이용이 제한됩니다.\n\n감사합니다.",
-      "category": "maintenance",
-      "priority": "important",
-      "isActive": true,
-      "startDate": "2024-11-20T00:00:00Z",
-      "endDate": "2024-11-25T06:00:00Z",
-      "showOnce": false,
-      "createdAt": "2024-11-18T09:00:00Z"
-    },
-    {
-      "id": "7002",
-      "type": "notice",
-      "boardId": "4003",
-      "title": "2024년 하반기 FW 개발 워크샵 안내",
-      "content": "2024년 하반기 FW 개발 워크샵을 개최합니다.\n\n- 일시: 2024년 12월 15일(금) 14:00 ~ 18:00\n- 장소: 본관 대강당\n- 주제: SSD FW 품질 향상 방안\n\n많은 참여 부탁드립니다.",
-      "category": "event",
-      "priority": "normal",
-      "isActive": true,
-      "startDate": "2024-11-20T00:00:00Z",
-      "endDate": "2024-12-15T14:00:00Z",
-      "showOnce": true,
-      "createdAt": "2024-11-10T10:00:00Z"
-    },
-    {
-      "id": "7003",
-      "type": "release-note",
-      "boardId": "5001",
-      "title": "MintPortal v2.5.0 릴리즈",
-      "content": "MintPortal v2.5.0 버전이 릴리즈되었습니다.\n\n이번 버전에서는 대시보드 UI 개선과 빌드 모니터링 기능이 강화되었습니다.",
-      "version": "2.5.0",
-      "releaseType": "minor",
-      "isActive": true,
-      "startDate": "2024-11-20T00:00:00Z",
-      "endDate": "2024-11-27T00:00:00Z",
-      "showOnce": false,
-      "createdAt": "2024-11-20T10:00:00Z"
-    },
-    {
-      "id": "7004",
-      "type": "release-note",
-      "boardId": "5003",
-      "title": "PM9A3 FW v3.1.0 메이저 릴리즈",
-      "content": "PM9A3 펌웨어 v3.1.0 메이저 버전이 릴리즈되었습니다.\n\nAWS 인증 요구사항 충족 및 새로운 보안 기능이 추가되었습니다.",
-      "version": "3.1.0",
-      "releaseType": "major",
-      "isActive": true,
-      "startDate": "2024-11-15T00:00:00Z",
-      "endDate": "2024-11-30T00:00:00Z",
-      "showOnce": true,
-      "createdAt": "2024-11-23T08:45:00Z"
-    }
-  ],
   "users": [
     {
       "id": "100",
@@ -2803,6 +2181,237 @@
       "name": "김리더",
       "email": "kim.ld@company.com",
       "role": "PL"
+    }
+  ],
+  "notices": [
+    {
+      "id": "4001",
+      "title": "MintPortal 서비스 점검 안내",
+      "content": "2024년 11월 25일 02:00-04:00 시스템 점검이 예정되어 있습니다.",
+      "category": "maintenance",
+      "priority": "high",
+      "author": {
+        "id": "100",
+        "name": "박대표",
+        "email": "park.dr@company.com"
+      },
+      "isPinned": true,
+      "viewCount": 245,
+      "createdAt": "2024-11-20T09:00:00Z",
+      "updatedAt": "2024-11-20T09:00:00Z"
+    },
+    {
+      "id": "4002",
+      "title": "Bamboo 서버 업그레이드 완료",
+      "content": "Bamboo 서버가 9.5 버전으로 업그레이드되었습니다. 새로운 기능을 확인해주세요.",
+      "category": "system",
+      "priority": "normal",
+      "author": {
+        "id": "115",
+        "name": "장원영",
+        "email": "jang.wy@company.com"
+      },
+      "isPinned": false,
+      "viewCount": 128,
+      "createdAt": "2024-11-18T14:00:00Z",
+      "updatedAt": "2024-11-18T14:00:00Z"
+    },
+    {
+      "id": "4003",
+      "title": "12월 릴리즈 일정 공지",
+      "content": "12월 릴리즈 일정이 확정되었습니다. 각 프로젝트별 마감일을 확인해주세요.",
+      "category": "general",
+      "priority": "high",
+      "author": {
+        "id": "120",
+        "name": "김리더",
+        "email": "kim.ld@company.com"
+      },
+      "isPinned": true,
+      "viewCount": 312,
+      "createdAt": "2024-11-15T10:00:00Z",
+      "updatedAt": "2024-11-15T10:00:00Z"
+    },
+    {
+      "id": "4004",
+      "title": "Coverity 분석 정책 변경",
+      "content": "Coverity Critical 이슈 임계값이 5개에서 3개로 변경됩니다. 11/30부터 적용됩니다.",
+      "category": "system",
+      "priority": "normal",
+      "author": {
+        "id": "101",
+        "name": "김철수",
+        "email": "kim.cs@company.com"
+      },
+      "isPinned": false,
+      "viewCount": 89,
+      "createdAt": "2024-11-10T11:00:00Z",
+      "updatedAt": "2024-11-10T11:00:00Z"
+    }
+  ],
+  "release-notes": [
+    {
+      "id": "5001",
+      "projectId": "1001",
+      "buildId": "3001",
+      "version": "v2.3.1",
+      "title": "BM1743 LENOVO Release v2.3.1",
+      "content": "## 주요 변경사항\n- NVMe 2.0 성능 최적화\n- 전력 소비 10% 감소\n- SAM 분석 이슈 해결\n\n## 버그 수정\n- TRIM 명령 처리 개선\n- 온도 센서 정확도 향상",
+      "changeType": "feature",
+      "author": {
+        "id": "101",
+        "name": "김철수",
+        "email": "kim.cs@company.com"
+      },
+      "releaseDate": "2024-11-20T14:30:00Z",
+      "createdAt": "2024-11-20T14:30:00Z",
+      "updatedAt": "2024-11-20T14:30:00Z"
+    },
+    {
+      "id": "5002",
+      "projectId": "1003",
+      "buildId": "3006",
+      "version": "v1.2.0",
+      "title": "PM9E1 Samsung Release v1.2.0",
+      "content": "## 주요 변경사항\n- PCIe 4.0 지원 추가\n- 새로운 펌웨어 업데이트 메커니즘\n\n## 성능 개선\n- 순차 읽기 속도 15% 향상",
+      "changeType": "major",
+      "author": {
+        "id": "108",
+        "name": "강태호",
+        "email": "kang.th@company.com"
+      },
+      "releaseDate": "2024-11-22T08:35:00Z",
+      "createdAt": "2024-11-22T08:35:00Z",
+      "updatedAt": "2024-11-22T08:35:00Z"
+    },
+    {
+      "id": "5003",
+      "projectId": "1004",
+      "buildId": "3007",
+      "version": "v3.1.0",
+      "title": "PM9A3 AWS Release v3.1.0",
+      "content": "## 주요 변경사항\n- AWS EC2 인스턴스 최적화\n- 암호화 기능 강화\n- 4TB 용량 지원\n\n## 보안 업데이트\n- AES-256 암호화 성능 개선",
+      "changeType": "major",
+      "author": {
+        "id": "111",
+        "name": "오현우",
+        "email": "oh.hw@company.com"
+      },
+      "releaseDate": "2024-11-23T08:45:00Z",
+      "createdAt": "2024-11-23T08:45:00Z",
+      "updatedAt": "2024-11-23T08:45:00Z"
+    }
+  ],
+  "vocs": [
+    {
+      "id": "6001",
+      "title": "빌드 대기 시간이 너무 깁니다",
+      "content": "최근 빌드 대기 시간이 30분 이상 걸리는 경우가 빈번합니다. 원인 파악 부탁드립니다.",
+      "category": "improvement",
+      "status": "in_progress",
+      "priority": "high",
+      "author": {
+        "id": "102",
+        "name": "이영희",
+        "email": "lee.yh@company.com"
+      },
+      "assignee": {
+        "id": "115",
+        "name": "장원영",
+        "email": "jang.wy@company.com"
+      },
+      "projectId": "1001",
+      "comments": [
+        {
+          "id": "c001",
+          "author": {
+            "id": "115",
+            "name": "장원영"
+          },
+          "content": "Bamboo 에이전트 증설을 검토 중입니다.",
+          "createdAt": "2024-11-21T10:00:00Z"
+        }
+      ],
+      "createdAt": "2024-11-20T15:00:00Z",
+      "updatedAt": "2024-11-21T10:00:00Z"
+    },
+    {
+      "id": "6002",
+      "title": "Coverity 리포트 다운로드 기능 요청",
+      "content": "Coverity 분석 결과를 PDF로 다운로드하는 기능이 필요합니다.",
+      "category": "feature",
+      "status": "open",
+      "priority": "normal",
+      "author": {
+        "id": "103",
+        "name": "박민수",
+        "email": "park.ms@company.com"
+      },
+      "assignee": null,
+      "projectId": null,
+      "comments": [],
+      "createdAt": "2024-11-19T09:00:00Z",
+      "updatedAt": "2024-11-19T09:00:00Z"
+    },
+    {
+      "id": "6003",
+      "title": "SAM 분석 실패 버그",
+      "content": "특정 파일 패턴에서 SAM 분석이 실패합니다. 로그 첨부합니다.",
+      "category": "bug",
+      "status": "resolved",
+      "priority": "critical",
+      "author": {
+        "id": "106",
+        "name": "한지민",
+        "email": "han.jm@company.com"
+      },
+      "assignee": {
+        "id": "101",
+        "name": "김철수",
+        "email": "kim.cs@company.com"
+      },
+      "projectId": "1002",
+      "resolution": "SAM 설정 파일의 경로 문제가 확인되어 수정되었습니다.",
+      "comments": [
+        {
+          "id": "c002",
+          "author": {
+            "id": "101",
+            "name": "김철수"
+          },
+          "content": "문제 확인했습니다. 수정 진행 중입니다.",
+          "createdAt": "2024-11-17T14:00:00Z"
+        },
+        {
+          "id": "c003",
+          "author": {
+            "id": "101",
+            "name": "김철수"
+          },
+          "content": "수정 완료되었습니다. 확인 부탁드립니다.",
+          "createdAt": "2024-11-18T10:00:00Z"
+        }
+      ],
+      "createdAt": "2024-11-17T11:00:00Z",
+      "updatedAt": "2024-11-18T10:00:00Z"
+    },
+    {
+      "id": "6004",
+      "title": "릴리즈 노트 자동 생성 기능 제안",
+      "content": "빌드 완료 시 릴리즈 노트를 자동으로 생성하는 기능이 있으면 좋겠습니다.",
+      "category": "feature",
+      "status": "open",
+      "priority": "low",
+      "author": {
+        "id": "108",
+        "name": "강태호",
+        "email": "kang.th@company.com"
+      },
+      "assignee": null,
+      "projectId": null,
+      "comments": [],
+      "createdAt": "2024-11-15T16:00:00Z",
+      "updatedAt": "2024-11-15T16:00:00Z"
     }
   ]
 }

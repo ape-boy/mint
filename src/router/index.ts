@@ -2,6 +2,11 @@ import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
 import AppLayout from '../layouts/AppLayout.vue'
 import LoginView from '../views/LoginView.vue'
 
+// Simple auth check - in production, replace with actual auth service
+function isAuthenticated(): boolean {
+  return localStorage.getItem('mintportal_auth') === 'true'
+}
+
 const routes: RouteRecordRaw[] = [
   {
     path: '/login',
@@ -46,34 +51,17 @@ const routes: RouteRecordRaw[] = [
           breadcrumb: 'Stage',
         },
       },
-      {
-        path: 'dashboard',
-        name: 'dashboard',
-        component: () => import('../views/HomeView.vue'),
-        meta: {
-          title: '대시보드',
-          breadcrumb: '대시보드',
-        },
-      },
-      {
-        path: 'board',
-        name: 'board',
-        component: () => import('../views/BoardView.vue'),
-        meta: {
-          title: 'Board',
-          breadcrumb: 'Board',
-        },
-      },
-      {
-        path: 'settings',
-        name: 'settings',
-        component: () => import('../views/SettingsView.vue'),
-        meta: {
-          title: '설정',
-          breadcrumb: '설정',
-        },
-      },
     ],
+  },
+  // 404 Catch-all route
+  {
+    path: '/:pathMatch(.*)*',
+    name: 'not-found',
+    component: () => import('../views/NotFoundView.vue'),
+    meta: {
+      title: '404 Not Found',
+      requiresAuth: false,
+    },
   },
 ]
 
@@ -82,11 +70,27 @@ const router = createRouter({
   routes,
 })
 
-// Navigation guard for title
+// Navigation guard for authentication and title
 router.beforeEach((to, _from, next) => {
+  // Set page title
   const title = to.meta.title as string | undefined
   document.title = title ? `${title} - MintPortal` : 'MintPortal'
-  next()
+
+  // Check authentication for protected routes
+  const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
+
+  if (requiresAuth && !isAuthenticated()) {
+    // Redirect to login with return URL
+    next({
+      name: 'login',
+      query: { redirect: to.fullPath },
+    })
+  } else if (to.name === 'login' && isAuthenticated()) {
+    // Already logged in, redirect to home
+    next({ name: 'projects' })
+  } else {
+    next()
+  }
 })
 
 export default router

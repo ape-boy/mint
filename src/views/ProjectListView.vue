@@ -6,12 +6,16 @@ import {
   FilterOutlined,
   ReloadOutlined,
   HistoryOutlined,
+  CheckCircleOutlined,
+  CloseCircleOutlined,
+  SyncOutlined,
+  ProjectOutlined,
 } from '@ant-design/icons-vue'
-import { PageHeader, StatusBadge, EmptyState } from '@/components'
+import { PageHeader, EmptyState } from '@/components'
 import { useTaskGroupStore } from '@/stores/projectGroup'
 import { useProjectStore } from '@/stores/project'
 import { useBuildStore } from '@/stores/build'
-import type { Project, Build, TaskGroup } from '@/types'
+import type { Build } from '@/types'
 
 const router = useRouter()
 const taskGroupStore = useTaskGroupStore()
@@ -34,6 +38,26 @@ onMounted(async () => {
     projectStore.fetchProjects(),
     buildStore.fetchBuilds()
   ])
+})
+
+// Dashboard Stats computed
+const dashboardStats = computed(() => {
+  const builds = buildStore.builds
+  const projects = projectStore.projects
+
+  const successBuilds = builds.filter(b => b.status === 'success').length
+  const failedBuilds = builds.filter(b => b.status === 'failed').length
+  const runningBuilds = builds.filter(b => b.status === 'running').length
+  const totalBuilds = builds.length
+  const successRate = totalBuilds > 0 ? Math.round((successBuilds / totalBuilds) * 100) : 0
+
+  return {
+    totalProjects: projects.length,
+    successBuilds,
+    failedBuilds,
+    runningBuilds,
+    successRate,
+  }
 })
 
 // Computed options for filters
@@ -168,6 +192,60 @@ const tableColumns = [
       </template>
     </PageHeader>
 
+    <!-- Dashboard Stats Cards -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon projects">
+          <ProjectOutlined />
+        </div>
+        <div class="stat-content">
+          <div class="stat-value">{{ dashboardStats.totalProjects }}</div>
+          <div class="stat-label">전체 과제</div>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon success">
+          <CheckCircleOutlined />
+        </div>
+        <div class="stat-content">
+          <div class="stat-value success">{{ dashboardStats.successBuilds }}</div>
+          <div class="stat-label">성공 빌드</div>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon failed">
+          <CloseCircleOutlined />
+        </div>
+        <div class="stat-content">
+          <div class="stat-value failed">{{ dashboardStats.failedBuilds }}</div>
+          <div class="stat-label">실패 빌드</div>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon running">
+          <SyncOutlined spin />
+        </div>
+        <div class="stat-content">
+          <div class="stat-value running">{{ dashboardStats.runningBuilds }}</div>
+          <div class="stat-label">진행 중</div>
+        </div>
+      </div>
+
+      <div class="stat-card stat-card--wide">
+        <div class="stat-content">
+          <div class="stat-label">빌드 성공률</div>
+          <a-progress
+            :percent="dashboardStats.successRate"
+            :stroke-color="dashboardStats.successRate >= 80 ? '#52c41a' : dashboardStats.successRate >= 50 ? '#faad14' : '#ff4d4f'"
+            :trail-color="'rgba(255,255,255,0.1)'"
+          />
+        </div>
+      </div>
+    </div>
+
     <!-- Filter Panel -->
     <div v-if="showFilters" class="filter-panel">
       <a-row :gutter="16">
@@ -235,6 +313,23 @@ const tableColumns = [
       </a-input-search>
       <span class="result-count">{{ tableData.length }} 과제</span>
     </div>
+
+    <!-- Error Alert -->
+    <a-alert
+      v-if="projectStore.error || buildStore.error"
+      :message="projectStore.error || buildStore.error"
+      type="error"
+      show-icon
+      closable
+      class="error-alert"
+      @close="() => { projectStore.clearError(); buildStore.clearError(); }"
+    >
+      <template #action>
+        <a-button size="small" type="primary" @click="() => { projectStore.fetchProjects(); buildStore.fetchBuilds(); }">
+          Retry
+        </a-button>
+      </template>
+    </a-alert>
 
     <!-- Data Table -->
     <a-spin :spinning="projectStore.loading || buildStore.loading">
@@ -320,6 +415,87 @@ const tableColumns = [
   gap: var(--spacing-lg);
 }
 
+/* Stats Grid */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr) 1.5fr;
+  gap: var(--spacing-md);
+}
+
+.stat-card {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  background: var(--color-bg-secondary);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-md) var(--spacing-lg);
+  border: 1px solid var(--color-border-light);
+}
+
+.stat-card--wide {
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.stat-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+}
+
+.stat-icon.projects {
+  background: rgba(0, 212, 170, 0.15);
+  color: var(--color-accent-primary);
+}
+
+.stat-icon.success {
+  background: rgba(82, 196, 26, 0.15);
+  color: #52c41a;
+}
+
+.stat-icon.failed {
+  background: rgba(255, 77, 79, 0.15);
+  color: #ff4d4f;
+}
+
+.stat-icon.running {
+  background: rgba(250, 173, 20, 0.15);
+  color: #faad14;
+}
+
+.stat-content {
+  flex: 1;
+}
+
+.stat-value {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  line-height: 1.2;
+}
+
+.stat-value.success {
+  color: #52c41a;
+}
+
+.stat-value.failed {
+  color: #ff4d4f;
+}
+
+.stat-value.running {
+  color: #faad14;
+}
+
+.stat-label {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  margin-top: 2px;
+}
+
 .filter-panel {
   background: var(--color-bg-secondary);
   border-radius: var(--radius-md);
@@ -403,6 +579,10 @@ const tableColumns = [
   color: var(--color-text-muted);
 }
 
+.error-alert {
+  margin-bottom: var(--spacing-md);
+}
+
 :deep(.ant-table) {
   background: var(--color-bg-secondary);
   border-radius: var(--radius-md);
@@ -425,5 +605,25 @@ const tableColumns = [
 
 :deep(.ant-table-tbody > tr) {
   cursor: pointer;
+}
+
+@media (max-width: 1400px) {
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .stat-card--wide {
+    grid-column: span 2;
+  }
+}
+
+@media (max-width: 768px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .stat-card--wide {
+    grid-column: span 1;
+  }
 }
 </style>

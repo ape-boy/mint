@@ -3,7 +3,7 @@
 # Usage: ./tests/e2e/api.test.sh
 # Prerequisites: Mock server must be running on port 3001
 
-set -e
+# set -e  # 전체 테스트 결과를 보기 위해 비활성화
 
 BASE_URL="${API_URL:-http://localhost:3001}"
 PASSED=0
@@ -68,9 +68,9 @@ test_endpoint "GET /stats - activeProjects" "/stats" "activeProjects"
 test_endpoint "GET /stats - runningBuilds" "/stats" "runningBuilds"
 
 echo ""
-echo "--- Project Groups Endpoint ---"
-test_array_endpoint "GET /project-groups" "/project-groups" 1
-test_endpoint "GET /project-groups/:id" "/project-groups/1" "BM1743"
+echo "--- Task Groups Endpoint ---"
+test_array_endpoint "GET /task-groups" "/task-groups" 1
+test_endpoint "GET /task-groups/:id" "/task-groups/1" "BM1743"
 
 echo ""
 echo "--- Projects Endpoint ---"
@@ -79,7 +79,7 @@ test_endpoint "GET /projects/:id" "/projects/1001" "BM1743_LENOVO"
 test_endpoint "GET /projects - has TL info" "/projects/1001" "tl"
 test_endpoint "GET /projects - has members" "/projects/1001" "members"
 test_endpoint "GET /projects - has milestones" "/projects/1001" "milestones"
-test_endpoint "GET /projects - has config" "/projects/1001" "config"
+test_endpoint "GET /projects - has scmConfig" "/projects/1001" "scmConfig"
 
 echo ""
 echo "--- Layers Endpoint ---"
@@ -94,8 +94,8 @@ test_array_endpoint "GET /builds" "/builds" 1
 test_endpoint "GET /builds/:id" "/builds/3001" "buildNumber"
 test_endpoint "GET /builds - has stages" "/builds/3001" "stages"
 test_endpoint "GET /builds - has artifacts" "/builds/3001" "artifacts"
-test_endpoint "GET /builds - has branch" "/builds/3001" "branch"
-test_endpoint "GET /builds - has commitHash" "/builds/3001" "commitHash"
+test_endpoint "GET /builds - has scmConfig.branch" "/builds/3001" "branch"
+test_endpoint "GET /builds - has scmConfig.revisionTag" "/builds/3001" "revisionTag"
 test_endpoint "GET /builds - has triggeredBy" "/builds/3001" "triggeredBy"
 
 echo ""

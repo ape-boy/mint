@@ -45,8 +45,8 @@ const props = defineProps<{
   projectId: string
 }>()
 
-// View state
-const currentView = ref<'summary' | 'build' | 'info'>('summary')
+// View state - 'overview'로 통합 (기존 summary + info)
+const currentView = ref<'overview' | 'build'>('overview')
 const currentLayerId = ref<string | null>(null)
 const selectedBuildId = ref<string | null>(null)
 const projectHistory = ref<ProjectHistory[]>([])
@@ -70,10 +70,9 @@ watch(
       currentView.value = 'build'
       currentLayerId.value = layerId as string
       selectedBuildId.value = null
-    } else if (tab === 'info') {
-      currentView.value = 'info'
     } else {
-      currentView.value = 'summary'
+      // overview가 기본 (기존 summary + info 통합)
+      currentView.value = 'overview'
     }
   },
   { immediate: true }
@@ -441,39 +440,99 @@ const qualityColumns = [
           </div>
         </div>
 
-        <!-- SUMMARY VIEW -->
-        <div v-if="currentView === 'summary'" class="content-section">
-          <div class="summary-section">
-            <!-- Latest Build Summary -->
-            <div v-if="summaryData?.latestBuild" class="latest-build-card">
-              <div class="build-summary-header">
-                <h3>최신 Release 빌드</h3>
-                <a-tag :color="summaryData.latestBuild.status === 'success' ? 'success' : summaryData.latestBuild.status === 'failed' ? 'error' : 'processing'">
-                  {{ summaryData.latestBuild.status }}
-                </a-tag>
-              </div>
-              <div class="build-summary-info">
-                <div class="info-item">
-                  <span class="label">Round</span>
-                  <span class="value">{{ summaryData.latestBuild.round }}</span>
+        <!-- OVERVIEW VIEW (기존 Summary + Info 통합) -->
+        <div v-if="currentView === 'overview'" class="content-section">
+          <div class="overview-section">
+            <!-- 두 컬럼 레이아웃: 좌측 기본정보, 우측 빌드 요약 -->
+            <a-row :gutter="[24, 24]">
+              <!-- 좌측: 기본 정보 -->
+              <a-col :span="12">
+                <div class="info-card">
+                  <h4><SettingOutlined /> Product 정보</h4>
+                  <a-descriptions :column="1" size="small" bordered>
+                    <a-descriptions-item label="OEM">{{ project.oem }}</a-descriptions-item>
+                    <a-descriptions-item label="Feature">{{ project.feature }}</a-descriptions-item>
+                    <a-descriptions-item label="Target">{{ project.target }}</a-descriptions-item>
+                    <a-descriptions-item label="Task Code">{{ project.taskCode }}</a-descriptions-item>
+                  </a-descriptions>
                 </div>
-                <div class="info-item">
-                  <span class="label">FW Name</span>
-                  <span class="value">{{ summaryData.latestBuild.fwName || '-' }}</span>
-                </div>
-                <div class="info-item">
-                  <span class="label">Branch</span>
-                  <span class="value">{{ summaryData.latestBuild.scmConfig?.branch }}</span>
-                </div>
-                <div class="info-item">
-                  <span class="label">Duration</span>
-                  <span class="value">{{ formatDuration(summaryData.latestBuild.duration) }}</span>
-                </div>
-              </div>
-            </div>
 
-            <!-- Quality Grid -->
-            <div v-if="summaryData?.recentBuilds.length" class="quality-grid">
+                <!-- Members Info -->
+                <div class="info-card" style="margin-top: 16px;">
+                  <h4><TeamOutlined /> Members 정보</h4>
+                  <div class="members-summary">
+                    <div class="key-members">
+                      <div v-if="project.tl" class="member-item highlight">
+                        <a-avatar size="default" :style="{ backgroundColor: 'var(--color-accent-primary)' }">
+                          {{ project.tl.name.charAt(0) }}
+                        </a-avatar>
+                        <div class="member-info">
+                          <span class="name">{{ project.tl.name }}</span>
+                          <span class="role-badge tl">TL</span>
+                        </div>
+                      </div>
+                      <div v-if="project.pl" class="member-item highlight">
+                        <a-avatar size="default" :style="{ backgroundColor: 'var(--color-accent-secondary)' }">
+                          {{ project.pl.name.charAt(0) }}
+                        </a-avatar>
+                        <div class="member-info">
+                          <span class="name">{{ project.pl.name }}</span>
+                          <span class="role-badge pl">PL</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div v-if="otherMembersCount > 0" class="other-members">
+                      <a-avatar-group :max-count="5" size="small">
+                        <a-avatar
+                          v-for="member in project.members?.filter(m => m.role !== 'PL' && m.role !== 'TL').slice(0, 5)"
+                          :key="member.id"
+                          :style="{ backgroundColor: '#4a4a52' }"
+                        >
+                          {{ member.name.charAt(0) }}
+                        </a-avatar>
+                      </a-avatar-group>
+                      <span class="members-count">외 {{ otherMembersCount }}명</span>
+                    </div>
+                  </div>
+                </div>
+              </a-col>
+
+              <!-- 우측: 최신 빌드 요약 + 품질 지표 -->
+              <a-col :span="12">
+                <!-- Latest Build Summary -->
+                <div v-if="summaryData?.latestBuild" class="latest-build-card">
+                  <div class="build-summary-header">
+                    <h3>최신 Release 빌드</h3>
+                    <a-tag :color="summaryData.latestBuild.status === 'success' ? 'success' : summaryData.latestBuild.status === 'failed' ? 'error' : 'processing'">
+                      {{ summaryData.latestBuild.status }}
+                    </a-tag>
+                  </div>
+                  <div class="build-summary-info">
+                    <div class="info-item">
+                      <span class="label">Round</span>
+                      <span class="value">{{ summaryData.latestBuild.round }}</span>
+                    </div>
+                    <div class="info-item">
+                      <span class="label">FW Name</span>
+                      <span class="value">{{ summaryData.latestBuild.fwName || '-' }}</span>
+                    </div>
+                    <div class="info-item">
+                      <span class="label">Branch</span>
+                      <span class="value">{{ summaryData.latestBuild.scmConfig?.branch }}</span>
+                    </div>
+                    <div class="info-item">
+                      <span class="label">Duration</span>
+                      <span class="value">{{ formatDuration(summaryData.latestBuild.duration) }}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <EmptyState v-else title="Release 빌드가 없습니다" description="좌측 BUILD 메뉴에서 빌드를 실행하세요" />
+              </a-col>
+            </a-row>
+
+            <!-- Quality Grid (전체 너비) -->
+            <div v-if="summaryData?.recentBuilds.length" class="quality-grid" style="margin-top: 24px;">
               <h4>품질 지표 (Quality Grid)</h4>
               <a-table
                 :columns="qualityColumns"
@@ -508,8 +567,6 @@ const qualityColumns = [
                 </template>
               </a-table>
             </div>
-
-            <EmptyState v-else title="Release 빌드가 없습니다" description="좌측 메뉴에서 빌드를 선택해주세요" />
           </div>
         </div>
 
@@ -836,134 +893,6 @@ const qualityColumns = [
               </div>
 
               <EmptyState v-else title="빌드 이력이 없습니다" description="빌드 실행 버튼을 눌러 첫 빌드를 시작하세요" />
-            </div>
-          </div>
-        </div>
-
-        <!-- INFO VIEW -->
-        <div v-else-if="currentView === 'info'" class="content-section">
-          <div class="basic-info-section">
-            <div class="section-header">
-              <h3>기본 정보</h3>
-              <a-button type="primary" ghost @click="isEditingBasicInfo = !isEditingBasicInfo">
-                <EditOutlined /> {{ isEditingBasicInfo ? '취소' : '수정' }}
-              </a-button>
-            </div>
-
-            <a-row :gutter="[24, 24]">
-              <!-- Product Info -->
-              <a-col :span="12">
-                <div class="info-card">
-                  <h4><SettingOutlined /> Product 정보</h4>
-                  <a-descriptions :column="1" size="small" bordered>
-                    <a-descriptions-item label="OEM">{{ project.oem }}</a-descriptions-item>
-                    <a-descriptions-item label="Feature">{{ project.feature }}</a-descriptions-item>
-                    <a-descriptions-item label="Target">{{ project.target }}</a-descriptions-item>
-                    <a-descriptions-item label="Task Code">{{ project.taskCode }}</a-descriptions-item>
-                  </a-descriptions>
-                </div>
-              </a-col>
-
-              <!-- Members Info -->
-              <a-col :span="12">
-                <div class="info-card">
-                  <h4><TeamOutlined /> Members 정보</h4>
-                  <div class="members-summary">
-                    <!-- Key Members (TL/PL) -->
-                    <div class="key-members">
-                      <div v-if="project.tl" class="member-item highlight">
-                        <a-avatar size="default" :style="{ backgroundColor: 'var(--color-accent-primary)' }">
-                          {{ project.tl.name.charAt(0) }}
-                        </a-avatar>
-                        <div class="member-info">
-                          <span class="name">{{ project.tl.name }}</span>
-                          <span class="role-badge tl">TL</span>
-                        </div>
-                      </div>
-                      <div v-if="project.pl" class="member-item highlight">
-                        <a-avatar size="default" :style="{ backgroundColor: 'var(--color-accent-secondary)' }">
-                          {{ project.pl.name.charAt(0) }}
-                        </a-avatar>
-                        <div class="member-info">
-                          <span class="name">{{ project.pl.name }}</span>
-                          <span class="role-badge pl">PL</span>
-                        </div>
-                      </div>
-                    </div>
-                    <!-- Other Members Summary -->
-                    <div v-if="otherMembersCount > 0" class="other-members">
-                      <a-avatar-group :max-count="5" size="small">
-                        <a-avatar
-                          v-for="member in project.members?.filter(m => m.role !== 'PL' && m.role !== 'TL').slice(0, 5)"
-                          :key="member.id"
-                          :style="{ backgroundColor: '#4a4a52' }"
-                        >
-                          {{ member.name.charAt(0) }}
-                        </a-avatar>
-                      </a-avatar-group>
-                      <span class="members-count">외 {{ otherMembersCount }}명</span>
-                    </div>
-                  </div>
-                </div>
-              </a-col>
-
-              <!-- PLM Info -->
-              <a-col :span="12">
-                <div class="info-card">
-                  <h4><LinkOutlined /> PLM 정보</h4>
-                  <div v-if="project.plmInfo">
-                    <p><strong>PLM ID:</strong> {{ project.plmInfo.plmId }}</p>
-                    <a :href="project.plmInfo.plmLink" target="_blank" class="plm-link">
-                      PLM 바로가기 <LinkOutlined />
-                    </a>
-                  </div>
-                  <p v-else class="text-muted">PLM 연동 정보 없음</p>
-                </div>
-              </a-col>
-
-            </a-row>
-
-            <!-- History Section (Expandable) -->
-            <div class="history-section">
-              <h3><HistoryOutlined /> 변경 이력</h3>
-              <a-table
-                :data-source="projectHistory"
-                :pagination="{ pageSize: 5 }"
-                row-key="id"
-                size="small"
-                :expandable="{
-                  expandedRowRender: expandHistoryRow,
-                  expandRowByClick: true
-                }"
-              >
-                <a-table-column title="일시" key="changedAt" width="180">
-                  <template #default="{ record }">
-                    {{ new Date(record.changedAt).toLocaleString('ko-KR') }}
-                  </template>
-                </a-table-column>
-                <a-table-column title="변경자" key="changedBy" width="120">
-                  <template #default="{ record }">
-                    <a-avatar size="small" :style="{ backgroundColor: 'var(--color-accent-primary)', marginRight: '8px' }">
-                      {{ record.changedBy?.name?.charAt(0) || '?' }}
-                    </a-avatar>
-                    {{ record.changedBy?.name || '-' }}
-                  </template>
-                </a-table-column>
-                <a-table-column title="변경 항목" key="field" width="150">
-                  <template #default="{ record }">
-                    <a-tag :color="getFieldColor(record.field)">{{ getFieldLabel(record.field) }}</a-tag>
-                  </template>
-                </a-table-column>
-                <a-table-column title="요약" key="summary">
-                  <template #default="{ record }">
-                    <span class="history-summary">
-                      <span class="old-value">{{ truncateValue(record.oldValue) }}</span>
-                      <span class="arrow">→</span>
-                      <span class="new-value">{{ truncateValue(record.newValue) }}</span>
-                    </span>
-                  </template>
-                </a-table-column>
-              </a-table>
             </div>
           </div>
         </div>
@@ -1312,11 +1241,11 @@ const qualityColumns = [
   border: 1px solid var(--color-border);
 }
 
-/* Summary Section */
-.summary-section {
+/* Overview Section (Summary + Info 통합) */
+.overview-section {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-xl);
+  gap: var(--spacing-lg);
 }
 
 .latest-build-card {
