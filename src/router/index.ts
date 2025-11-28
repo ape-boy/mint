@@ -22,8 +22,8 @@ const routes: RouteRecordRaw[] = [
         name: 'projects',
         component: () => import('../views/ProjectListView.vue'),
         meta: {
-          title: 'Projects',
-          breadcrumb: 'Projects',
+          title: 'Project List',
+          breadcrumb: 'Project List',
         },
       },
       {
@@ -33,7 +33,17 @@ const routes: RouteRecordRaw[] = [
         props: true,
         meta: {
           title: 'Project Detail',
-          breadcrumb: 'Project Detail',
+          breadcrumb: 'projects',
+        },
+      },
+      {
+        path: 'projects/:projectId/builds/:buildId/stages/:stageName',
+        name: 'stage-detail',
+        component: () => import('../views/StageDetailView.vue'),
+        props: true,
+        meta: {
+          title: 'Stage Detail',
+          breadcrumb: 'Stage',
         },
       },
       {
@@ -41,35 +51,44 @@ const routes: RouteRecordRaw[] = [
         name: 'dashboard',
         component: () => import('../views/HomeView.vue'),
         meta: {
-          title: 'Dashboard',
-          breadcrumb: 'Dashboard',
+          title: '대시보드',
+          breadcrumb: '대시보드',
         },
       },
       {
-        path: 'build',
-        name: 'build-list',
-        component: () => import('../views/BuildListView.vue'),
+        path: 'board',
+        name: 'board',
+        component: () => import('../views/BoardView.vue'),
         meta: {
-          title: 'Builds',
-          breadcrumb: 'Builds',
+          title: 'Board',
+          breadcrumb: 'Board',
         },
       },
       {
-        path: 'build/new',
-        name: 'build-new',
-        component: () => import('../views/BuildNewView.vue'),
+        path: 'board/notice/:id',
+        name: 'notice-detail',
+        component: () => import('../views/BoardView.vue'),
         meta: {
-          title: 'New Build',
-          breadcrumb: 'New Build',
+          title: 'Notice Detail',
+          breadcrumb: 'board',
         },
       },
       {
-        path: 'build/:id',
-        name: 'build-detail',
-        component: () => import('../views/BuildDetailView.vue'),
+        path: 'board/voc/:id',
+        name: 'voc-detail',
+        component: () => import('../views/BoardView.vue'),
         meta: {
-          title: 'Build Detail',
-          breadcrumb: 'Build Detail',
+          title: 'VOC Detail',
+          breadcrumb: 'board',
+        },
+      },
+      {
+        path: 'board/release-note/:id',
+        name: 'release-note-detail',
+        component: () => import('../views/BoardView.vue'),
+        meta: {
+          title: 'Release Note Detail',
+          breadcrumb: 'board',
         },
       },
       {
@@ -77,8 +96,8 @@ const routes: RouteRecordRaw[] = [
         name: 'settings',
         component: () => import('../views/SettingsView.vue'),
         meta: {
-          title: 'Settings',
-          breadcrumb: 'Settings',
+          title: '설정',
+          breadcrumb: '설정',
         },
       },
     ],

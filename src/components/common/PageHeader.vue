@@ -32,12 +32,10 @@ defineProps<{
 
 .page-header__title {
   margin: 0;
-  font-size: var(--font-size-4xl);
-  font-weight: var(--font-weight-bold);
-  background: linear-gradient(to right, var(--color-accent-primary), var(--color-accent-secondary));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  letter-spacing: -0.02em;
 }
 
 .page-header__description {

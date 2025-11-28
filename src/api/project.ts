@@ -1,10 +1,22 @@
 import api from './client'
-import type { Project } from '@/types'
+import type { Project, ProjectQueryParams } from '@/types'
 
 export const projectApi = {
-  getAll: (groupId?: string) => {
-    const params = groupId ? { groupId } : {}
+  getAll(params?: ProjectQueryParams) {
     return api.get<Project[]>('/projects', { params })
   },
-  getById: (id: string) => api.get<Project>(`/projects/${id}`),
+
+  // Alias for getAll for backward compatibility
+  async getList(params?: ProjectQueryParams): Promise<Project[]> {
+    const response = await api.get<Project[]>('/projects', { params })
+    return response.data
+  },
+
+  getById(id: string) {
+    return api.get<Project>(`/projects/${id}`)
+  },
+
+  update(id: string, data: Partial<Project>) {
+    return api.patch<Project>(`/projects/${id}`, data)
+  },
 }

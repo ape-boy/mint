@@ -1,20 +1,26 @@
 {
-  "project-groups": [
+  "task-groups": [
     {
       "id": "1",
       "name": "BM1743",
+      "product": "Enterprise SSD",
+      "controller": "Piccolo",
       "createdAt": "2024-01-15T09:00:00Z",
       "updatedAt": "2024-11-20T14:30:00Z"
     },
     {
       "id": "2",
       "name": "PM9E1",
+      "product": "Consumer SSD",
+      "controller": "Aries",
       "createdAt": "2024-02-10T10:00:00Z",
       "updatedAt": "2024-11-18T11:00:00Z"
     },
     {
       "id": "3",
       "name": "PM9A3",
+      "product": "Datacenter SSD",
+      "controller": "Pascal",
       "createdAt": "2024-03-05T08:00:00Z",
       "updatedAt": "2024-11-22T16:45:00Z"
     }
@@ -23,9 +29,18 @@
     {
       "id": "1001",
       "groupId": "1",
+      "taskCode": "BM1743-LNV-001",
       "name": "BM1743_LENOVO_1TB",
       "status": "active",
       "oem": "Lenovo",
+      "feature": "NVMe 2.0",
+      "target": "ThinkSystem SR650",
+      "pl": {
+        "id": "100",
+        "name": "박대표",
+        "email": "park.dr@company.com",
+        "role": "PL"
+      },
       "tl": {
         "id": "101",
         "name": "김철수",
@@ -33,35 +48,94 @@
         "role": "TL"
       },
       "members": [
-        { "id": "101", "name": "김철수", "email": "kim.cs@company.com", "role": "TL" },
-        { "id": "102", "name": "이영희", "email": "lee.yh@company.com", "role": "Developer" },
-        { "id": "103", "name": "박민수", "email": "park.ms@company.com", "role": "Developer" },
-        { "id": "104", "name": "정수진", "email": "jung.sj@company.com", "role": "QA" }
+        {
+          "id": "100",
+          "name": "박대표",
+          "email": "park.dr@company.com",
+          "role": "PL"
+        },
+        {
+          "id": "101",
+          "name": "김철수",
+          "email": "kim.cs@company.com",
+          "role": "TL"
+        },
+        {
+          "id": "102",
+          "name": "이영희",
+          "email": "lee.yh@company.com",
+          "role": "Developer"
+        },
+        {
+          "id": "103",
+          "name": "박민수",
+          "email": "park.ms@company.com",
+          "role": "Developer"
+        },
+        {
+          "id": "104",
+          "name": "정수진",
+          "email": "jung.sj@company.com",
+          "role": "QA"
+        }
       ],
-      "config": {
+      "scmConfig": {
         "repository": "git@github.com:samsung/bm1743-fw.git",
-        "defaultBranch": "main",
-        "buildOptions": [
-          { "key": "debug", "label": "Debug Mode", "defaultValue": false },
-          { "key": "verbose", "label": "Verbose Log", "defaultValue": false },
-          { "key": "clean", "label": "Clean Build", "defaultValue": true }
-        ]
+        "branch": "main",
+        "revisionTag": "v2.3.1"
+      },
+      "buildEnvConfig": {
+        "batchFilePath": "/build/scripts/bm1743_build.bat",
+        "buildBatchOptions": "--target=release --optimization=high"
+      },
+      "buildOptions": {
+        "sourceCodeZip": true,
+        "onboardTestBinaryName": "bm1743_test.bin"
+      },
+      "plmInfo": {
+        "plmId": "PLM-2024-001234",
+        "plmLink": "https://plm.company.com/projects/PLM-2024-001234"
       },
       "milestones": [
-        { "id": "1", "name": "MP", "targetDate": "2024-03-01", "status": "completed" },
-        { "id": "2", "name": "ES", "targetDate": "2024-06-01", "status": "completed" },
-        { "id": "3", "name": "CS", "targetDate": "2024-09-01", "status": "in_progress" },
-        { "id": "4", "name": "QS", "targetDate": "2024-12-01", "status": "pending" }
+        {
+          "id": "m1",
+          "name": "MP",
+          "targetDate": "2024-03-01",
+          "status": "completed"
+        },
+        {
+          "id": "m2",
+          "name": "ES",
+          "targetDate": "2024-06-01",
+          "status": "completed"
+        },
+        {
+          "id": "m3",
+          "name": "CS",
+          "targetDate": "2024-09-01",
+          "status": "in_progress"
+        },
+        {
+          "id": "m4",
+          "name": "QS",
+          "targetDate": "2024-12-01",
+          "status": "pending"
+        }
       ],
+      "currentMilestone": "CS",
+      "kpiScore": 92,
       "createdAt": "2024-01-20T09:00:00Z",
       "updatedAt": "2024-11-20T14:30:00Z"
     },
     {
       "id": "1002",
       "groupId": "1",
+      "taskCode": "BM1743-DEL-001",
       "name": "BM1743_DELL_2TB",
       "status": "active",
       "oem": "Dell",
+      "feature": "NVMe 2.0",
+      "target": "PowerEdge R750",
       "tl": {
         "id": "105",
         "name": "최동훈",
@@ -69,33 +143,72 @@
         "role": "TL"
       },
       "members": [
-        { "id": "105", "name": "최동훈", "email": "choi.dh@company.com", "role": "TL" },
-        { "id": "106", "name": "한지민", "email": "han.jm@company.com", "role": "Developer" },
-        { "id": "107", "name": "윤서연", "email": "yoon.sy@company.com", "role": "Developer" }
+        {
+          "id": "105",
+          "name": "최동훈",
+          "email": "choi.dh@company.com",
+          "role": "TL"
+        },
+        {
+          "id": "106",
+          "name": "한지민",
+          "email": "han.jm@company.com",
+          "role": "Developer"
+        },
+        {
+          "id": "107",
+          "name": "윤서연",
+          "email": "yoon.sy@company.com",
+          "role": "Developer"
+        }
       ],
-      "config": {
+      "scmConfig": {
         "repository": "git@github.com:samsung/bm1743-fw.git",
-        "defaultBranch": "main",
-        "buildOptions": [
-          { "key": "debug", "label": "Debug Mode", "defaultValue": false },
-          { "key": "verbose", "label": "Verbose Log", "defaultValue": false },
-          { "key": "clean", "label": "Clean Build", "defaultValue": true }
-        ]
+        "branch": "main",
+        "revisionTag": "v2.3.0"
+      },
+      "buildEnvConfig": {
+        "batchFilePath": "/build/scripts/bm1743_dell_build.bat",
+        "buildBatchOptions": "--target=release --vendor=dell"
+      },
+      "buildOptions": {
+        "sourceCodeZip": true,
+        "onboardTestBinaryName": "bm1743_dell_test.bin"
       },
       "milestones": [
-        { "id": "5", "name": "MP", "targetDate": "2024-04-01", "status": "completed" },
-        { "id": "6", "name": "ES", "targetDate": "2024-07-01", "status": "completed" },
-        { "id": "7", "name": "CS", "targetDate": "2024-10-01", "status": "in_progress" }
+        {
+          "id": "m5",
+          "name": "MP",
+          "targetDate": "2024-04-01",
+          "status": "completed"
+        },
+        {
+          "id": "m6",
+          "name": "ES",
+          "targetDate": "2024-07-01",
+          "status": "completed"
+        },
+        {
+          "id": "m7",
+          "name": "CS",
+          "targetDate": "2024-10-01",
+          "status": "in_progress"
+        }
       ],
+      "currentMilestone": "CS",
+      "kpiScore": 88,
       "createdAt": "2024-02-01T10:00:00Z",
       "updatedAt": "2024-11-19T09:15:00Z"
     },
     {
       "id": "1003",
       "groupId": "2",
+      "taskCode": "PM9E1-SAM-001",
       "name": "PM9E1_SAMSUNG_512GB",
       "status": "active",
       "oem": "Samsung",
+      "feature": "PCIe 4.0",
+      "target": "Galaxy Book",
       "tl": {
         "id": "108",
         "name": "강태호",
@@ -103,32 +216,72 @@
         "role": "TL"
       },
       "members": [
-        { "id": "108", "name": "강태호", "email": "kang.th@company.com", "role": "TL" },
-        { "id": "109", "name": "송미래", "email": "song.mr@company.com", "role": "Developer" },
-        { "id": "110", "name": "임준혁", "email": "lim.jh@company.com", "role": "QA" }
+        {
+          "id": "108",
+          "name": "강태호",
+          "email": "kang.th@company.com",
+          "role": "TL"
+        },
+        {
+          "id": "109",
+          "name": "송미래",
+          "email": "song.mr@company.com",
+          "role": "Developer"
+        },
+        {
+          "id": "110",
+          "name": "임준혁",
+          "email": "lim.jh@company.com",
+          "role": "QA"
+        }
       ],
-      "config": {
+      "scmConfig": {
         "repository": "git@github.com:samsung/pm9e1-fw.git",
-        "defaultBranch": "develop",
-        "buildOptions": [
-          { "key": "debug", "label": "Debug Mode", "defaultValue": true },
-          { "key": "verbose", "label": "Verbose Log", "defaultValue": true },
-          { "key": "clean", "label": "Clean Build", "defaultValue": true }
-        ]
+        "branch": "develop",
+        "revisionTag": "v1.2.0"
+      },
+      "buildEnvConfig": {
+        "batchFilePath": "/build/scripts/pm9e1_build.bat",
+        "buildBatchOptions": "--target=consumer --pcie=4.0"
+      },
+      "buildOptions": {
+        "sourceCodeZip": false,
+        "onboardTestBinaryName": "pm9e1_test.bin"
       },
       "milestones": [
-        { "id": "8", "name": "MP", "targetDate": "2024-05-01", "status": "completed" },
-        { "id": "9", "name": "ES", "targetDate": "2024-08-01", "status": "in_progress" }
+        {
+          "id": "m8",
+          "name": "MP",
+          "targetDate": "2024-05-01",
+          "status": "completed"
+        },
+        {
+          "id": "m9",
+          "name": "ES",
+          "targetDate": "2024-08-01",
+          "status": "in_progress"
+        }
       ],
+      "currentMilestone": "ES",
+      "kpiScore": 85,
       "createdAt": "2024-03-15T09:00:00Z",
       "updatedAt": "2024-11-22T10:00:00Z"
     },
     {
       "id": "1004",
       "groupId": "3",
+      "taskCode": "PM9A3-AWS-001",
       "name": "PM9A3_AWS_4TB",
       "status": "active",
       "oem": "AWS",
+      "feature": "NVMe 1.4",
+      "target": "EC2 Instances",
+      "pl": {
+        "id": "120",
+        "name": "김리더",
+        "email": "kim.ld@company.com",
+        "role": "PL"
+      },
       "tl": {
         "id": "111",
         "name": "오현우",
@@ -136,30 +289,150 @@
         "role": "TL"
       },
       "members": [
-        { "id": "111", "name": "오현우", "email": "oh.hw@company.com", "role": "TL" },
-        { "id": "112", "name": "배수지", "email": "bae.sj@company.com", "role": "Developer" },
-        { "id": "113", "name": "신동엽", "email": "shin.dy@company.com", "role": "Developer" },
-        { "id": "114", "name": "권유리", "email": "kwon.yr@company.com", "role": "QA" },
-        { "id": "115", "name": "장원영", "email": "jang.wy@company.com", "role": "PM" }
+        {
+          "id": "120",
+          "name": "김리더",
+          "email": "kim.ld@company.com",
+          "role": "PL"
+        },
+        {
+          "id": "111",
+          "name": "오현우",
+          "email": "oh.hw@company.com",
+          "role": "TL"
+        },
+        {
+          "id": "112",
+          "name": "배수지",
+          "email": "bae.sj@company.com",
+          "role": "Developer"
+        },
+        {
+          "id": "113",
+          "name": "신동엽",
+          "email": "shin.dy@company.com",
+          "role": "Developer"
+        },
+        {
+          "id": "114",
+          "name": "권유리",
+          "email": "kwon.yr@company.com",
+          "role": "QA"
+        },
+        {
+          "id": "115",
+          "name": "장원영",
+          "email": "jang.wy@company.com",
+          "role": "PM"
+        }
       ],
-      "config": {
+      "scmConfig": {
         "repository": "git@github.com:samsung/pm9a3-fw.git",
-        "defaultBranch": "main",
-        "buildOptions": [
-          { "key": "debug", "label": "Debug Mode", "defaultValue": false },
-          { "key": "verbose", "label": "Verbose Log", "defaultValue": false },
-          { "key": "clean", "label": "Clean Build", "defaultValue": true },
-          { "key": "encryption", "label": "Enable Encryption", "defaultValue": true }
-        ]
+        "branch": "main",
+        "revisionTag": "v3.1.0"
+      },
+      "buildEnvConfig": {
+        "batchFilePath": "/build/scripts/pm9a3_build.bat",
+        "buildBatchOptions": "--target=datacenter --encryption=on --capacity=4tb"
+      },
+      "buildOptions": {
+        "sourceCodeZip": true,
+        "onboardTestBinaryName": "pm9a3_aws_test.bin"
+      },
+      "plmInfo": {
+        "plmId": "PLM-2024-002345",
+        "plmLink": "https://plm.company.com/projects/PLM-2024-002345"
       },
       "milestones": [
-        { "id": "10", "name": "MP", "targetDate": "2024-02-01", "status": "completed" },
-        { "id": "11", "name": "ES", "targetDate": "2024-05-01", "status": "completed" },
-        { "id": "12", "name": "CS", "targetDate": "2024-08-01", "status": "completed" },
-        { "id": "13", "name": "QS", "targetDate": "2024-11-01", "status": "in_progress" }
+        {
+          "id": "m10",
+          "name": "MP",
+          "targetDate": "2024-02-01",
+          "status": "completed"
+        },
+        {
+          "id": "m11",
+          "name": "ES",
+          "targetDate": "2024-05-01",
+          "status": "completed"
+        },
+        {
+          "id": "m12",
+          "name": "CS",
+          "targetDate": "2024-08-01",
+          "status": "completed"
+        },
+        {
+          "id": "m13",
+          "name": "QS",
+          "targetDate": "2024-11-01",
+          "status": "in_progress"
+        }
       ],
+      "currentMilestone": "QS",
+      "kpiScore": 95,
       "createdAt": "2024-01-10T09:00:00Z",
       "updatedAt": "2024-11-23T08:00:00Z"
+    },
+    {
+      "id": "1005",
+      "groupId": "2",
+      "taskCode": "PM9E1-HP-001",
+      "name": "PM9E1_HP_256GB",
+      "status": "active",
+      "oem": "HP",
+      "feature": "PCIe 4.0",
+      "target": "EliteBook 800",
+      "tl": {
+        "id": "116",
+        "name": "조예진",
+        "email": "cho.yj@company.com",
+        "role": "TL"
+      },
+      "members": [
+        {
+          "id": "116",
+          "name": "조예진",
+          "email": "cho.yj@company.com",
+          "role": "TL"
+        },
+        {
+          "id": "117",
+          "name": "김도현",
+          "email": "kim.dh@company.com",
+          "role": "Developer"
+        }
+      ],
+      "scmConfig": {
+        "repository": "git@github.com:samsung/pm9e1-fw.git",
+        "branch": "hp-custom",
+        "revisionTag": "v1.1.5-hp"
+      },
+      "buildEnvConfig": {
+        "batchFilePath": "/build/scripts/pm9e1_hp_build.bat",
+        "buildBatchOptions": "--target=consumer --vendor=hp"
+      },
+      "buildOptions": {
+        "sourceCodeZip": false
+      },
+      "milestones": [
+        {
+          "id": "m14",
+          "name": "MP",
+          "targetDate": "2024-06-01",
+          "status": "completed"
+        },
+        {
+          "id": "m15",
+          "name": "ES",
+          "targetDate": "2024-09-01",
+          "status": "in_progress"
+        }
+      ],
+      "currentMilestone": "ES",
+      "kpiScore": 78,
+      "createdAt": "2024-04-01T09:00:00Z",
+      "updatedAt": "2024-11-21T15:00:00Z"
     }
   ],
   "layers": [
@@ -169,15 +442,116 @@
       "name": "Release",
       "type": "release",
       "pipelineConfig": [
-        { "name": "Build", "enabled": true, "required": true },
-        { "name": "SAM", "enabled": true, "required": true },
-        { "name": "Coverity", "enabled": true, "required": true },
-        { "name": "DoBEE", "enabled": true, "required": false },
-        { "name": "TASTY", "enabled": true, "required": true },
-        { "name": "Warning Count", "enabled": true, "required": false },
-        { "name": "BlackDuck", "enabled": true, "required": true },
-        { "name": "TEST1", "enabled": true, "required": false },
-        { "name": "TEST2", "enabled": false, "required": false }
+        {
+          "name": "Build",
+          "enabled": true,
+          "required": true,
+          "settings": {
+            "timeout": 30,
+            "retryCount": 1,
+            "build": {
+              "optimization": "release",
+              "cleanBuild": true,
+              "parallelJobs": 8
+            }
+          }
+        },
+        {
+          "name": "SAM",
+          "enabled": true,
+          "required": true,
+          "settings": {
+            "timeout": 15,
+            "sam": {
+              "level": "strict",
+              "excludePaths": ["test/", "tools/"]
+            }
+          }
+        },
+        {
+          "name": "Coverity",
+          "enabled": true,
+          "required": true,
+          "settings": {
+            "timeout": 60,
+            "coverity": {
+              "threshold": 5,
+              "ruleSet": "strict"
+            }
+          }
+        },
+        {
+          "name": "DoBEE",
+          "enabled": true,
+          "required": false,
+          "settings": {
+            "timeout": 20,
+            "dobee": {
+              "profile": "enterprise-ssd",
+              "targetBranch": "main"
+            }
+          }
+        },
+        {
+          "name": "TASTY",
+          "enabled": true,
+          "required": true,
+          "settings": {
+            "timeout": 30,
+            "tasty": {
+              "configFile": "/config/tasty_release.yml",
+              "testTimeout": 300
+            }
+          }
+        },
+        {
+          "name": "OnBoard Test",
+          "enabled": true,
+          "required": true,
+          "settings": {
+            "timeout": 45,
+            "onboardTest": {
+              "testSuite": "full_regression",
+              "parallelCount": 4
+            }
+          }
+        },
+        {
+          "name": "Warning Count",
+          "enabled": true,
+          "required": false,
+          "settings": {
+            "timeout": 5,
+            "warningCount": {
+              "maxWarnings": 100,
+              "treatAsError": false
+            }
+          }
+        },
+        {
+          "name": "Coding Rule Check",
+          "enabled": true,
+          "required": true,
+          "settings": {
+            "timeout": 10,
+            "codingRuleCheck": {
+              "rules": ["MISRA-C:2012", "CERT-C"],
+              "severity": "error"
+            }
+          }
+        },
+        {
+          "name": "BlackDuck",
+          "enabled": true,
+          "required": true,
+          "settings": {
+            "timeout": 30,
+            "blackduck": {
+              "scanMode": "full",
+              "excludePatterns": ["*.test.*", "test/**"]
+            }
+          }
+        }
       ],
       "createdAt": "2024-01-20T09:00:00Z",
       "updatedAt": "2024-11-20T14:30:00Z"
@@ -186,27 +560,63 @@
       "id": "2002",
       "projectId": "1001",
       "name": "HIL",
-      "type": "custom",
+      "type": "layer",
       "pipelineConfig": [
         { "name": "Build", "enabled": true, "required": true },
         { "name": "SAM", "enabled": true, "required": false },
-        { "name": "HIL Test", "enabled": true, "required": true },
-        { "name": "Report", "enabled": true, "required": false }
+        { "name": "Coverity", "enabled": true, "required": false },
+        { "name": "Warning Count", "enabled": true, "required": false }
       ],
       "createdAt": "2024-02-01T09:00:00Z",
       "updatedAt": "2024-11-15T10:00:00Z"
     },
     {
-      "id": "2003",
+      "id": "2010",
       "projectId": "1001",
-      "name": "FTL",
-      "type": "custom",
+      "name": "FIL",
+      "type": "layer",
       "pipelineConfig": [
         { "name": "Build", "enabled": true, "required": true },
-        { "name": "FTL Test", "enabled": true, "required": true },
-        { "name": "Performance", "enabled": true, "required": false }
+        { "name": "SAM", "enabled": true, "required": false },
+        { "name": "Warning Count", "enabled": true, "required": false }
+      ],
+      "createdAt": "2024-02-15T09:00:00Z",
+      "updatedAt": "2024-11-15T10:00:00Z"
+    },
+    {
+      "id": "2011",
+      "projectId": "1001",
+      "name": "FTL",
+      "type": "layer",
+      "pipelineConfig": [
+        { "name": "Build", "enabled": true, "required": true },
+        { "name": "SAM", "enabled": true, "required": false },
+        { "name": "Coverity", "enabled": true, "required": false }
+      ],
+      "createdAt": "2024-02-20T09:00:00Z",
+      "updatedAt": "2024-11-15T10:00:00Z"
+    },
+    {
+      "id": "2003",
+      "projectId": "1001",
+      "name": "DEV-Test",
+      "type": "private",
+      "pipelineConfig": [
+        { "name": "Build", "enabled": true, "required": true },
+        { "name": "SAM", "enabled": false, "required": false }
       ],
       "createdAt": "2024-03-01T09:00:00Z",
+      "updatedAt": "2024-11-10T14:00:00Z"
+    },
+    {
+      "id": "2012",
+      "projectId": "1001",
+      "name": "Debug-Build",
+      "type": "private",
+      "pipelineConfig": [
+        { "name": "Build", "enabled": true, "required": true }
+      ],
+      "createdAt": "2024-03-10T09:00:00Z",
       "updatedAt": "2024-11-10T14:00:00Z"
     },
     {
@@ -215,11 +625,46 @@
       "name": "Release",
       "type": "release",
       "pipelineConfig": [
-        { "name": "Build", "enabled": true, "required": true },
-        { "name": "SAM", "enabled": true, "required": true },
-        { "name": "Coverity", "enabled": true, "required": true },
-        { "name": "TASTY", "enabled": true, "required": true },
-        { "name": "BlackDuck", "enabled": true, "required": true }
+        {
+          "name": "Build",
+          "enabled": true,
+          "required": true
+        },
+        {
+          "name": "SAM",
+          "enabled": true,
+          "required": true
+        },
+        {
+          "name": "Coverity",
+          "enabled": true,
+          "required": true
+        },
+        {
+          "name": "DoBEE",
+          "enabled": true,
+          "required": true
+        },
+        {
+          "name": "TASTY",
+          "enabled": true,
+          "required": true
+        },
+        {
+          "name": "OnBoard Test",
+          "enabled": true,
+          "required": true
+        },
+        {
+          "name": "Coding Rule Check",
+          "enabled": true,
+          "required": true
+        },
+        {
+          "name": "BlackDuck",
+          "enabled": true,
+          "required": true
+        }
       ],
       "createdAt": "2024-02-01T10:00:00Z",
       "updatedAt": "2024-11-19T09:15:00Z"
@@ -230,11 +675,36 @@
       "name": "Release",
       "type": "release",
       "pipelineConfig": [
-        { "name": "Build", "enabled": true, "required": true },
-        { "name": "SAM", "enabled": true, "required": true },
-        { "name": "Coverity", "enabled": true, "required": true },
-        { "name": "TASTY", "enabled": true, "required": true },
-        { "name": "BlackDuck", "enabled": true, "required": true }
+        {
+          "name": "Build",
+          "enabled": true,
+          "required": true
+        },
+        {
+          "name": "SAM",
+          "enabled": true,
+          "required": true
+        },
+        {
+          "name": "Coverity",
+          "enabled": true,
+          "required": true
+        },
+        {
+          "name": "TASTY",
+          "enabled": true,
+          "required": true
+        },
+        {
+          "name": "OnBoard Test",
+          "enabled": true,
+          "required": true
+        },
+        {
+          "name": "BlackDuck",
+          "enabled": true,
+          "required": true
+        }
       ],
       "createdAt": "2024-03-15T09:00:00Z",
       "updatedAt": "2024-11-22T10:00:00Z"
@@ -245,15 +715,51 @@
       "name": "Release",
       "type": "release",
       "pipelineConfig": [
-        { "name": "Build", "enabled": true, "required": true },
-        { "name": "SAM", "enabled": true, "required": true },
-        { "name": "Coverity", "enabled": true, "required": true },
-        { "name": "DoBEE", "enabled": true, "required": true },
-        { "name": "TASTY", "enabled": true, "required": true },
-        { "name": "Warning Count", "enabled": true, "required": true },
-        { "name": "BlackDuck", "enabled": true, "required": true },
-        { "name": "TEST1", "enabled": true, "required": true },
-        { "name": "TEST2", "enabled": true, "required": true }
+        {
+          "name": "Build",
+          "enabled": true,
+          "required": true
+        },
+        {
+          "name": "SAM",
+          "enabled": true,
+          "required": true
+        },
+        {
+          "name": "Coverity",
+          "enabled": true,
+          "required": true
+        },
+        {
+          "name": "DoBEE",
+          "enabled": true,
+          "required": true
+        },
+        {
+          "name": "TASTY",
+          "enabled": true,
+          "required": true
+        },
+        {
+          "name": "OnBoard Test",
+          "enabled": true,
+          "required": true
+        },
+        {
+          "name": "Warning Count",
+          "enabled": true,
+          "required": true
+        },
+        {
+          "name": "Coding Rule Check",
+          "enabled": true,
+          "required": true
+        },
+        {
+          "name": "BlackDuck",
+          "enabled": true,
+          "required": true
+        }
       ],
       "createdAt": "2024-01-10T09:00:00Z",
       "updatedAt": "2024-11-23T08:00:00Z"
@@ -261,14 +767,62 @@
     {
       "id": "2007",
       "projectId": "1004",
-      "name": "HIL",
-      "type": "custom",
+      "name": "Layer Build",
+      "type": "layer",
       "pipelineConfig": [
-        { "name": "Build", "enabled": true, "required": true },
-        { "name": "HIL Test", "enabled": true, "required": true }
+        {
+          "name": "Build",
+          "enabled": true,
+          "required": true
+        },
+        {
+          "name": "SAM",
+          "enabled": true,
+          "required": false
+        },
+        {
+          "name": "Coverity",
+          "enabled": true,
+          "required": false
+        }
       ],
       "createdAt": "2024-02-15T09:00:00Z",
       "updatedAt": "2024-11-20T10:00:00Z"
+    },
+    {
+      "id": "2008",
+      "projectId": "1005",
+      "name": "Release",
+      "type": "release",
+      "pipelineConfig": [
+        {
+          "name": "Build",
+          "enabled": true,
+          "required": true
+        },
+        {
+          "name": "SAM",
+          "enabled": true,
+          "required": true
+        },
+        {
+          "name": "Coverity",
+          "enabled": true,
+          "required": true
+        },
+        {
+          "name": "TASTY",
+          "enabled": true,
+          "required": true
+        },
+        {
+          "name": "BlackDuck",
+          "enabled": true,
+          "required": true
+        }
+      ],
+      "createdAt": "2024-04-01T09:00:00Z",
+      "updatedAt": "2024-11-21T15:00:00Z"
     }
   ],
   "builds": [
@@ -276,26 +830,222 @@
       "id": "3001",
       "projectId": "1001",
       "layerId": "2001",
+      "round": 45,
       "buildNumber": 1245,
       "status": "success",
-      "branch": "main",
-      "commitHash": "a1b2c3d4e5f6",
-      "buildOptions": { "debug": false, "verbose": false, "clean": true },
-      "stages": [
-        { "name": "Build", "status": "success", "duration": 120 },
-        { "name": "SAM", "status": "success", "duration": 45 },
-        { "name": "Coverity", "status": "success", "duration": 180 },
-        { "name": "DoBEE", "status": "success", "duration": 60 },
-        { "name": "TASTY", "status": "success", "duration": 90 },
-        { "name": "Warning Count", "status": "success", "duration": 15 },
-        { "name": "BlackDuck", "status": "success", "duration": 120 }
-      ],
-      "trStatus": "available",
-      "artifacts": {
-        "binaryUrl": "/downloads/build-3001/firmware.bin",
-        "logsUrl": "/downloads/build-3001/build.log"
+      "scmConfig": {
+        "repository": "git@github.com:samsung/bm1743-fw.git",
+        "branch": "main",
+        "revisionTag": "v2.3.1"
       },
-      "triggeredBy": "jenkins-auto",
+      "buildEnvConfig": {
+        "batchFilePath": "/build/scripts/bm1743_build.bat",
+        "buildBatchOptions": "--target=release --optimization=high"
+      },
+      "buildOptions": {
+        "sourceCodeZip": true,
+        "onboardTestBinaryName": "bm1743_test.bin"
+      },
+      "stages": [
+        {
+          "name": "Build",
+          "status": "success",
+          "duration": 120,
+          "startedAt": "2024-11-20T14:00:00Z",
+          "finishedAt": "2024-11-20T14:02:00Z",
+          "artifacts": {
+            "binaryUrl": "/downloads/3001/build/firmware.bin",
+            "logsUrl": "/downloads/3001/build/build.log"
+          },
+          "logs": "[14:00:00] Starting build process...\n[14:00:05] Compiling source files...\n[14:01:30] Linking objects...\n[14:01:55] Build completed successfully\n[14:02:00] Artifacts generated: firmware.bin (2.3MB)",
+          "logUrl": "/api/builds/3001/stages/Build/logs",
+          "summary": {
+            "message": "Build completed successfully",
+            "errorCount": 0,
+            "warningCount": 12
+          }
+        },
+        {
+          "name": "SAM",
+          "status": "success",
+          "duration": 45,
+          "startedAt": "2024-11-20T14:02:00Z",
+          "finishedAt": "2024-11-20T14:02:45Z",
+          "artifacts": {
+            "logsUrl": "/downloads/3001/sam/sam.log"
+          },
+          "logs": "[14:02:00] SAM Analysis started\n[14:02:10] Scanning memory access patterns...\n[14:02:35] Analysis complete\n[14:02:45] Score: 95/100",
+          "logUrl": "/api/builds/3001/stages/SAM/logs",
+          "summary": {
+            "message": "SAM analysis passed",
+            "errorCount": 0,
+            "warningCount": 3
+          }
+        },
+        {
+          "name": "Coverity",
+          "status": "success",
+          "duration": 180,
+          "startedAt": "2024-11-20T14:02:45Z",
+          "finishedAt": "2024-11-20T14:05:45Z",
+          "artifacts": {
+            "logsUrl": "/downloads/3001/coverity/coverity.log"
+          },
+          "logs": "[14:02:45] Coverity scan initiated\n[14:03:00] Analyzing 1,245 files...\n[14:04:30] Defect analysis in progress...\n[14:05:45] Scan complete: 2 issues found (below threshold)",
+          "logUrl": "/api/builds/3001/stages/Coverity/logs",
+          "summary": {
+            "message": "2 defects found (threshold: 5)",
+            "errorCount": 2,
+            "warningCount": 8
+          }
+        },
+        {
+          "name": "DoBEE",
+          "status": "success",
+          "duration": 60,
+          "startedAt": "2024-11-20T14:05:45Z",
+          "finishedAt": "2024-11-20T14:06:45Z",
+          "artifacts": {
+            "logsUrl": "/downloads/3001/dobee/dobee.log"
+          },
+          "logs": "[14:05:45] DoBEE verification started\n[14:06:00] Checking branch compliance...\n[14:06:30] Validating code ownership...\n[14:06:45] DoBEE check passed",
+          "logUrl": "/api/builds/3001/stages/DoBEE/logs",
+          "summary": {
+            "message": "Branch compliance verified"
+          }
+        },
+        {
+          "name": "TASTY",
+          "status": "success",
+          "duration": 90,
+          "startedAt": "2024-11-20T14:06:45Z",
+          "finishedAt": "2024-11-20T14:08:15Z",
+          "artifacts": {
+            "logsUrl": "/downloads/3001/tasty/tasty.log"
+          },
+          "logs": "[14:06:45] TASTY test suite starting\n[14:07:00] Running unit tests: 245 tests\n[14:07:45] Running integration tests: 58 tests\n[14:08:15] All tests passed: 303/303",
+          "logUrl": "/api/builds/3001/stages/TASTY/logs",
+          "summary": {
+            "message": "All tests passed",
+            "passedTests": 303,
+            "failedTests": 0,
+            "coverage": 87
+          }
+        },
+        {
+          "name": "OnBoard Test",
+          "status": "success",
+          "duration": 150,
+          "startedAt": "2024-11-20T14:08:15Z",
+          "finishedAt": "2024-11-20T14:10:45Z",
+          "artifacts": {
+            "logsUrl": "/downloads/3001/onboard/onboard.log"
+          },
+          "logs": "[14:08:15] OnBoard test initialized\n[14:08:30] Flashing firmware to test device...\n[14:09:00] Running hardware validation tests...\n[14:10:30] Performance benchmarks complete\n[14:10:45] All OnBoard tests passed",
+          "logUrl": "/api/builds/3001/stages/OnBoard%20Test/logs",
+          "summary": {
+            "message": "Hardware validation passed",
+            "passedTests": 48,
+            "failedTests": 0
+          }
+        },
+        {
+          "name": "Warning Count",
+          "status": "success",
+          "duration": 15,
+          "startedAt": "2024-11-20T14:10:45Z",
+          "finishedAt": "2024-11-20T14:11:00Z",
+          "artifacts": {
+            "logsUrl": "/downloads/3001/warning/warning.log"
+          },
+          "logs": "[14:10:45] Counting compiler warnings...\n[14:10:55] Total warnings: 45 (max allowed: 100)\n[14:11:00] Warning count check passed",
+          "logUrl": "/api/builds/3001/stages/Warning%20Count/logs",
+          "summary": {
+            "message": "45 warnings (limit: 100)",
+            "warningCount": 45
+          }
+        },
+        {
+          "name": "Coding Rule Check",
+          "status": "success",
+          "duration": 30,
+          "startedAt": "2024-11-20T14:11:00Z",
+          "finishedAt": "2024-11-20T14:11:30Z",
+          "artifacts": {
+            "logsUrl": "/downloads/3001/coding/coding.log"
+          },
+          "logs": "[14:11:00] Coding rule validation started\n[14:11:10] Checking MISRA-C:2012 compliance...\n[14:11:20] Checking CERT-C compliance...\n[14:11:30] All coding rules satisfied",
+          "logUrl": "/api/builds/3001/stages/Coding%20Rule%20Check/logs",
+          "summary": {
+            "message": "MISRA-C:2012, CERT-C compliant",
+            "errorCount": 0
+          }
+        },
+        {
+          "name": "BlackDuck",
+          "status": "success",
+          "duration": 120,
+          "startedAt": "2024-11-20T14:11:30Z",
+          "finishedAt": "2024-11-20T14:13:30Z",
+          "artifacts": {
+            "logsUrl": "/downloads/3001/blackduck/blackduck.log"
+          },
+          "logs": "[14:11:30] BlackDuck OSS scan started\n[14:12:00] Scanning dependencies...\n[14:12:45] Checking license compliance...\n[14:13:15] Vulnerability scan complete\n[14:13:30] No issues found",
+          "logUrl": "/api/builds/3001/stages/BlackDuck/logs",
+          "summary": {
+            "message": "No OSS violations found",
+            "errorCount": 0
+          }
+        }
+      ],
+      "qualityMetrics": {
+        "coverity": {
+          "status": "pass",
+          "score": 98,
+          "issues": 2
+        },
+        "sam": {
+          "status": "pass",
+          "score": 95
+        },
+        "onboardTest": {
+          "status": "pass",
+          "score": 100
+        },
+        "dobee": {
+          "status": "pass",
+          "score": 92
+        },
+        "codingRuleCheck": {
+          "status": "pass",
+          "score": 97
+        },
+        "blackduck": {
+          "status": "pass",
+          "issues": 0
+        }
+      },
+      "releaseCriteria": {
+        "allStagesPassed": true,
+        "coverityPassed": true,
+        "samPassed": true,
+        "onboardTestPassed": true,
+        "blackduckPassed": true,
+        "overallPassed": true
+      },
+      "releaseStatus": "released",
+      "artifacts": {
+        "binaryUrl": "/downloads/3001/firmware.bin",
+        "logsUrl": "/downloads/3001/build.log",
+        "sourceZipUrl": "/downloads/3001/source.zip"
+      },
+      "fwName": "BM1743_v2.3.1_R45",
+      "triggeredBy": {
+        "id": "101",
+        "name": "김철수",
+        "email": "kim.cs@company.com",
+        "role": "TL"
+      },
       "startedAt": "2024-11-20T14:00:00Z",
       "finishedAt": "2024-11-20T14:25:00Z",
       "duration": 1500
@@ -304,25 +1054,113 @@
       "id": "3002",
       "projectId": "1001",
       "layerId": "2001",
+      "round": 44,
       "buildNumber": 1244,
       "status": "failed",
-      "branch": "feature/nvme-opt",
-      "commitHash": "b2c3d4e5f6a1",
-      "buildOptions": { "debug": true, "verbose": true, "clean": true },
-      "stages": [
-        { "name": "Build", "status": "success", "duration": 125 },
-        { "name": "SAM", "status": "success", "duration": 48 },
-        { "name": "Coverity", "status": "failed", "duration": 95 },
-        { "name": "DoBEE", "status": "skipped", "duration": null },
-        { "name": "TASTY", "status": "skipped", "duration": null },
-        { "name": "Warning Count", "status": "skipped", "duration": null },
-        { "name": "BlackDuck", "status": "skipped", "duration": null }
-      ],
-      "trStatus": "pending_approval",
-      "artifacts": {
-        "logsUrl": "/downloads/build-3002/build.log"
+      "scmConfig": {
+        "repository": "git@github.com:samsung/bm1743-fw.git",
+        "branch": "feature/nvme-opt",
+        "revisionTag": "v2.3.0-rc1"
       },
-      "triggeredBy": "kim.cs",
+      "stages": [
+        {
+          "name": "Build",
+          "status": "success",
+          "duration": 125,
+          "artifacts": {
+            "logsUrl": "/downloads/3002/build/build.log"
+          }
+        },
+        {
+          "name": "SAM",
+          "status": "success",
+          "duration": 48,
+          "artifacts": {
+            "logsUrl": "/downloads/3002/sam/sam.log"
+          }
+        },
+        {
+          "name": "Coverity",
+          "status": "failed",
+          "duration": 95,
+          "artifacts": {
+            "logsUrl": "/downloads/3002/coverity/coverity.log"
+          }
+        },
+        {
+          "name": "DoBEE",
+          "status": "skipped",
+          "duration": null
+        },
+        {
+          "name": "TASTY",
+          "status": "skipped",
+          "duration": null
+        },
+        {
+          "name": "OnBoard Test",
+          "status": "skipped",
+          "duration": null
+        },
+        {
+          "name": "Warning Count",
+          "status": "skipped",
+          "duration": null
+        },
+        {
+          "name": "Coding Rule Check",
+          "status": "skipped",
+          "duration": null
+        },
+        {
+          "name": "BlackDuck",
+          "status": "skipped",
+          "duration": null
+        }
+      ],
+      "qualityMetrics": {
+        "coverity": {
+          "status": "fail",
+          "score": 65,
+          "issues": 15,
+          "details": "Critical issues found"
+        },
+        "sam": {
+          "status": "pass",
+          "score": 88
+        },
+        "onboardTest": {
+          "status": "skipped"
+        },
+        "dobee": {
+          "status": "skipped"
+        },
+        "codingRuleCheck": {
+          "status": "skipped"
+        },
+        "blackduck": {
+          "status": "skipped"
+        }
+      },
+      "releaseCriteria": {
+        "allStagesPassed": false,
+        "coverityPassed": false,
+        "samPassed": true,
+        "onboardTestPassed": false,
+        "blackduckPassed": false,
+        "overallPassed": false
+      },
+      "releaseStatus": "pending_approval",
+      "artifacts": {
+        "logsUrl": "/downloads/3002/build.log"
+      },
+      "fwName": "BM1743_v2.3.0-rc1_R44",
+      "triggeredBy": {
+        "id": "102",
+        "name": "이영희",
+        "email": "lee.yh@company.com",
+        "role": "Developer"
+      },
       "startedAt": "2024-11-20T10:00:00Z",
       "finishedAt": "2024-11-20T10:15:00Z",
       "duration": 900
@@ -330,126 +1168,1600 @@
     {
       "id": "3003",
       "projectId": "1001",
+      "layerId": "2001",
+      "round": 43,
+      "buildNumber": 1243,
+      "status": "success",
+      "scmConfig": {
+        "repository": "git@github.com:samsung/bm1743-fw.git",
+        "branch": "main",
+        "revisionTag": "v2.2.9"
+      },
+      "stages": [
+        {
+          "name": "Build",
+          "status": "success",
+          "duration": 118,
+          "artifacts": {
+            "binaryUrl": "/downloads/3003/build/firmware.bin",
+            "logsUrl": "/downloads/3003/build/build.log"
+          }
+        },
+        {
+          "name": "SAM",
+          "status": "success",
+          "duration": 42,
+          "artifacts": {
+            "logsUrl": "/downloads/3003/sam/sam.log"
+          }
+        },
+        {
+          "name": "Coverity",
+          "status": "success",
+          "duration": 175,
+          "artifacts": {
+            "logsUrl": "/downloads/3003/coverity/coverity.log"
+          }
+        },
+        {
+          "name": "DoBEE",
+          "status": "success",
+          "duration": 58,
+          "artifacts": {
+            "logsUrl": "/downloads/3003/dobee/dobee.log"
+          }
+        },
+        {
+          "name": "TASTY",
+          "status": "success",
+          "duration": 88,
+          "artifacts": {
+            "logsUrl": "/downloads/3003/tasty/tasty.log"
+          }
+        },
+        {
+          "name": "OnBoard Test",
+          "status": "success",
+          "duration": 145,
+          "artifacts": {
+            "logsUrl": "/downloads/3003/onboard/onboard.log"
+          }
+        },
+        {
+          "name": "Warning Count",
+          "status": "success",
+          "duration": 12,
+          "artifacts": {
+            "logsUrl": "/downloads/3003/warning/warning.log"
+          }
+        },
+        {
+          "name": "Coding Rule Check",
+          "status": "success",
+          "duration": 28,
+          "artifacts": {
+            "logsUrl": "/downloads/3003/coding/coding.log"
+          }
+        },
+        {
+          "name": "BlackDuck",
+          "status": "success",
+          "duration": 115,
+          "artifacts": {
+            "logsUrl": "/downloads/3003/blackduck/blackduck.log"
+          }
+        }
+      ],
+      "qualityMetrics": {
+        "coverity": {
+          "status": "pass",
+          "score": 96,
+          "issues": 3
+        },
+        "sam": {
+          "status": "pass",
+          "score": 94
+        },
+        "onboardTest": {
+          "status": "pass",
+          "score": 99
+        },
+        "dobee": {
+          "status": "pass",
+          "score": 91
+        },
+        "codingRuleCheck": {
+          "status": "pass",
+          "score": 96
+        },
+        "blackduck": {
+          "status": "pass",
+          "issues": 0
+        }
+      },
+      "releaseCriteria": {
+        "allStagesPassed": true,
+        "coverityPassed": true,
+        "samPassed": true,
+        "onboardTestPassed": true,
+        "blackduckPassed": true,
+        "overallPassed": true
+      },
+      "releaseStatus": "released",
+      "artifacts": {
+        "binaryUrl": "/downloads/3003/firmware.bin",
+        "logsUrl": "/downloads/3003/build.log",
+        "sourceZipUrl": "/downloads/3003/source.zip"
+      },
+      "fwName": "BM1743_v2.2.9_R43",
+      "triggeredBy": "jenkins-nightly",
+      "startedAt": "2024-11-19T02:00:00Z",
+      "finishedAt": "2024-11-19T02:22:00Z",
+      "duration": 1320
+    },
+    {
+      "id": "3004",
+      "projectId": "1001",
       "layerId": "2002",
+      "round": 12,
       "buildNumber": 87,
       "status": "success",
-      "branch": "main",
-      "commitHash": "c3d4e5f6a1b2",
-      "buildOptions": { "debug": false, "clean": true },
-      "stages": [
-        { "name": "Build", "status": "success", "duration": 110 },
-        { "name": "SAM", "status": "success", "duration": 40 },
-        { "name": "HIL Test", "status": "success", "duration": 300 },
-        { "name": "Report", "status": "success", "duration": 20 }
-      ],
-      "artifacts": {
-        "logsUrl": "/downloads/build-3003/hil.log"
+      "scmConfig": {
+        "repository": "git@github.com:samsung/bm1743-fw.git",
+        "branch": "main",
+        "revisionTag": "v2.3.1"
       },
-      "triggeredBy": "park.ms",
+      "stages": [
+        {
+          "name": "Build",
+          "status": "success",
+          "duration": 110,
+          "artifacts": {
+            "binaryUrl": "/downloads/3004/build/firmware.bin",
+            "logsUrl": "/downloads/3004/build/build.log"
+          }
+        },
+        {
+          "name": "SAM",
+          "status": "success",
+          "duration": 40,
+          "artifacts": {
+            "logsUrl": "/downloads/3004/sam/sam.log"
+          }
+        },
+        {
+          "name": "Coverity",
+          "status": "success",
+          "duration": 165,
+          "artifacts": {
+            "logsUrl": "/downloads/3004/coverity/coverity.log"
+          }
+        },
+        {
+          "name": "Warning Count",
+          "status": "success",
+          "duration": 10,
+          "artifacts": {
+            "logsUrl": "/downloads/3004/warning/warning.log"
+          }
+        }
+      ],
+      "qualityMetrics": {
+        "coverity": {
+          "status": "pass",
+          "score": 94
+        },
+        "sam": {
+          "status": "pass",
+          "score": 92
+        },
+        "onboardTest": {
+          "status": "skipped"
+        },
+        "dobee": {
+          "status": "skipped"
+        },
+        "codingRuleCheck": {
+          "status": "skipped"
+        },
+        "blackduck": {
+          "status": "skipped"
+        }
+      },
+      "artifacts": {
+        "binaryUrl": "/downloads/3004/firmware.bin",
+        "logsUrl": "/downloads/3004/build.log"
+      },
+      "fwName": "BM1743_v2.3.1_L12",
+      "triggeredBy": {
+        "id": "103",
+        "name": "박민수",
+        "email": "park.ms@company.com",
+        "role": "Developer"
+      },
       "startedAt": "2024-11-19T16:00:00Z",
       "finishedAt": "2024-11-19T16:25:00Z",
       "duration": 1500
     },
     {
-      "id": "3004",
+      "id": "3005",
       "projectId": "1002",
       "layerId": "2004",
+      "round": 28,
       "buildNumber": 892,
       "status": "running",
-      "branch": "main",
-      "commitHash": "d4e5f6a1b2c3",
-      "buildOptions": { "debug": false, "verbose": false, "clean": true },
+      "scmConfig": {
+        "repository": "git@github.com:samsung/bm1743-fw.git",
+        "branch": "main",
+        "revisionTag": "v2.3.0"
+      },
       "stages": [
-        { "name": "Build", "status": "success", "duration": 115 },
-        { "name": "SAM", "status": "success", "duration": 42 },
-        { "name": "Coverity", "status": "running", "duration": null },
-        { "name": "TASTY", "status": "pending", "duration": null },
-        { "name": "BlackDuck", "status": "pending", "duration": null }
+        {
+          "name": "Build",
+          "status": "success",
+          "duration": 115,
+          "artifacts": {
+            "logsUrl": "/downloads/3005/build/build.log"
+          }
+        },
+        {
+          "name": "SAM",
+          "status": "success",
+          "duration": 42,
+          "artifacts": {
+            "logsUrl": "/downloads/3005/sam/sam.log"
+          }
+        },
+        {
+          "name": "Coverity",
+          "status": "running",
+          "duration": null
+        },
+        {
+          "name": "DoBEE",
+          "status": "pending",
+          "duration": null
+        },
+        {
+          "name": "TASTY",
+          "status": "pending",
+          "duration": null
+        },
+        {
+          "name": "OnBoard Test",
+          "status": "pending",
+          "duration": null
+        },
+        {
+          "name": "Coding Rule Check",
+          "status": "pending",
+          "duration": null
+        },
+        {
+          "name": "BlackDuck",
+          "status": "pending",
+          "duration": null
+        }
       ],
+      "fwName": "BM1743_DELL_v2.3.0_R28",
       "triggeredBy": "jenkins-auto",
       "startedAt": "2024-11-20T14:30:00Z",
       "finishedAt": null,
       "duration": null
     },
     {
-      "id": "3005",
+      "id": "3006",
       "projectId": "1003",
       "layerId": "2005",
+      "round": 15,
       "buildNumber": 445,
       "status": "success",
-      "branch": "develop",
-      "commitHash": "e5f6a1b2c3d4",
-      "buildOptions": { "debug": true, "verbose": true, "clean": true },
-      "stages": [
-        { "name": "Build", "status": "success", "duration": 130 },
-        { "name": "SAM", "status": "success", "duration": 55 },
-        { "name": "Coverity", "status": "success", "duration": 200 },
-        { "name": "TASTY", "status": "success", "duration": 95 },
-        { "name": "BlackDuck", "status": "success", "duration": 110 }
-      ],
-      "trStatus": "available",
-      "artifacts": {
-        "binaryUrl": "/downloads/build-3005/firmware.bin",
-        "logsUrl": "/downloads/build-3005/build.log"
+      "scmConfig": {
+        "repository": "git@github.com:samsung/pm9e1-fw.git",
+        "branch": "develop",
+        "revisionTag": "v1.2.0"
       },
-      "triggeredBy": "kang.th",
+      "stages": [
+        {
+          "name": "Build",
+          "status": "success",
+          "duration": 130,
+          "artifacts": {
+            "binaryUrl": "/downloads/3006/build/firmware.bin",
+            "logsUrl": "/downloads/3006/build/build.log"
+          }
+        },
+        {
+          "name": "SAM",
+          "status": "success",
+          "duration": 55,
+          "artifacts": {
+            "logsUrl": "/downloads/3006/sam/sam.log"
+          }
+        },
+        {
+          "name": "Coverity",
+          "status": "success",
+          "duration": 200,
+          "artifacts": {
+            "logsUrl": "/downloads/3006/coverity/coverity.log"
+          }
+        },
+        {
+          "name": "TASTY",
+          "status": "success",
+          "duration": 95,
+          "artifacts": {
+            "logsUrl": "/downloads/3006/tasty/tasty.log"
+          }
+        },
+        {
+          "name": "OnBoard Test",
+          "status": "success",
+          "duration": 140,
+          "artifacts": {
+            "logsUrl": "/downloads/3006/onboard/onboard.log"
+          }
+        },
+        {
+          "name": "BlackDuck",
+          "status": "success",
+          "duration": 110,
+          "artifacts": {
+            "logsUrl": "/downloads/3006/blackduck/blackduck.log"
+          }
+        }
+      ],
+      "qualityMetrics": {
+        "coverity": {
+          "status": "pass",
+          "score": 97,
+          "issues": 1
+        },
+        "sam": {
+          "status": "pass",
+          "score": 96
+        },
+        "onboardTest": {
+          "status": "pass",
+          "score": 100
+        },
+        "dobee": {
+          "status": "skipped"
+        },
+        "codingRuleCheck": {
+          "status": "skipped"
+        },
+        "blackduck": {
+          "status": "pass",
+          "issues": 0
+        }
+      },
+      "releaseCriteria": {
+        "allStagesPassed": true,
+        "coverityPassed": true,
+        "samPassed": true,
+        "onboardTestPassed": true,
+        "blackduckPassed": true,
+        "overallPassed": true
+      },
+      "releaseStatus": "available",
+      "artifacts": {
+        "binaryUrl": "/downloads/3006/firmware.bin",
+        "logsUrl": "/downloads/3006/build.log"
+      },
+      "fwName": "PM9E1_v1.2.0_R15",
+      "triggeredBy": {
+        "id": "108",
+        "name": "강태호",
+        "email": "kang.th@company.com",
+        "role": "TL"
+      },
       "startedAt": "2024-11-22T08:00:00Z",
       "finishedAt": "2024-11-22T08:35:00Z",
       "duration": 2100
     },
     {
-      "id": "3006",
+      "id": "3007",
       "projectId": "1004",
       "layerId": "2006",
+      "round": 52,
       "buildNumber": 3401,
       "status": "success",
-      "branch": "main",
-      "commitHash": "f6a1b2c3d4e5",
-      "buildOptions": { "debug": false, "verbose": false, "clean": true, "encryption": true },
-      "stages": [
-        { "name": "Build", "status": "success", "duration": 150 },
-        { "name": "SAM", "status": "success", "duration": 60 },
-        { "name": "Coverity", "status": "success", "duration": 220 },
-        { "name": "DoBEE", "status": "success", "duration": 80 },
-        { "name": "TASTY", "status": "success", "duration": 100 },
-        { "name": "Warning Count", "status": "success", "duration": 20 },
-        { "name": "BlackDuck", "status": "success", "duration": 130 },
-        { "name": "TEST1", "status": "success", "duration": 45 },
-        { "name": "TEST2", "status": "success", "duration": 50 }
-      ],
-      "trStatus": "available",
-      "artifacts": {
-        "binaryUrl": "/downloads/build-3006/firmware.bin",
-        "logsUrl": "/downloads/build-3006/build.log"
+      "scmConfig": {
+        "repository": "git@github.com:samsung/pm9a3-fw.git",
+        "branch": "main",
+        "revisionTag": "v3.1.0"
       },
+      "stages": [
+        {
+          "name": "Build",
+          "status": "success",
+          "duration": 150,
+          "artifacts": {
+            "binaryUrl": "/downloads/3007/build/firmware.bin",
+            "logsUrl": "/downloads/3007/build/build.log"
+          }
+        },
+        {
+          "name": "SAM",
+          "status": "success",
+          "duration": 60,
+          "artifacts": {
+            "logsUrl": "/downloads/3007/sam/sam.log"
+          }
+        },
+        {
+          "name": "Coverity",
+          "status": "success",
+          "duration": 220,
+          "artifacts": {
+            "logsUrl": "/downloads/3007/coverity/coverity.log"
+          }
+        },
+        {
+          "name": "DoBEE",
+          "status": "success",
+          "duration": 80,
+          "artifacts": {
+            "logsUrl": "/downloads/3007/dobee/dobee.log"
+          }
+        },
+        {
+          "name": "TASTY",
+          "status": "success",
+          "duration": 100,
+          "artifacts": {
+            "logsUrl": "/downloads/3007/tasty/tasty.log"
+          }
+        },
+        {
+          "name": "OnBoard Test",
+          "status": "success",
+          "duration": 160,
+          "artifacts": {
+            "logsUrl": "/downloads/3007/onboard/onboard.log"
+          }
+        },
+        {
+          "name": "Warning Count",
+          "status": "success",
+          "duration": 20,
+          "artifacts": {
+            "logsUrl": "/downloads/3007/warning/warning.log"
+          }
+        },
+        {
+          "name": "Coding Rule Check",
+          "status": "success",
+          "duration": 35,
+          "artifacts": {
+            "logsUrl": "/downloads/3007/coding/coding.log"
+          }
+        },
+        {
+          "name": "BlackDuck",
+          "status": "success",
+          "duration": 130,
+          "artifacts": {
+            "logsUrl": "/downloads/3007/blackduck/blackduck.log"
+          }
+        }
+      ],
+      "qualityMetrics": {
+        "coverity": {
+          "status": "pass",
+          "score": 99,
+          "issues": 0
+        },
+        "sam": {
+          "status": "pass",
+          "score": 98
+        },
+        "onboardTest": {
+          "status": "pass",
+          "score": 100
+        },
+        "dobee": {
+          "status": "pass",
+          "score": 95
+        },
+        "codingRuleCheck": {
+          "status": "pass",
+          "score": 99
+        },
+        "blackduck": {
+          "status": "pass",
+          "issues": 0
+        }
+      },
+      "releaseCriteria": {
+        "allStagesPassed": true,
+        "coverityPassed": true,
+        "samPassed": true,
+        "onboardTestPassed": true,
+        "blackduckPassed": true,
+        "overallPassed": true
+      },
+      "releaseStatus": "available",
+      "artifacts": {
+        "binaryUrl": "/downloads/3007/firmware.bin",
+        "logsUrl": "/downloads/3007/build.log",
+        "sourceZipUrl": "/downloads/3007/source.zip"
+      },
+      "fwName": "PM9A3_AWS_v3.1.0_R52",
       "triggeredBy": "jenkins-auto",
       "startedAt": "2024-11-23T08:00:00Z",
       "finishedAt": "2024-11-23T08:45:00Z",
       "duration": 2700
     },
     {
-      "id": "3007",
+      "id": "3008",
       "projectId": "1004",
       "layerId": "2007",
+      "round": 8,
       "buildNumber": 156,
       "status": "pending",
-      "branch": "main",
-      "commitHash": "a1b2c3d4e5f6",
-      "buildOptions": { "debug": false, "clean": true },
+      "scmConfig": {
+        "repository": "git@github.com:samsung/pm9a3-fw.git",
+        "branch": "main",
+        "revisionTag": "v3.1.0"
+      },
       "stages": [
-        { "name": "Build", "status": "pending", "duration": null },
-        { "name": "HIL Test", "status": "pending", "duration": null }
+        {
+          "name": "Build",
+          "status": "pending",
+          "duration": null
+        },
+        {
+          "name": "SAM",
+          "status": "pending",
+          "duration": null
+        },
+        {
+          "name": "Coverity",
+          "status": "pending",
+          "duration": null
+        }
       ],
-      "triggeredBy": "oh.hw",
+      "fwName": "PM9A3_AWS_v3.1.0_L8",
+      "triggeredBy": {
+        "id": "111",
+        "name": "오현우",
+        "email": "oh.hw@company.com",
+        "role": "TL"
+      },
       "startedAt": "2024-11-23T09:00:00Z",
       "finishedAt": null,
       "duration": null
+    },
+    {
+      "id": "3009",
+      "projectId": "1005",
+      "layerId": "2008",
+      "round": 6,
+      "buildNumber": 201,
+      "status": "success",
+      "scmConfig": {
+        "repository": "git@github.com:samsung/pm9e1-fw.git",
+        "branch": "hp-custom",
+        "revisionTag": "v1.1.5-hp"
+      },
+      "stages": [
+        {
+          "name": "Build",
+          "status": "success",
+          "duration": 125,
+          "artifacts": {
+            "binaryUrl": "/downloads/3009/build/firmware.bin",
+            "logsUrl": "/downloads/3009/build/build.log"
+          }
+        },
+        {
+          "name": "SAM",
+          "status": "success",
+          "duration": 50,
+          "artifacts": {
+            "logsUrl": "/downloads/3009/sam/sam.log"
+          }
+        },
+        {
+          "name": "Coverity",
+          "status": "success",
+          "duration": 185,
+          "artifacts": {
+            "logsUrl": "/downloads/3009/coverity/coverity.log"
+          }
+        },
+        {
+          "name": "TASTY",
+          "status": "success",
+          "duration": 85,
+          "artifacts": {
+            "logsUrl": "/downloads/3009/tasty/tasty.log"
+          }
+        },
+        {
+          "name": "BlackDuck",
+          "status": "success",
+          "duration": 105,
+          "artifacts": {
+            "logsUrl": "/downloads/3009/blackduck/blackduck.log"
+          }
+        }
+      ],
+      "qualityMetrics": {
+        "coverity": {
+          "status": "pass",
+          "score": 91,
+          "issues": 5
+        },
+        "sam": {
+          "status": "pass",
+          "score": 89
+        },
+        "onboardTest": {
+          "status": "skipped"
+        },
+        "dobee": {
+          "status": "skipped"
+        },
+        "codingRuleCheck": {
+          "status": "skipped"
+        },
+        "blackduck": {
+          "status": "pass",
+          "issues": 1
+        }
+      },
+      "releaseCriteria": {
+        "allStagesPassed": true,
+        "coverityPassed": true,
+        "samPassed": true,
+        "onboardTestPassed": true,
+        "blackduckPassed": true,
+        "overallPassed": true
+      },
+      "releaseStatus": "available",
+      "artifacts": {
+        "binaryUrl": "/downloads/3009/firmware.bin",
+        "logsUrl": "/downloads/3009/build.log"
+      },
+      "fwName": "PM9E1_HP_v1.1.5_R6",
+      "triggeredBy": {
+        "id": "116",
+        "name": "조예진",
+        "email": "cho.yj@company.com",
+        "role": "TL"
+      },
+      "startedAt": "2024-11-21T14:00:00Z",
+      "finishedAt": "2024-11-21T14:30:00Z",
+      "duration": 1800
+    },
+    {
+      "id": "3010",
+      "projectId": "1001",
+      "layerId": "2003",
+      "round": 1,
+      "buildNumber": 15,
+      "status": "success",
+      "scmConfig": {
+        "repository": "git@github.com:samsung/bm1743-fw.git",
+        "branch": "feature/test-improvement",
+        "revisionTag": "dev-snapshot"
+      },
+      "stages": [
+        {
+          "name": "Build",
+          "status": "success",
+          "duration": 95,
+          "artifacts": {
+            "binaryUrl": "/downloads/3010/build/firmware.bin",
+            "logsUrl": "/downloads/3010/build/build.log"
+          }
+        }
+      ],
+      "artifacts": {
+        "binaryUrl": "/downloads/3010/firmware.bin",
+        "logsUrl": "/downloads/3010/build.log"
+      },
+      "fwName": "BM1743_dev_P1",
+      "triggeredBy": {
+        "id": "102",
+        "name": "이영희",
+        "email": "lee.yh@company.com",
+        "role": "Developer"
+      },
+      "startedAt": "2024-11-20T16:00:00Z",
+      "finishedAt": "2024-11-20T16:05:00Z",
+      "duration": 300
+    }
+  ],
+  "project-history": [
+    {
+      "id": "h001",
+      "projectId": "1001",
+      "action": "update",
+      "field": "scmConfig.branch",
+      "oldValue": "develop",
+      "newValue": "main",
+      "changedBy": {
+        "id": "101",
+        "name": "김철수",
+        "email": "kim.cs@company.com",
+        "role": "TL"
+      },
+      "changedAt": "2024-11-15T10:30:00Z"
+    },
+    {
+      "id": "h002",
+      "projectId": "1001",
+      "action": "update",
+      "field": "members",
+      "oldValue": "3 members",
+      "newValue": "5 members",
+      "changedBy": {
+        "id": "100",
+        "name": "박대표",
+        "email": "park.dr@company.com",
+        "role": "PL"
+      },
+      "changedAt": "2024-11-10T14:00:00Z"
+    },
+    {
+      "id": "h003",
+      "projectId": "1001",
+      "action": "update",
+      "field": "currentMilestone",
+      "oldValue": "ES",
+      "newValue": "CS",
+      "changedBy": {
+        "id": "101",
+        "name": "김철수",
+        "email": "kim.cs@company.com",
+        "role": "TL"
+      },
+      "changedAt": "2024-09-01T09:00:00Z"
+    },
+    {
+      "id": "h004",
+      "projectId": "1004",
+      "action": "update",
+      "field": "buildEnvConfig.buildBatchOptions",
+      "oldValue": "--target=datacenter --encryption=off",
+      "newValue": "--target=datacenter --encryption=on --capacity=4tb",
+      "changedBy": {
+        "id": "111",
+        "name": "오현우",
+        "email": "oh.hw@company.com",
+        "role": "TL"
+      },
+      "changedAt": "2024-11-20T11:00:00Z"
+    },
+    {
+      "id": "h005",
+      "projectId": "1002",
+      "action": "update",
+      "field": "tl",
+      "oldValue": "김영수",
+      "newValue": "최동훈",
+      "changedBy": {
+        "id": "100",
+        "name": "박대표",
+        "email": "park.dr@company.com",
+        "role": "PL"
+      },
+      "changedAt": "2024-10-15T09:00:00Z"
     }
   ],
   "stats": {
-    "successRate": 85,
-    "totalBuilds": 156,
-    "activeProjects": 4,
-    "runningBuilds": 2
-  }
+    "successRate": 87,
+    "totalBuilds": 245,
+    "activeProjects": 5,
+    "runningBuilds": 2,
+    "qualityOverview": {
+      "coverityAvg": 94,
+      "samAvg": 92,
+      "passRate": 89
+    }
+  },
+  "notices": [
+    {
+      "id": "4001",
+      "title": "MintPortal 시스템 정기 점검 안내",
+      "content": "안녕하세요.\n\n2024년 11월 25일(월) 02:00 ~ 06:00 시스템 정기 점검이 예정되어 있습니다.\n\n점검 시간 동안 서비스 이용이 제한됩니다.\n\n감사합니다.",
+      "category": "maintenance",
+      "priority": "important",
+      "isPinned": true,
+      "isPopup": true,
+      "popupStartDate": "2024-11-20T00:00:00Z",
+      "popupEndDate": "2024-11-25T06:00:00Z",
+      "viewCount": 245,
+      "attachments": [],
+      "author": {
+        "id": "100",
+        "name": "박대표",
+        "email": "park.dr@company.com",
+        "role": "PL"
+      },
+      "createdAt": "2024-11-18T09:00:00Z",
+      "updatedAt": "2024-11-18T09:00:00Z"
+    },
+    {
+      "id": "4002",
+      "title": "CI/CD 파이프라인 개선 안내",
+      "content": "CI/CD 파이프라인이 개선되었습니다.\n\n주요 변경 사항:\n1. 빌드 속도 30% 향상\n2. Coverity 분석 병렬화\n3. BlackDuck 스캔 최적화\n\n자세한 내용은 첨부 파일을 참고해 주세요.",
+      "category": "system",
+      "priority": "normal",
+      "isPinned": false,
+      "isPopup": false,
+      "viewCount": 189,
+      "attachments": [
+        {
+          "id": "att001",
+          "name": "pipeline_improvement_v2.pdf",
+          "url": "/downloads/attachments/pipeline_improvement_v2.pdf",
+          "size": 2048576,
+          "mimeType": "application/pdf"
+        }
+      ],
+      "author": {
+        "id": "101",
+        "name": "김철수",
+        "email": "kim.cs@company.com",
+        "role": "TL"
+      },
+      "createdAt": "2024-11-15T14:30:00Z",
+      "updatedAt": "2024-11-15T14:30:00Z"
+    },
+    {
+      "id": "4003",
+      "title": "2024년 하반기 FW 개발 워크샵 안내",
+      "content": "2024년 하반기 FW 개발 워크샵을 개최합니다.\n\n- 일시: 2024년 12월 15일(금) 14:00 ~ 18:00\n- 장소: 본관 대강당\n- 주제: SSD FW 품질 향상 방안\n\n많은 참여 부탁드립니다.",
+      "category": "event",
+      "priority": "normal",
+      "isPinned": false,
+      "isPopup": true,
+      "popupStartDate": "2024-11-20T00:00:00Z",
+      "popupEndDate": "2024-12-15T14:00:00Z",
+      "viewCount": 156,
+      "attachments": [],
+      "author": {
+        "id": "115",
+        "name": "장원영",
+        "email": "jang.wy@company.com",
+        "role": "PM"
+      },
+      "createdAt": "2024-11-10T10:00:00Z",
+      "updatedAt": "2024-11-12T11:00:00Z"
+    },
+    {
+      "id": "4004",
+      "title": "보안 정책 업데이트 안내",
+      "content": "보안 정책이 업데이트되었습니다.\n\n변경 사항:\n1. 비밀번호 복잡도 강화\n2. 2FA 인증 필수화\n3. 세션 타임아웃 시간 조정 (60분 → 30분)\n\n2024년 12월 1일부터 적용됩니다.",
+      "category": "general",
+      "priority": "urgent",
+      "isPinned": true,
+      "isPopup": false,
+      "viewCount": 312,
+      "attachments": [],
+      "author": {
+        "id": "100",
+        "name": "박대표",
+        "email": "park.dr@company.com",
+        "role": "PL"
+      },
+      "createdAt": "2024-11-08T09:00:00Z",
+      "updatedAt": "2024-11-08T09:00:00Z"
+    },
+    {
+      "id": "4005",
+      "title": "신규 프로젝트 등록 절차 안내",
+      "content": "신규 프로젝트 등록 절차가 간소화되었습니다.\n\n기존 5단계 → 3단계로 축소\n\n자세한 내용은 Settings > Project Management를 참고해 주세요.",
+      "category": "general",
+      "priority": "normal",
+      "isPinned": false,
+      "isPopup": false,
+      "viewCount": 98,
+      "attachments": [],
+      "author": {
+        "id": "108",
+        "name": "강태호",
+        "email": "kang.th@company.com",
+        "role": "TL"
+      },
+      "createdAt": "2024-11-05T15:00:00Z",
+      "updatedAt": "2024-11-05T15:00:00Z"
+    }
+  ],
+  "release-notes": [
+    {
+      "id": "5001",
+      "title": "MintPortal v2.5.0 릴리즈",
+      "content": "MintPortal v2.5.0 버전이 릴리즈되었습니다.\n\n이번 버전에서는 대시보드 UI 개선과 빌드 모니터링 기능이 강화되었습니다.",
+      "version": "2.5.0",
+      "projectId": null,
+      "projectName": null,
+      "releaseType": "minor",
+      "changes": [
+        {
+          "type": "feature",
+          "description": "실시간 빌드 모니터링 대시보드 추가"
+        },
+        {
+          "type": "feature",
+          "description": "프로젝트 그룹별 통계 차트 추가"
+        },
+        {
+          "type": "improvement",
+          "description": "빌드 목록 페이지 로딩 속도 개선"
+        },
+        {
+          "type": "bugfix",
+          "description": "파이프라인 스테이지 상태 표시 오류 수정"
+        }
+      ],
+      "isPopup": true,
+      "popupStartDate": "2024-11-20T00:00:00Z",
+      "popupEndDate": "2024-11-27T00:00:00Z",
+      "viewCount": 423,
+      "attachments": [],
+      "author": {
+        "id": "101",
+        "name": "김철수",
+        "email": "kim.cs@company.com",
+        "role": "TL"
+      },
+      "releasedAt": "2024-11-20T10:00:00Z",
+      "createdAt": "2024-11-20T10:00:00Z",
+      "updatedAt": "2024-11-20T10:00:00Z"
+    },
+    {
+      "id": "5002",
+      "title": "BM1743 FW v2.3.1 릴리즈",
+      "content": "BM1743 펌웨어 v2.3.1 버전이 릴리즈되었습니다.\n\nLenovo OEM 요구사항이 반영되었습니다.",
+      "version": "2.3.1",
+      "projectId": "1001",
+      "projectName": "BM1743_LENOVO_1TB",
+      "releaseType": "patch",
+      "changes": [
+        {
+          "type": "bugfix",
+          "description": "NVMe 커맨드 타임아웃 이슈 수정"
+        },
+        {
+          "type": "bugfix",
+          "description": "전력 관리 모드 전환 오류 수정"
+        },
+        {
+          "type": "improvement",
+          "description": "부팅 시간 최적화"
+        }
+      ],
+      "isPopup": false,
+      "viewCount": 187,
+      "attachments": [
+        {
+          "id": "att002",
+          "name": "BM1743_v2.3.1_release_notes.pdf",
+          "url": "/downloads/attachments/BM1743_v2.3.1_release_notes.pdf",
+          "size": 1048576,
+          "mimeType": "application/pdf"
+        }
+      ],
+      "author": {
+        "id": "101",
+        "name": "김철수",
+        "email": "kim.cs@company.com",
+        "role": "TL"
+      },
+      "releasedAt": "2024-11-20T14:30:00Z",
+      "createdAt": "2024-11-20T14:30:00Z",
+      "updatedAt": "2024-11-20T14:30:00Z"
+    },
+    {
+      "id": "5003",
+      "title": "PM9A3 FW v3.1.0 메이저 릴리즈",
+      "content": "PM9A3 펌웨어 v3.1.0 메이저 버전이 릴리즈되었습니다.\n\nAWS 인증 요구사항 충족 및 새로운 보안 기능이 추가되었습니다.",
+      "version": "3.1.0",
+      "projectId": "1004",
+      "projectName": "PM9A3_AWS_4TB",
+      "releaseType": "major",
+      "changes": [
+        {
+          "type": "feature",
+          "description": "AES-256 하드웨어 암호화 지원"
+        },
+        {
+          "type": "feature",
+          "description": "Secure Boot 기능 추가"
+        },
+        {
+          "type": "feature",
+          "description": "AWS Nitro 호환성 지원"
+        },
+        {
+          "type": "breaking",
+          "description": "기존 펌웨어 업그레이드 시 설정 초기화 필요"
+        },
+        {
+          "type": "improvement",
+          "description": "랜덤 읽기 성능 15% 향상"
+        }
+      ],
+      "isPopup": true,
+      "popupStartDate": "2024-11-15T00:00:00Z",
+      "popupEndDate": "2024-11-30T00:00:00Z",
+      "viewCount": 567,
+      "attachments": [
+        {
+          "id": "att003",
+          "name": "PM9A3_v3.1.0_migration_guide.pdf",
+          "url": "/downloads/attachments/PM9A3_v3.1.0_migration_guide.pdf",
+          "size": 3145728,
+          "mimeType": "application/pdf"
+        }
+      ],
+      "author": {
+        "id": "111",
+        "name": "오현우",
+        "email": "oh.hw@company.com",
+        "role": "TL"
+      },
+      "releasedAt": "2024-11-23T08:45:00Z",
+      "createdAt": "2024-11-23T08:45:00Z",
+      "updatedAt": "2024-11-23T08:45:00Z"
+    },
+    {
+      "id": "5004",
+      "title": "MintPortal v2.4.5 핫픽스",
+      "content": "긴급 보안 패치가 적용되었습니다.",
+      "version": "2.4.5",
+      "projectId": null,
+      "projectName": null,
+      "releaseType": "hotfix",
+      "changes": [
+        {
+          "type": "bugfix",
+          "description": "인증 토큰 만료 처리 오류 수정"
+        },
+        {
+          "type": "bugfix",
+          "description": "XSS 취약점 패치"
+        }
+      ],
+      "isPopup": false,
+      "viewCount": 234,
+      "attachments": [],
+      "author": {
+        "id": "100",
+        "name": "박대표",
+        "email": "park.dr@company.com",
+        "role": "PL"
+      },
+      "releasedAt": "2024-11-10T18:00:00Z",
+      "createdAt": "2024-11-10T18:00:00Z",
+      "updatedAt": "2024-11-10T18:00:00Z"
+    },
+    {
+      "id": "5005",
+      "title": "PM9E1 FW v1.2.0 릴리즈",
+      "content": "PM9E1 펌웨어 v1.2.0 버전이 릴리즈되었습니다.",
+      "version": "1.2.0",
+      "projectId": "1003",
+      "projectName": "PM9E1_SAMSUNG_512GB",
+      "releaseType": "minor",
+      "changes": [
+        {
+          "type": "feature",
+          "description": "SMART 로그 확장"
+        },
+        {
+          "type": "improvement",
+          "description": "Wear Leveling 알고리즘 개선"
+        },
+        {
+          "type": "bugfix",
+          "description": "드라이브 인식 지연 문제 수정"
+        }
+      ],
+      "isPopup": false,
+      "viewCount": 145,
+      "attachments": [],
+      "author": {
+        "id": "108",
+        "name": "강태호",
+        "email": "kang.th@company.com",
+        "role": "TL"
+      },
+      "releasedAt": "2024-11-22T08:35:00Z",
+      "createdAt": "2024-11-22T08:35:00Z",
+      "updatedAt": "2024-11-22T08:35:00Z"
+    }
+  ],
+  "vocs": [
+    {
+      "id": "6001",
+      "title": "빌드 실패 시 알림 기능 요청",
+      "content": "빌드가 실패했을 때 담당자에게 이메일 또는 Slack 알림이 가도록 기능을 추가해 주세요.\n\n현재는 직접 대시보드에서 확인해야 해서 불편합니다.",
+      "category": "feature_request",
+      "priority": "high",
+      "status": "in_progress",
+      "projectId": "1001",
+      "projectName": "BM1743_LENOVO_1TB",
+      "projectGroupId": "1",
+      "projectGroupName": "BM1743",
+      "requester": {
+        "id": "102",
+        "name": "이영희",
+        "email": "lee.yh@company.com",
+        "role": "Developer"
+      },
+      "assignee": {
+        "id": "101",
+        "name": "김철수",
+        "email": "kim.cs@company.com",
+        "role": "TL"
+      },
+      "dueDate": "2024-12-01T00:00:00Z",
+      "viewCount": 45,
+      "attachments": [],
+      "comments": [
+        {
+          "id": "cmt001",
+          "content": "좋은 제안입니다. 검토 후 반영하겠습니다.",
+          "author": {
+            "id": "101",
+            "name": "김철수",
+            "email": "kim.cs@company.com",
+            "role": "TL"
+          },
+          "createdAt": "2024-11-16T10:00:00Z"
+        },
+        {
+          "id": "cmt002",
+          "content": "Slack 웹훅 연동 작업 진행 중입니다.",
+          "author": {
+            "id": "101",
+            "name": "김철수",
+            "email": "kim.cs@company.com",
+            "role": "TL"
+          },
+          "createdAt": "2024-11-18T14:00:00Z"
+        }
+      ],
+      "createdAt": "2024-11-15T09:00:00Z",
+      "updatedAt": "2024-11-18T14:00:00Z"
+    },
+    {
+      "id": "6002",
+      "title": "Coverity 분석 결과 상세 보기 오류",
+      "content": "Coverity 분석 결과 상세 보기 버튼 클릭 시 404 에러가 발생합니다.\n\n재현 방법:\n1. Build 상세 페이지 접속\n2. Coverity 스테이지 클릭\n3. '상세 보기' 버튼 클릭\n→ 404 Not Found 에러",
+      "category": "bug",
+      "priority": "critical",
+      "status": "resolved",
+      "projectId": "1002",
+      "projectName": "BM1743_DELL_2TB",
+      "projectGroupId": "1",
+      "projectGroupName": "BM1743",
+      "requester": {
+        "id": "106",
+        "name": "한지민",
+        "email": "han.jm@company.com",
+        "role": "Developer"
+      },
+      "assignee": {
+        "id": "105",
+        "name": "최동훈",
+        "email": "choi.dh@company.com",
+        "role": "TL"
+      },
+      "dueDate": "2024-11-18T00:00:00Z",
+      "resolvedAt": "2024-11-17T16:00:00Z",
+      "resolution": "Coverity 서버 URL 설정 오류를 수정했습니다. 환경 변수 COVERITY_URL이 누락되어 있었습니다.",
+      "viewCount": 78,
+      "attachments": [
+        {
+          "id": "att004",
+          "name": "error_screenshot.png",
+          "url": "/downloads/attachments/error_screenshot.png",
+          "size": 256000,
+          "mimeType": "image/png"
+        }
+      ],
+      "comments": [
+        {
+          "id": "cmt003",
+          "content": "확인했습니다. 긴급 처리하겠습니다.",
+          "author": {
+            "id": "105",
+            "name": "최동훈",
+            "email": "choi.dh@company.com",
+            "role": "TL"
+          },
+          "createdAt": "2024-11-16T11:00:00Z"
+        },
+        {
+          "id": "cmt004",
+          "content": "수정 완료했습니다. 확인 부탁드립니다.",
+          "author": {
+            "id": "105",
+            "name": "최동훈",
+            "email": "choi.dh@company.com",
+            "role": "TL"
+          },
+          "createdAt": "2024-11-17T16:00:00Z"
+        }
+      ],
+      "createdAt": "2024-11-16T09:30:00Z",
+      "updatedAt": "2024-11-17T16:00:00Z"
+    },
+    {
+      "id": "6003",
+      "title": "프로젝트 목록 필터 기능 개선 요청",
+      "content": "프로젝트 목록에서 OEM, TL, 마일스톤 등으로 필터링할 수 있으면 좋겠습니다.\n\n현재 프로젝트가 많아져서 원하는 프로젝트를 찾기 어렵습니다.",
+      "category": "improvement",
+      "priority": "medium",
+      "status": "open",
+      "projectId": null,
+      "projectName": null,
+      "projectGroupId": null,
+      "projectGroupName": null,
+      "requester": {
+        "id": "109",
+        "name": "송미래",
+        "email": "song.mr@company.com",
+        "role": "Developer"
+      },
+      "assignee": null,
+      "dueDate": null,
+      "viewCount": 34,
+      "attachments": [],
+      "comments": [],
+      "createdAt": "2024-11-19T14:00:00Z",
+      "updatedAt": "2024-11-19T14:00:00Z"
+    },
+    {
+      "id": "6004",
+      "title": "API 문서 업데이트 요청",
+      "content": "API 문서가 최신 버전과 맞지 않습니다.\n\n특히 빌드 API의 새로운 파라미터들이 문서에 없습니다.",
+      "category": "documentation",
+      "priority": "low",
+      "status": "pending",
+      "projectId": null,
+      "projectName": null,
+      "projectGroupId": null,
+      "projectGroupName": null,
+      "requester": {
+        "id": "113",
+        "name": "신동엽",
+        "email": "shin.dy@company.com",
+        "role": "Developer"
+      },
+      "assignee": {
+        "id": "115",
+        "name": "장원영",
+        "email": "jang.wy@company.com",
+        "role": "PM"
+      },
+      "dueDate": "2024-12-15T00:00:00Z",
+      "viewCount": 23,
+      "attachments": [],
+      "comments": [
+        {
+          "id": "cmt005",
+          "content": "문서 업데이트 일정을 잡았습니다. 12월 중 완료 예정입니다.",
+          "author": {
+            "id": "115",
+            "name": "장원영",
+            "email": "jang.wy@company.com",
+            "role": "PM"
+          },
+          "createdAt": "2024-11-20T10:00:00Z"
+        }
+      ],
+      "createdAt": "2024-11-18T11:00:00Z",
+      "updatedAt": "2024-11-20T10:00:00Z"
+    },
+    {
+      "id": "6005",
+      "title": "빌드 히스토리 내보내기 기능 문의",
+      "content": "빌드 히스토리를 CSV 또는 Excel로 내보내기 하는 기능이 있나요?\n\n보고서 작성 시 필요합니다.",
+      "category": "question",
+      "priority": "low",
+      "status": "closed",
+      "projectId": "1004",
+      "projectName": "PM9A3_AWS_4TB",
+      "projectGroupId": "3",
+      "projectGroupName": "PM9A3",
+      "requester": {
+        "id": "114",
+        "name": "권유리",
+        "email": "kwon.yr@company.com",
+        "role": "QA"
+      },
+      "assignee": {
+        "id": "111",
+        "name": "오현우",
+        "email": "oh.hw@company.com",
+        "role": "TL"
+      },
+      "dueDate": null,
+      "resolvedAt": "2024-11-12T15:00:00Z",
+      "resolution": "현재 빌드 목록 페이지 우측 상단의 'Export' 버튼을 통해 CSV 내보내기가 가능합니다.",
+      "viewCount": 56,
+      "attachments": [],
+      "comments": [
+        {
+          "id": "cmt006",
+          "content": "빌드 목록 페이지의 Export 버튼을 사용하시면 됩니다.",
+          "author": {
+            "id": "111",
+            "name": "오현우",
+            "email": "oh.hw@company.com",
+            "role": "TL"
+          },
+          "createdAt": "2024-11-12T15:00:00Z"
+        }
+      ],
+      "createdAt": "2024-11-12T10:00:00Z",
+      "updatedAt": "2024-11-12T15:00:00Z"
+    },
+    {
+      "id": "6006",
+      "title": "PM9E1 빌드 시간이 너무 오래 걸림",
+      "content": "PM9E1 프로젝트의 Release 빌드가 평균 45분 이상 소요됩니다.\n\n다른 프로젝트는 25분 내외인데 비해 너무 오래 걸립니다.\n\n원인 파악 및 개선 요청드립니다.",
+      "category": "improvement",
+      "priority": "high",
+      "status": "in_progress",
+      "projectId": "1003",
+      "projectName": "PM9E1_SAMSUNG_512GB",
+      "projectGroupId": "2",
+      "projectGroupName": "PM9E1",
+      "requester": {
+        "id": "110",
+        "name": "임준혁",
+        "email": "lim.jh@company.com",
+        "role": "QA"
+      },
+      "assignee": {
+        "id": "108",
+        "name": "강태호",
+        "email": "kang.th@company.com",
+        "role": "TL"
+      },
+      "dueDate": "2024-11-30T00:00:00Z",
+      "viewCount": 67,
+      "attachments": [
+        {
+          "id": "att005",
+          "name": "build_time_comparison.xlsx",
+          "url": "/downloads/attachments/build_time_comparison.xlsx",
+          "size": 45056,
+          "mimeType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        }
+      ],
+      "comments": [
+        {
+          "id": "cmt007",
+          "content": "빌드 로그 분석 결과, Coverity 단계에서 시간이 많이 소요되고 있습니다. 병렬화 작업을 진행하겠습니다.",
+          "author": {
+            "id": "108",
+            "name": "강태호",
+            "email": "kang.th@company.com",
+            "role": "TL"
+          },
+          "createdAt": "2024-11-21T14:00:00Z"
+        }
+      ],
+      "createdAt": "2024-11-20T09:00:00Z",
+      "updatedAt": "2024-11-21T14:00:00Z"
+    },
+    {
+      "id": "6007",
+      "title": "테스트 환경 접근 권한 요청",
+      "content": "테스트 환경 서버 접근 권한을 요청합니다.\n\n신규 입사자 온보딩을 위해 필요합니다.",
+      "category": "other",
+      "priority": "medium",
+      "status": "resolved",
+      "projectId": null,
+      "projectName": null,
+      "projectGroupId": null,
+      "projectGroupName": null,
+      "requester": {
+        "id": "103",
+        "name": "박민수",
+        "email": "park.ms@company.com",
+        "role": "Developer"
+      },
+      "assignee": {
+        "id": "100",
+        "name": "박대표",
+        "email": "park.dr@company.com",
+        "role": "PL"
+      },
+      "dueDate": null,
+      "resolvedAt": "2024-11-14T11:00:00Z",
+      "resolution": "테스트 서버 접근 권한이 부여되었습니다. VPN 연결 후 접속 가능합니다.",
+      "viewCount": 12,
+      "attachments": [],
+      "comments": [],
+      "createdAt": "2024-11-14T09:00:00Z",
+      "updatedAt": "2024-11-14T11:00:00Z"
+    }
+  ],
+  "active-popups": [
+    {
+      "id": "7001",
+      "type": "notice",
+      "boardId": "4001",
+      "title": "MintPortal 시스템 정기 점검 안내",
+      "content": "안녕하세요.\n\n2024년 11월 25일(월) 02:00 ~ 06:00 시스템 정기 점검이 예정되어 있습니다.\n\n점검 시간 동안 서비스 이용이 제한됩니다.\n\n감사합니다.",
+      "category": "maintenance",
+      "priority": "important",
+      "isActive": true,
+      "startDate": "2024-11-20T00:00:00Z",
+      "endDate": "2024-11-25T06:00:00Z",
+      "showOnce": false,
+      "createdAt": "2024-11-18T09:00:00Z"
+    },
+    {
+      "id": "7002",
+      "type": "notice",
+      "boardId": "4003",
+      "title": "2024년 하반기 FW 개발 워크샵 안내",
+      "content": "2024년 하반기 FW 개발 워크샵을 개최합니다.\n\n- 일시: 2024년 12월 15일(금) 14:00 ~ 18:00\n- 장소: 본관 대강당\n- 주제: SSD FW 품질 향상 방안\n\n많은 참여 부탁드립니다.",
+      "category": "event",
+      "priority": "normal",
+      "isActive": true,
+      "startDate": "2024-11-20T00:00:00Z",
+      "endDate": "2024-12-15T14:00:00Z",
+      "showOnce": true,
+      "createdAt": "2024-11-10T10:00:00Z"
+    },
+    {
+      "id": "7003",
+      "type": "release-note",
+      "boardId": "5001",
+      "title": "MintPortal v2.5.0 릴리즈",
+      "content": "MintPortal v2.5.0 버전이 릴리즈되었습니다.\n\n이번 버전에서는 대시보드 UI 개선과 빌드 모니터링 기능이 강화되었습니다.",
+      "version": "2.5.0",
+      "releaseType": "minor",
+      "isActive": true,
+      "startDate": "2024-11-20T00:00:00Z",
+      "endDate": "2024-11-27T00:00:00Z",
+      "showOnce": false,
+      "createdAt": "2024-11-20T10:00:00Z"
+    },
+    {
+      "id": "7004",
+      "type": "release-note",
+      "boardId": "5003",
+      "title": "PM9A3 FW v3.1.0 메이저 릴리즈",
+      "content": "PM9A3 펌웨어 v3.1.0 메이저 버전이 릴리즈되었습니다.\n\nAWS 인증 요구사항 충족 및 새로운 보안 기능이 추가되었습니다.",
+      "version": "3.1.0",
+      "releaseType": "major",
+      "isActive": true,
+      "startDate": "2024-11-15T00:00:00Z",
+      "endDate": "2024-11-30T00:00:00Z",
+      "showOnce": true,
+      "createdAt": "2024-11-23T08:45:00Z"
+    }
+  ],
+  "users": [
+    {
+      "id": "100",
+      "name": "박대표",
+      "email": "park.dr@company.com",
+      "role": "PL"
+    },
+    {
+      "id": "101",
+      "name": "김철수",
+      "email": "kim.cs@company.com",
+      "role": "TL"
+    },
+    {
+      "id": "102",
+      "name": "이영희",
+      "email": "lee.yh@company.com",
+      "role": "Developer"
+    },
+    {
+      "id": "103",
+      "name": "박민수",
+      "email": "park.ms@company.com",
+      "role": "Developer"
+    },
+    {
+      "id": "104",
+      "name": "정수진",
+      "email": "jung.sj@company.com",
+      "role": "QA"
+    },
+    {
+      "id": "105",
+      "name": "최동훈",
+      "email": "choi.dh@company.com",
+      "role": "TL"
+    },
+    {
+      "id": "106",
+      "name": "한지민",
+      "email": "han.jm@company.com",
+      "role": "Developer"
+    },
+    {
+      "id": "107",
+      "name": "윤서연",
+      "email": "yoon.sy@company.com",
+      "role": "Developer"
+    },
+    {
+      "id": "108",
+      "name": "강태호",
+      "email": "kang.th@company.com",
+      "role": "TL"
+    },
+    {
+      "id": "109",
+      "name": "송미래",
+      "email": "song.mr@company.com",
+      "role": "Developer"
+    },
+    {
+      "id": "110",
+      "name": "임준혁",
+      "email": "lim.jh@company.com",
+      "role": "QA"
+    },
+    {
+      "id": "111",
+      "name": "오현우",
+      "email": "oh.hw@company.com",
+      "role": "TL"
+    },
+    {
+      "id": "112",
+      "name": "배수지",
+      "email": "bae.sj@company.com",
+      "role": "Developer"
+    },
+    {
+      "id": "113",
+      "name": "신동엽",
+      "email": "shin.dy@company.com",
+      "role": "Developer"
+    },
+    {
+      "id": "114",
+      "name": "권유리",
+      "email": "kwon.yr@company.com",
+      "role": "QA"
+    },
+    {
+      "id": "115",
+      "name": "장원영",
+      "email": "jang.wy@company.com",
+      "role": "PM"
+    },
+    {
+      "id": "116",
+      "name": "조예진",
+      "email": "cho.yj@company.com",
+      "role": "TL"
+    },
+    {
+      "id": "117",
+      "name": "김도현",
+      "email": "kim.dh@company.com",
+      "role": "Developer"
+    },
+    {
+      "id": "120",
+      "name": "김리더",
+      "email": "kim.ld@company.com",
+      "role": "PL"
+    }
+  ]
 }

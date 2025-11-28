@@ -113,8 +113,13 @@ function getProjectName(projectId: string) {
         <RecentBuildsList
           :builds="recentBuilds"
           :get-project-name="getProjectName"
-          @view-all="router.push('/build')"
-          @view-build="(id) => router.push(`/build/${id}`)"
+          @view-all="router.push('/')"
+          @view-build="(id) => {
+            const build = buildStore.builds.find(b => b.id === id)
+            if (build) {
+              router.push(`/projects/${build.projectId}?tab=builds`)
+            }
+          }"
         />
         <ActiveProjectsList
           :projects="activeProjects"

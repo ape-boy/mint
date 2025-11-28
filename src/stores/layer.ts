@@ -13,7 +13,7 @@ export const useLayerStore = defineStore('layer', () => {
     loading.value = true
     error.value = null
     try {
-      const response = await layerApi.getAll(projectId)
+      const response = await layerApi.getAll(projectId ? { projectId } : undefined)
       layers.value = response.data
     } catch (e) {
       error.value = 'Failed to fetch layers'

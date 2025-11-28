@@ -1,10 +1,16 @@
 import api from './client'
-import type { Layer } from '@/types'
+import type { Layer, LayerQueryParams } from '@/types'
 
 export const layerApi = {
-  getAll: (projectId?: string) => {
-    const params = projectId ? { projectId } : {}
+  getAll(params?: LayerQueryParams) {
     return api.get<Layer[]>('/layers', { params })
   },
-  getById: (id: string) => api.get<Layer>(`/layers/${id}`),
+
+  getById(id: string) {
+    return api.get<Layer>(`/layers/${id}`)
+  },
+
+  getByProjectId(projectId: string) {
+    return api.get<Layer[]>('/layers', { params: { projectId } })
+  },
 }

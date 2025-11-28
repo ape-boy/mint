@@ -126,6 +126,26 @@ export function useFormat() {
     return hash.slice(0, length)
   }
 
+  /**
+   * Format file size to human readable string
+   * @param bytes - File size in bytes
+   * @returns Formatted string like "1.5 MB"
+   */
+  function formatFileSize(bytes: number | null | undefined): string {
+    if (bytes === null || bytes === undefined) return '-'
+
+    const units = ['B', 'KB', 'MB', 'GB', 'TB']
+    let size = bytes
+    let unitIndex = 0
+
+    while (size >= 1024 && unitIndex < units.length - 1) {
+      size /= 1024
+      unitIndex++
+    }
+
+    return `${size.toFixed(unitIndex > 0 ? 1 : 0)} ${units[unitIndex]}`
+  }
+
   return {
     formatDuration,
     formatDate,
@@ -135,5 +155,6 @@ export function useFormat() {
     formatPercent,
     truncate,
     formatCommitHash,
+    formatFileSize,
   }
 }

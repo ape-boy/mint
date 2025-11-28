@@ -187,10 +187,16 @@ export function useStatus() {
       bgColor: 'var(--color-bg-danger)',
       label: 'Rejected',
     },
+    released: {
+      icon: CheckCircleOutlined,
+      color: 'var(--color-accent-primary)',
+      bgColor: 'var(--color-bg-info)',
+      label: 'Released',
+    },
   }
 
   function getTRStatusConfig(status: TRStatus): StatusConfig {
-    return trStatusConfig[status] || trStatusConfig.pending_approval
+    return trStatusConfig[status] ?? trStatusConfig.pending_approval
   }
 
   function getTRStatusColor(status: TRStatus): string {

@@ -121,10 +121,8 @@ async function handleLogin() {
   margin: 0;
   font-size: var(--font-size-3xl);
   font-weight: var(--font-weight-bold);
-  background: linear-gradient(135deg, var(--color-accent-primary), var(--color-accent-secondary));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: var(--color-accent-primary);
+  letter-spacing: -0.02em;
 }
 
 .login-header p {

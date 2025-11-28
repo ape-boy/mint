@@ -1,62 +1,68 @@
 :root {
   /* ========================================
-   * Color Palette - Mint Dark Theme
+   * Color Palette - Backstage IDP Style
+   * Dark charcoal with mint/teal accent
    * ======================================== */
 
-  /* Background Colors */
-  --color-bg-primary: #0f172a;
-  --color-bg-secondary: #1e293b;
-  --color-bg-tertiary: #334155;
+  /* Background Colors - Charcoal gray tones */
+  --color-bg-primary: #1a1a1f;
+  --color-bg-secondary: #232328;
+  --color-bg-tertiary: #2e2e33;
+  --color-bg-elevated: #36363e;
 
-  /* Accent Colors */
-  --color-accent-primary: #00c896;
-  --color-accent-secondary: #2dd4bf;
-  --color-accent-success: #34d399;
-  --color-accent-warning: #fbbf24;
-  --color-accent-danger: #f87171;
-  --color-accent-info: #3b82f6;
+  /* Accent Colors - Mint/Teal Green (Backstage style) */
+  --color-accent-primary: #00d4aa;
+  --color-accent-secondary: #36baa2;
+  --color-accent-success: #4caf50;
+  --color-accent-warning: #ffb74d;
+  --color-accent-danger: #f44336;
+  --color-accent-info: #29b6f6;
 
   /* Text Colors */
-  --color-text-primary: #f1f5f9;
-  --color-text-secondary: #cbd5e1;
-  --color-text-muted: #94a3b8;
+  --color-text-primary: #ffffff;
+  --color-text-secondary: #b5b5b5;
+  --color-text-muted: #8b8b8b;
+  --color-text-disabled: #6b6b6b;
 
   /* Border Colors */
-  --color-border: #334155;
+  --color-border: #3a3a40;
   --color-border-light: rgba(255, 255, 255, 0.08);
+  --color-border-focus: var(--color-accent-primary);
 
   /* ========================================
    * Semantic Background Colors
    * ======================================== */
-  --color-bg-success: rgba(5, 150, 105, 0.2);
-  --color-bg-info: rgba(59, 130, 246, 0.2);
-  --color-bg-warning: rgba(217, 119, 6, 0.2);
-  --color-bg-danger: rgba(220, 38, 38, 0.2);
-  --color-bg-indigo: rgba(79, 70, 229, 0.2);
-  --color-border-indigo: rgba(99, 102, 241, 0.3);
+  --color-bg-success: rgba(76, 175, 80, 0.12);
+  --color-bg-info: rgba(41, 182, 246, 0.12);
+  --color-bg-warning: rgba(255, 183, 77, 0.12);
+  --color-bg-danger: rgba(244, 67, 54, 0.12);
+  --color-bg-accent: rgba(0, 212, 170, 0.12);
+  --color-bg-indigo: rgba(102, 126, 234, 0.12);
+  --color-border-indigo: rgba(102, 126, 234, 0.25);
 
   /* ========================================
    * Glass Effect
    * ======================================== */
-  --glass-bg: rgba(15, 23, 42, 0.7);
-  --glass-border: 1px solid rgba(255, 255, 255, 0.08);
+  --glass-bg: rgba(26, 26, 31, 0.92);
+  --glass-border: 1px solid rgba(255, 255, 255, 0.06);
 
   /* ========================================
-   * Border Radius
+   * Border Radius (Backstage uses smaller radius)
    * ======================================== */
-  --radius-sm: 6px;
-  --radius-md: 10px;
-  --radius-lg: 16px;
-  --radius-xl: 20px;
+  --radius-xs: 2px;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 12px;
   --radius-full: 9999px;
 
   /* ========================================
-   * Shadows
+   * Shadows (Subtle for dark theme)
    * ======================================== */
-  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.15);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.15);
-  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.15);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.5);
+  --shadow-xl: 0 8px 32px rgba(0, 0, 0, 0.6);
 
   /* ========================================
    * Transitions

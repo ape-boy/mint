@@ -25,7 +25,7 @@ const { formatDuration, formatDateTime } = useFormat()
         <StatusBadge :status="build.status" type="build" :show-label="false" />
         <span class="build-number">#{{ build.buildNumber }}</span>
         <span class="build-branch">
-          <BranchesOutlined /> {{ build.branch }}
+          <BranchesOutlined /> {{ build.scmConfig?.branch || '-' }}
         </span>
       </div>
       <div class="build-card__meta">
@@ -50,9 +50,9 @@ const { formatDuration, formatDateTime } = useFormat()
     </div>
 
     <!-- TR Status -->
-    <div v-if="showTrStatus && layer?.type === 'release' && build.trStatus" class="build-card__tr">
+    <div v-if="showTrStatus && layer?.type === 'release' && build.releaseStatus" class="build-card__tr">
       <span class="tr-label">TR Status:</span>
-      <StatusBadge :status="build.trStatus" type="tr" size="small" />
+      <StatusBadge :status="build.releaseStatus" type="tr" size="small" />
     </div>
 
     <!-- Artifacts -->

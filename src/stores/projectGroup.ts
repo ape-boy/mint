@@ -1,53 +1,57 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import type { ProjectGroup } from '@/types'
-import { projectGroupApi } from '@/api/projectGroup'
+import type { TaskGroup } from '@/types'
+import { taskGroupApi } from '@/api/taskGroup'
 
-export const useProjectGroupStore = defineStore('projectGroup', () => {
-  const projectGroups = ref<ProjectGroup[]>([])
-  const currentProjectGroup = ref<ProjectGroup | null>(null)
+// Renamed from projectGroup to taskGroup but keeping store name for compatibility
+export const useTaskGroupStore = defineStore('taskGroup', () => {
+  const taskGroups = ref<TaskGroup[]>([])
+  const currentTaskGroup = ref<TaskGroup | null>(null)
   const loading = ref(false)
   const error = ref<string | null>(null)
 
-  async function fetchProjectGroups() {
+  async function fetchTaskGroups() {
     loading.value = true
     error.value = null
     try {
-      const response = await projectGroupApi.getAll()
-      projectGroups.value = response.data
+      const response = await taskGroupApi.getAll()
+      taskGroups.value = response.data
     } catch (e) {
-      error.value = 'Failed to fetch project groups'
+      error.value = 'Failed to fetch task groups'
       console.error(e)
     } finally {
       loading.value = false
     }
   }
 
-  async function fetchProjectGroupById(id: string) {
+  async function fetchTaskGroupById(id: string) {
     loading.value = true
     error.value = null
     try {
-      const response = await projectGroupApi.getById(id)
-      currentProjectGroup.value = response.data
+      const response = await taskGroupApi.getById(id)
+      currentTaskGroup.value = response.data
     } catch (e) {
-      error.value = 'Failed to fetch project group'
+      error.value = 'Failed to fetch task group'
       console.error(e)
     } finally {
       loading.value = false
     }
   }
 
-  function setCurrentProjectGroup(projectGroup: ProjectGroup | null) {
-    currentProjectGroup.value = projectGroup
+  function setCurrentTaskGroup(taskGroup: TaskGroup | null) {
+    currentTaskGroup.value = taskGroup
   }
 
   return {
-    projectGroups,
-    currentProjectGroup,
+    taskGroups,
+    currentTaskGroup,
     loading,
     error,
-    fetchProjectGroups,
-    fetchProjectGroupById,
-    setCurrentProjectGroup,
+    fetchTaskGroups,
+    fetchTaskGroupById,
+    setCurrentTaskGroup,
   }
 })
+
+// Alias for backward compatibility
+export const useProjectGroupStore = useTaskGroupStore

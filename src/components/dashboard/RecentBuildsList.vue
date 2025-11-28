@@ -38,7 +38,7 @@ const { formatTimeAgo } = useFormat()
             {{ getProjectName(build.projectId) }} #{{ build.buildNumber }}
           </span>
           <span class="build-meta">
-            {{ build.branch }} • {{ formatTimeAgo(build.startedAt) }} • {{ build.triggeredBy }}
+            {{ build.scmConfig?.branch || '-' }} • {{ formatTimeAgo(build.startedAt) }} • {{ typeof build.triggeredBy === 'string' ? build.triggeredBy : build.triggeredBy?.name }}
           </span>
         </div>
         <div class="build-action">
